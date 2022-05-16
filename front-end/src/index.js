@@ -1,14 +1,18 @@
 import React from 'react';
-import ReactDOM from 'react-dom/client';
+import ReactDOM from 'react-dom';
 import './index.css';
-import App from './App';
+import HomePage from './Components/HomePage';
+
+//import Material UI Stuff here
 
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
-root.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>
-);
+// Change this in the future for React 18
+
+ReactDOM.render(
+  <div>
+    test
+  </div>, document.getElementById('root'),
+)
+
 
 

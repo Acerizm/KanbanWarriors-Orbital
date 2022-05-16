@@ -4,11 +4,14 @@ import { useMediaQuery } from "react-responsive";
 // source -> https://www.npmjs.com/package/react-responsive
 
 //children -> refers to any properties/components that will be passed to the main component
-const Desktop =({children}) => {
+export const Desktop =({children}) => {
     const isDesktop = useMediaQuery({minWidth: 992});
     return isDesktop ?  children : null;
 }
 
-const Tablet = ({children}) => {
+export const Tablet = ({children}) => {
     const isTablet = useMediaQuery({minWidth: 768, maxWidth: 991});
+    return isTablet ? children : null;
 }
+
+
