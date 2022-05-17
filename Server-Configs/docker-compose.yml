@@ -28,7 +28,7 @@ services:
       - APP_MONGO_DB=${APP_MONGO_DB}
     volumes:
       - ./data-volume:/data/db
-      - ./mongo-user-entrypoint.sh/:/docker-entrypoint-initdb.d/
+      - .mongo-user-entrypoint.sh:/docker-entrypoint-initdb.d/
     # the volume created is in the HOST VM but is automatically mapped to a directory in our server
     # check the "Mountpoint" with command - docker volume inspect <volume name>
     # list docker volumes command - docker volume ls
@@ -44,5 +44,4 @@ services:
   #   image: "acerizm/<image>"
   #   #image for back end (dockerized)
 
-# volumes:
-#  data-volume: 
+
