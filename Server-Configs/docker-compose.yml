@@ -1,0 +1,48 @@
+version: "3"
+
+services:
+  frontEnd:
+    ports:
+    # - "VM Port" : "Docker Container Port"
+      - "80:80"
+    image: "acerizm/kanbanwarriors"
+    # env file will be used to store our private keys
+    env_file:
+      - .env
+  mongoDB:
+    ports:
+      - "300:27017"
+    image: mongo
+    container_name: mongo_container
+    env_file:
+      - .env
+    environment: 
+      - MONGO_INITDB_ROOT_USERNAME=${MONGO_ROOT_USERNAME}
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_ROOT_PASSWORD}
+      - APP_MONGO_HOST=${MONGO_HOST}
+      - MONGO_PORT=${MONGO_PORT}
+      - MONGO_ROOT_USER=${MONGO_ROOT_USERNAME}
+      - MONGO_ROOT_PASS=${MONGO_ROOT_PASSWORD}
+      - APP_MONGO_USER=${APP_MONGO_USER}
+      - APP_MONGO_PASS=${APP_MONGO_PASS}
+      - APP_MONGO_DB=${APP_MONGO_DB}
+    volumes:
+      - ./data-volume:/data/db
+      - ./mongo-user-entrypoint.sh/:/docker-entrypoint-initdb.d/
+    # the volume created is in the HOST VM but is automatically mapped to a directory in our server
+    # check the "Mountpoint" with command - docker volume inspect <volume name>
+    # list docker volumes command - docker volume ls
+
+  #   # Useful links when encountering errors related to authentication
+  #   # https://medium.com/@MaxouMask/secured-mongodb-container-6b602ef67885
+  #   # https://github.com/docker-library/mongo/issues/174
+  #   # https://docs.mongodb.com/manual/reference/method/db.auth/
+  #   # My Solution: https://github.com/docker-library/mongo/issues/174
+  # backEnd:
+  #   ports:
+  #    - "500:500"
+  #   image: "acerizm/<image>"
+  #   #image for back end (dockerized)
+
+# volumes:
+#  data-volume: 
