@@ -23,5 +23,43 @@
              <response code="201">Returns the newly created item</response>
              <response code="400">If the item is null</response>       
         </member>
+        <member name="M:back_end.Controllers.BackgroundImagesController.GetImagesFromCategory(System.String)">
+             <summary>
+             Gets all of the backgroundImages based on category Id
+             </summary>
+             <remarks>
+             Sample request:
+            
+                  /GetImagesFromCategory/{Id}
+                 {
+                    "id": "5ce37619a9e07c300c1e6a7d",
+                    "category": "Nature",
+                    "backgroundImages": [1,2],
+                    "cloudinaryRP": "/relative_path"
+                 }
+            
+             </remarks>
+             <response code="201">Returns the newly created item</response>
+             <response code="400">If the item is null</response>       
+        </member>
+        <member name="M:back_end.Controllers.BackgroundImagesController.CreateNewCategory(System.String,System.Collections.Generic.List{System.Int32},System.String)">
+             <summary>
+             Create a new category of images
+             </summary>
+             <remarks>
+             Sample request:
+            
+                  /CreateNewCategory
+                 {
+                    "id": "5cea58888578a12e180e9703",
+                    "category": "Samsung",
+                    "backgroundImages": [1,2],
+                    "cloudinaryRP": "./."
+                 }
+            
+             </remarks>
+             <response code="201">Returns the newly created item</response>
+             <response code="400">If the item is null</response>       
+        </member>
     </members>
 </doc>
