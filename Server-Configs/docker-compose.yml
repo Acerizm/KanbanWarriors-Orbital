@@ -38,10 +38,10 @@ services:
   #   # https://github.com/docker-library/mongo/issues/174
   #   # https://docs.mongodb.com/manual/reference/method/db.auth/
   #   # My Solution: https://github.com/docker-library/mongo/issues/174
-  # backEnd:
-  #   ports:
-  #    - "500:500"
-  #   image: "acerizm/<image>"
+  backEnd:
+    ports:
+     - "500:500"
+    image: "acerizm/kanbanwarriors_backend:latest"
   #   #image for back end (dockerized)
 
 

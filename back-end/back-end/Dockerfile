@@ -2,8 +2,12 @@
 
 FROM mcr.microsoft.com/dotnet/aspnet:6.0 AS base
 WORKDIR /app
-EXPOSE 80
-EXPOSE 443
+EXPOSE 500
+#EXPOSE 443
+
+# remove this when moving from development -> production
+ENV ASPNETCORE_ENVIRONMENT=Development 
+ENV ASPNETCORE_URLS=http://+:500
 
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 WORKDIR /src

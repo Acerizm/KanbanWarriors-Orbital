@@ -43,6 +43,22 @@ if (app.Environment.IsDevelopment())
     });
 }
 
+// Setting up CORS here
+// reference -> https://docs.microsoft.com/en-us/aspnet/core/security/cors?view=aspnetcore-6.0
+app.UseCors(builder =>
+{
+    //Change the main front-end website here
+    builder.WithOrigins("http://159.223.91.154:500").AllowAnyHeader();
+    builder.WithOrigins("http://159.223.91.154:500").AllowAnyMethod();
+    builder.WithOrigins("http://159.223.91.154:500").AllowAnyOrigin();
+
+    //for our localhost
+    builder.WithOrigins("http://localhost:3000").AllowAnyHeader();
+    builder.WithOrigins("http://localhost:3000").AllowAnyMethod();
+    builder.WithOrigins("http://localhost:3000").AllowAnyOrigin();
+});
+
+
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
