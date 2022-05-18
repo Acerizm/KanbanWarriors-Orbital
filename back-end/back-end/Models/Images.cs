@@ -6,30 +6,38 @@ using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
+using System.Text.Json.Serialization;
 
 namespace back_end.Models
 {
-    public class BackgroundImages
+    // class -> collection/table in MongoDB
+    // do not confuse with "databases" and "collections" in MongoDB's schema
+    // Bson is a data type created by MongoDB
+
+    // Serialization/Deserialization -> [BsonRepresentation(BsonType.<type>)]
+    public class Images
     {
-        // Bson is a data type created by MongoDB
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
-        public string id { get; set; }
+        public string Id { get; set; }
 
-        [BsonElement("Category")]
+        [BsonElement("category")]
+        [JsonPropertyName("category")]
         [Required]
         public string category { get; set; }
 
         [BsonElement("backgroundImages")]
-        [BsonRepresentation(BsonType.String)]
-        public List<string> backgroundImages { get; set; }
+        [JsonPropertyName("backgroundImages")]
+        [BsonRepresentation(BsonType.Int32)]
+        public List<int> backgroundImages { get; set; }
 
         // decide on image cdn to use
         // proposed: Cloudinary
         // if brave, can try Amazon S3 bucket I guess for our CDN
         // cloudinaryRP means cloudinary relative path
         // eg. /PhoneModels/Apple_Logo
-        [BsonElement]
+        [BsonElement("cloudinaryRP")]
+        [JsonPropertyName("cloudinaryRP")]
         [Required]
         public string cloudinaryRP { get; set; }
     }
