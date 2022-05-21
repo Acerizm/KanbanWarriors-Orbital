@@ -1,10 +1,13 @@
-import { Desktop, Tablet } from "../../MediaQuery";
+import { Desktop, Tablet } from "../ResponsiveComponent/MediaQuery.js";
+import * as CSS from "./css.js"
 
 const NavBar = ({props}) => {
     return (
-        <div>
+        <div className="handle">
             <Desktop>
-                <h1>Test</h1>
+                <div id="navbarContainer" style={{...CSS.navBarContainerStyle}}>
+                    Drag me! (This is a test feature)            
+                </div>
             </Desktop>
             <Tablet></Tablet>
         </div>

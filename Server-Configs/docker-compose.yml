@@ -5,7 +5,7 @@ services:
     ports:
     # - "VM Port" : "Docker Container Port"
       - "80:80"
-    image: "acerizm/kanbanwarriors"
+    image: "acerizm/kanbanwarriors_frontend:latest"
     # env file will be used to store our private keys
     env_file:
       - .env
