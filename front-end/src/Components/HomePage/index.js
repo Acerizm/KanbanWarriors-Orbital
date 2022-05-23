@@ -7,6 +7,10 @@ import {urlEndpoint} from "../../Routes/index.js";
 import Draggable from 'react-draggable'; 
 import React from "react";
 
+// import custom css file here
+// React dosnt play nice with .css files
+import "./HomePage.css";
+
 // 1. Can use either functional ES6 style or Component OOP style.
 // Stateless -> use functional
 // Stateful -> use OOP Classes
@@ -19,29 +23,32 @@ class HomePage extends React.Component  {
         return (
             <div id="Home" style={{...CSS.homeStyle}}>
                 <Desktop>
-                    {/* <IKImage 
-                        urlEndpoint={urlEndpoint}
-                        path="../Categories/Space/5.jpg"
-                        width="100%"
-                        height="100%"
-                        z-index="-1"
-                        position="absolute"
-                        //https://ik.imagekit.io/acerizm/KanbanWarriors/Categories/Space/1.jpg
-                    /> */}
-                    <Draggable
-                        axis="both"
-                        handle=".handle"
-                        defaultPosition={{x: 0, y: 0}}
-                        position={null}
-                        //grid={[25, 25]}
-                        scale={1}
-                        onStart={this.handleStart}
-                        onDrag={this.handleDrag}
-                        onStop={this.handleStop}>
-                        <div>
-                            <NavBar></NavBar>
-                        </div>
-                    </Draggable>
+                    <div id="HomeDesktopContainer" style={{...CSS.homeDesktopContainerStyle}}>
+                        {/* Peek the definition of IKIMage to see which properties it supports */}
+                        <IKImage 
+                            urlEndpoint={urlEndpoint}
+                            path="../Categories/Space/5.jpg"
+                            width="100%"
+                            height="100%"
+                            id="background"
+                            //https://ik.imagekit.io/acerizm/KanbanWarriors/Categories/Space/1.jpg
+                        />
+                        <Draggable
+                            axis="both"
+                            handle=".handle"
+                            //defaultPosition={{x: 90, y: 0}}
+                            position={null}
+                            defaultClassName="draggableNavBar"
+                            //grid={[25, 25]}
+                            scale={1}
+                            onStart={this.handleStart}
+                            onDrag={this.handleDrag}
+                            onStop={this.handleStop}>
+                            <div>
+                                <NavBar></NavBar>
+                            </div>
+                        </Draggable>
+                    </div>
                 </Desktop>
                 <Tablet></Tablet>
             </div>
