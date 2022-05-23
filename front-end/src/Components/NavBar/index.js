@@ -27,21 +27,40 @@ const navBarTheme = createTheme({
     }
 });
 
+// We are using React hooks 
+// Hooks allows us to skip classes/OOP
+
 const NavBar = ({props}) => {
+    //Hooks are here
     const [value, setValue] = React.useState(0);
+    const [showCategories, setCategories] = React.useState(0);
+
+    let testDiv;
+    if (showCategories==1){
+        testDiv = <Test/>
+    }
     return (
         <div className="handle" style={{...CSS.navBarContainerStyle}}>
             <Desktop>
+                {testDiv}
                 <ThemeProvider theme={navBarTheme}>
                     <BottomNavigation
-                        showLabels
+                        // showLabels
                         value={value}
                         onChange={(event, newValue) => {
                             setValue(newValue);
                         }}
                         >
-                        <BottomNavigationAction label="Background" icon={<WallpaperIcon/>}/>
-                        <BottomNavigationAction label="Timer" icon={<TimerIcon />} />
+                        <BottomNavigationAction label="Background" icon={<WallpaperIcon/>} 
+                            onClick={
+                                () => setCategories(1)
+                            }
+                        />
+                        <BottomNavigationAction label="Timer" icon={<TimerIcon />}
+                            onClick={
+                                () => setCategories(0)
+                            } 
+                        />
                         <BottomNavigationAction label="Music" icon={<AudiotrackIcon />} />
                         <BottomNavigationAction label="Ambience" icon={<GraphicEqIcon />} />
                         <BottomNavigationAction label="To-Do" icon={<NotesIcon />} />
@@ -51,6 +70,14 @@ const NavBar = ({props}) => {
                 </ThemeProvider>
             </Desktop>
             <Tablet></Tablet>
+        </div>
+    )
+}
+
+const Test = ({props}) => {
+    return (
+        <div>
+            Hello World
         </div>
     )
 }
