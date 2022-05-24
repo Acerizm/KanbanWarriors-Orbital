@@ -11,6 +11,7 @@ import { ThemeProvider, createTheme } from '@mui/material/styles';
 import GraphicEqIcon from '@mui/icons-material/GraphicEq';
 import NotesIcon from '@mui/icons-material/Notes';
 import SettingsIcon from '@mui/icons-material/Settings';
+import TemporaryDrawer from "../BackgroundCategories/index.js";
 
 // 1. Using Material-UI "themes" to alter their components/APIs
 const navBarTheme = createTheme({
@@ -37,7 +38,7 @@ const NavBar = ({props}) => {
 
     let testDiv;
     if (showCategories==1){
-        testDiv = <Test/>
+        testDiv = <TemporaryDrawer/>
     }
     return (
         <div className="handle" style={{...CSS.navBarContainerStyle}}>
