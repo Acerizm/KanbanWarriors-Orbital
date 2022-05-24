@@ -5,6 +5,10 @@ import NavBar from './Components/NavBar';
 import * as CSS from "./css.js";
 import { createRoot } from "react-dom/client";
 
+//import redux stuff here
+import { Provider } from 'react-redux';
+import store from "./Components/Redux/Store/store.js";
+
 
 //import Material UI Stuff here
 
@@ -16,7 +20,9 @@ const container = document.getElementById("root");
 const root = createRoot(container);
 root.render(
   <div id="app" style={{...CSS.appStyle}}>
-    <HomePage></HomePage>
+    <Provider store={store}>
+      <HomePage></HomePage>
+    </Provider>
   </div>
 )
 

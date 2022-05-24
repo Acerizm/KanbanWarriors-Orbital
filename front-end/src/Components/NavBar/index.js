@@ -13,6 +13,11 @@ import NotesIcon from '@mui/icons-material/Notes';
 import SettingsIcon from '@mui/icons-material/Settings';
 import TemporaryDrawer from "../BackgroundCategories/index.js";
 
+// import Redux stuff here
+import { useDispatch, useSelector } from "react-redux";
+// import all the reducers you want to use here
+import { toggleDrawerOn, selectDrawerState } from "../Redux/Reducers/BackgroundImage/BackgroundImageSlice.js";
+
 // 1. Using Material-UI "themes" to alter their components/APIs
 const navBarTheme = createTheme({
     components: {
@@ -37,9 +42,17 @@ const NavBar = ({props}) => {
     const [showCategories, setCategories] = React.useState(0);
 
     let testDiv;
-    if (showCategories==1){
+    // if (showCategories==1){
+    //     testDiv = <TemporaryDrawer/>
+    // }
+    const isDrawerOn = useSelector(selectDrawerState);
+    if (isDrawerOn) {
         testDiv = <TemporaryDrawer/>
     }
+
+    //redux stuff here
+    const dispatch = useDispatch();
+
     return (
         <div className="handle" style={{...CSS.navBarContainerStyle}}>
             <Desktop>
@@ -54,7 +67,8 @@ const NavBar = ({props}) => {
                         >
                         <BottomNavigationAction label="Background" icon={<WallpaperIcon/>} 
                             onClick={
-                                () => setCategories(1)
+                                // () => setCategories(1)
+                                () => dispatch(toggleDrawerOn())
                             }
                         />
                         <BottomNavigationAction label="Timer" icon={<TimerIcon />}

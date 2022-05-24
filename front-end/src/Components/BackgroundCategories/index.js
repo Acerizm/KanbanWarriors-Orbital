@@ -11,27 +11,33 @@ import ListItemText from '@mui/material/ListItemText';
 import InboxIcon from '@mui/icons-material/MoveToInbox';
 import MailIcon from '@mui/icons-material/Mail';
 
+// import Redux stuff here
+import { selectDrawerState, toggleDrawerOn, toggleDrawerOff } from '../Redux/Reducers/BackgroundImage/BackgroundImageSlice';
+import { useDispatch, useSelector } from 'react-redux';
+
 export default function TemporaryDrawer() {
-    // hooks are here
-    
-  const [isDrawerOn, setDrawerState] = React.useState(false);
+  // Redux stuff here
+  const dispatch = useDispatch();
+  // Our redux state here for "isDrawerOn" state
+  const isDrawerOn = useSelector(selectDrawerState);
 
   const toggleDrawer = () => (event) => {
     if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
       return;
     }
-
-    // setState({ ...state, [anchor]: open });
-    setDrawerState(true)
+    // change the "isDrawerOpen" state here to false
+    dispatch(toggleDrawerOff());  
+    console.log(isDrawerOn);
   };
 
   const list = () => (
     <Box
-    //   sx={{ width: anchor === 'top' || anchor === 'bottom' ? 'auto' : 250 }}
-      sx={{ width: '250' }}
+      //sx={{ width: anchor === 'top' || anchor === 'bottom' ? 'auto' : 250 }}
+      sx={{ width: "auto" }}
       role="presentation"
-      onClick={() => toggleDrawer()}
-      onKeyDown={ () => toggleDrawer()}
+      // make onClick and onKeyDown change "isDrawerOpen" to false
+      // onClick={() => dispatch(toggleDrawerOff())}
+      // onKeyDown={ () => dispatch(toggleDrawerOff())}
     >
       <List>
         {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
@@ -66,7 +72,8 @@ export default function TemporaryDrawer() {
           <Drawer
             anchor={'left'}
             open={isDrawerOn}
-            onClose={() => toggleDrawer()}
+            transitionDuration={1000}
+            onClose={() => dispatch(toggleDrawerOff())}
           >
             {list()}
           </Drawer>
