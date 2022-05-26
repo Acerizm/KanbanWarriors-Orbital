@@ -1,83 +1,147 @@
 import * as React from 'react';
+
+// import Material UI Stuff here
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
-import Button from '@mui/material/Button';
-import List from '@mui/material/List';
-import Divider from '@mui/material/Divider';
-import ListItem from '@mui/material/ListItem';
-import ListItemButton from '@mui/material/ListItemButton';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import ListItemText from '@mui/material/ListItemText';
-import InboxIcon from '@mui/icons-material/MoveToInbox';
-import MailIcon from '@mui/icons-material/Mail';
+import IconButton from '@mui/material/IconButton';
+import Stack from '@mui/material/Stack';
+import RocketIcon from '@mui/icons-material/Rocket';
+import PetsIcon from '@mui/icons-material/Pets';
+import LocationCityIcon from '@mui/icons-material/LocationCity';
+import SurfingIcon from '@mui/icons-material/Surfing';
+import { Typography } from '@mui/material';
+
+// import custom css file here
+import "./BackgroundCategories.css";
+
+// Import ImageKit APIs here
+import { IKImage } from 'imagekitio-react';
+import { urlEndpoint } from "../../Routes/index.js";
 
 // import Redux stuff here
-import { selectDrawerState, toggleDrawerOn, toggleDrawerOff } from '../Redux/Reducers/BackgroundImage/BackgroundImageSlice';
+// import { selectDrawerState, toggleDrawerOff, changeSpaceImage, selectSpaceImageState, changeSpaceImageId } from '../Redux/Reducers/BackgroundImage/BackgroundImageSlice';
 import { useDispatch, useSelector } from 'react-redux';
+import * as REDUX from "../Redux/Reducers/BackgroundImage/BackgroundImageSlice.js";
 
-export default function TemporaryDrawer() {
+// ------------------------------------- Drawer (Material UI) Feature/Component ------------------------------------------------------------------------------------
+// styling for Drawer
+export const TemporaryDrawer = () => {
   // Redux stuff here
   const dispatch = useDispatch();
   // Our redux state here for "isDrawerOn" state
-  const isDrawerOn = useSelector(selectDrawerState);
-
-  const toggleDrawer = () => (event) => {
-    if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
-      return;
-    }
-    // change the "isDrawerOpen" state here to false
-    dispatch(toggleDrawerOff());  
-    console.log(isDrawerOn);
-  };
+  const isDrawerOn = useSelector(REDUX.selectDrawerState);
 
   const list = () => (
     <Box
-      //sx={{ width: anchor === 'top' || anchor === 'bottom' ? 'auto' : 250 }}
-      sx={{ width: "auto" }}
+      sx={{ width: "auto", height: "10vh" }}
       role="presentation"
       // make onClick and onKeyDown change "isDrawerOpen" to false
       // onClick={() => dispatch(toggleDrawerOff())}
-      // onKeyDown={ () => dispatch(toggleDrawerOff())}
+      onKeyDown={ () => dispatch(REDUX.toggleDrawerOff())}
     >
-      <List>
-        {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
-          <ListItem key={text} disablePadding>
-            <ListItemButton>
-              <ListItemIcon>
-                {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-              </ListItemIcon>
-              <ListItemText primary={text} />
-            </ListItemButton>
-          </ListItem>
-        ))}
-      </List>
-      <Divider />
-      <List>
-        {['All mail', 'Trash', 'Spam'].map((text, index) => (
-          <ListItem key={text} disablePadding>
-            <ListItemButton>
-              <ListItemIcon>
-                {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-              </ListItemIcon>
-              <ListItemText primary={text} />
-            </ListItemButton>
-          </ListItem>
-        ))}
-      </List>
+      <Stack direction="row" spacing={20} justifyContent="center" alignItems="center" height="100%">
+        <Stack direction="column" spacing={1} justifyContent="center" alignItems="center">
+          <Typography variant="button" display="block">
+            Space
+          </Typography>
+          <IconButton aria-label="space" onClick={() => dispatch(REDUX.changeSpaceImage())}>
+            <RocketIcon/>
+          </IconButton>
+        </Stack>
+        <Stack direction="column" spacing={1} justifyContent="center" alignItems="center">
+        <Typography variant="button" display="block">
+            Wildlife
+          </Typography>
+          <IconButton aria-label="Wildlife">
+            <PetsIcon/>
+          </IconButton>
+        </Stack>
+        <Stack direction="column" spacing={1} justifyContent="center" alignItems="center">
+        <Typography variant="button" display="block">
+            City
+          </Typography>
+          <IconButton aria-label="City">
+            <LocationCityIcon/>
+          </IconButton>
+        </Stack>
+        <Stack direction="column" spacing={1} justifyContent="center" alignItems="center">
+        <Typography variant="button" display="block">
+            Beach
+          </Typography>
+          <IconButton aria-label="Beach">
+            <SurfingIcon/>
+          </IconButton>
+        </Stack>     
+      </Stack>
     </Box>
   );
 
   return (
     <div>
-          <Drawer
-            anchor={'left'}
-            open={isDrawerOn}
-            transitionDuration={1000}
-            onClose={() => dispatch(toggleDrawerOff())}
-          >
-            {list()}
-          </Drawer>
+      <Drawer
+        anchor={'bottom'}
+        open={isDrawerOn}
+        onClose={() => dispatch(REDUX.toggleDrawerOff())}
+      >
+        {list()}
+      </Drawer>
     </div>
   );
 }
 
+// ----------------------------------- Background Images Feature/Component ------------------------------------------------------------------------------------------
+
+// rng component for calculating 
+// const rng = () => {
+//   return Math.floor(Math.random() * 5) + 1;
+// }
+
+// Imagekit API here for conditional rendering
+// IKImage component refers to the component to retrieve/store images using Imagekit.io API
+// link -> https://docs.imagekit.io/getting-started/quickstart-guides/react
+
+export const BackgroundImage = () => {
+  // redux stuff here
+  const dispatch = useDispatch();
+  // selectors here
+  // observer pattern is used here
+  const isSpaceSelected = useSelector(REDUX.selectSpace);
+  const updatedSpaceImageId = useSelector(REDUX.updatedSpaceImageId);
+  const isWildlifeSelected = useSelector(REDUX.selectWildlife);
+  const updatedWildlifeImageId = useSelector(REDUX.updatedWildlifeImageId);
+  const isBeachSelected = useSelector(REDUX.selectBeach);
+  const updatedBeachImageId = useSelector(REDUX.updatedBeachImageId);
+  const isCitySelected = useSelector(REDUX.selectCity);
+  const updatedCityImageId = useSelector(REDUX.selectCity);
+
+  // relative path for ImageKitAPI
+  var path;
+  // check what is selected
+  if(isSpaceSelected) {
+    path = "../Categories/Space/" + updatedSpaceImageId + ".jpg";
+  } else if (isWildlifeSelected) {
+    path = "../Categories/Wildlife/" + updatedWildlifeImageId + ".jpg";
+  } else if (isBeachSelected) {
+    path = "../Categories/Wildlife/" + updatedBeachImageId + ".jpg";
+  } else if (isCitySelected) {
+    path = "../Categories/Wildlife/" + updatedCityImageId + ".jpg";
+  } else {
+    // when the user dosn't select anything else
+    path = "../Categories/Space/" + updatedSpaceImageId + ".jpg"
+  }
+
+  return(
+      <React.Fragment>
+          <IKImage 
+              urlEndpoint={urlEndpoint}
+              path={path}
+              width="100%"
+              height="100%"
+              id="background"
+              // Example API URL -> https://ik.imagekit.io/acerizm/KanbanWarriors/Categories/Space/1.jpg
+          />
+      </React.Fragment>
+  )
+}
+
+// --------------------------- Exporting Components ---------------------------------------------
