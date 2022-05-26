@@ -1,0 +1,6 @@
+#background {
+    /* border: 2px solid green; */
+    /* move this css to background categories in the future */
+    grid-column: 1;
+    grid-row: 1 / 3;
+}

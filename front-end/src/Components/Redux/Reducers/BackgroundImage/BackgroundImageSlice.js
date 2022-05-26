@@ -15,7 +15,7 @@ const backgroundImageSlice = createSlice({
         },
         wildlife: {
             isWildlifeSelected: false,
-            currentWildifeImageId: 1
+            currentWildlifeImageId: 1
         },
         city: {
             isCitySelected: false,
@@ -23,7 +23,7 @@ const backgroundImageSlice = createSlice({
         },
         beach: {
             isBeachSelected: false,
-            currentBeachId: 1
+            currentBeachImageId: 1
         }
     },
     // root reducer
@@ -68,13 +68,52 @@ const backgroundImageSlice = createSlice({
             } else {
                 state.space.currentSpaceImageId += 1;
             }
+        },
+        changeWildlifeImage(state) {
+            state.space.isSpaceSelected = false;
+            state.wildlife.isWildlifeSelected = true;
+            state.city.isCitySelected = false;
+            state.beach.isBeachSelected = false;
+            var max = 5;
+            var min = 1;
+            if (state.wildlife.currentWildlifeImageId == 5) {
+                state.wildlife.currentWildlifeImageId = 1;
+            } else {
+                state.wildlife.currentWildlifeImageId += 1;
+            }
+        },
+        changeCityImage(state) {
+            state.space.isSpaceSelected = false;
+            state.wildlife.isWildlifeSelected = false;
+            state.city.isCitySelected = true;
+            state.beach.isBeachSelected = false;
+            var max = 5;
+            var min = 1;
+            if (state.city.currentCityImageId == 5) {
+                state.city.currentCityImageId = 1;
+            } else {
+                state.city.currentCityImageId += 1;
+            }
+        },
+        changeBeachImage(state) {
+            state.space.isSpaceSelected = false;
+            state.wildlife.isWildlifeSelected = false;
+            state.city.isCitySelected = false;
+            state.beach.isBeachSelected = true;
+            var max = 5;
+            var min = 1;
+            if (state.beach.currentBeachImageId == 5) {
+                state.beach.currentBeachImageId = 1;
+            } else {
+                state.beach.currentBeachImageId += 1;
+            }
         }
     }
 })
 
 // ------------------------------- Exporting Actions/Reducers ---------------------------------------------------------------------------
 
-export const {toggleDrawerOn,toggleDrawerOff,changeSpaceImage} = backgroundImageSlice.actions;
+export const {toggleDrawerOn,toggleDrawerOff,changeSpaceImage,changeWildlifeImage,changeCityImage,changeBeachImage} = backgroundImageSlice.actions;
 
 export default backgroundImageSlice.reducer;
 
@@ -95,6 +134,6 @@ export const selectBeach = state => state.backgroundImage.beach.isBeachSelected;
 
 //for the image id of respective categories
 export const updatedSpaceImageId = state => state.backgroundImage.space.currentSpaceImageId;
-export const updatedWildlifeImageId = state => state.backgroundImage.wildlife.currentWildifeImageId;
+export const updatedWildlifeImageId = state => state.backgroundImage.wildlife.currentWildlifeImageId;
 export const updatedCityImageId = state => state.backgroundImage.city.currentCityImageId;
-export const updatedBeachImageId = state => state.backgroundImage.beach.currentBeachId;
+export const updatedBeachImageId = state => state.backgroundImage.beach.currentBeachImageId;

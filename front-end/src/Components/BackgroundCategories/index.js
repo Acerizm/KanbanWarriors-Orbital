@@ -52,7 +52,7 @@ export const TemporaryDrawer = () => {
         <Typography variant="button" display="block">
             Wildlife
           </Typography>
-          <IconButton aria-label="Wildlife">
+          <IconButton aria-label="Wildlife" onClick={() => dispatch(REDUX.changeWildlifeImage())}>
             <PetsIcon/>
           </IconButton>
         </Stack>
@@ -60,7 +60,7 @@ export const TemporaryDrawer = () => {
         <Typography variant="button" display="block">
             City
           </Typography>
-          <IconButton aria-label="City">
+          <IconButton aria-label="City" onClick={()=> dispatch(REDUX.changeCityImage())}>
             <LocationCityIcon/>
           </IconButton>
         </Stack>
@@ -68,7 +68,7 @@ export const TemporaryDrawer = () => {
         <Typography variant="button" display="block">
             Beach
           </Typography>
-          <IconButton aria-label="Beach">
+          <IconButton aria-label="Beach" onClick={()=> dispatch(REDUX.changeBeachImage())}>
             <SurfingIcon/>
           </IconButton>
         </Stack>     
@@ -112,7 +112,7 @@ export const BackgroundImage = () => {
   const isBeachSelected = useSelector(REDUX.selectBeach);
   const updatedBeachImageId = useSelector(REDUX.updatedBeachImageId);
   const isCitySelected = useSelector(REDUX.selectCity);
-  const updatedCityImageId = useSelector(REDUX.selectCity);
+  const updatedCityImageId = useSelector(REDUX.updatedCityImageId);
 
   // relative path for ImageKitAPI
   var path;
@@ -122,12 +122,13 @@ export const BackgroundImage = () => {
   } else if (isWildlifeSelected) {
     path = "../Categories/Wildlife/" + updatedWildlifeImageId + ".jpg";
   } else if (isBeachSelected) {
-    path = "../Categories/Wildlife/" + updatedBeachImageId + ".jpg";
+    path = "../Categories/Beach/" + updatedBeachImageId + ".jpg";
   } else if (isCitySelected) {
-    path = "../Categories/Wildlife/" + updatedCityImageId + ".jpg";
+    path = "../Categories/City/" + updatedCityImageId + ".jpg";
+    console.log(path);
   } else {
     // when the user dosn't select anything else
-    path = "../Categories/Space/" + updatedSpaceImageId + ".jpg"
+    path = "../Categories/Wildlife/" + updatedWildlifeImageId + ".jpg"
   }
 
   return(
