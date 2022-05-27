@@ -25,6 +25,10 @@ const backgroundImageSlice = createSlice({
             isBeachSelected: false,
             currentBeachImageId: 1
         }
+        random: {
+            isRandomSelected: false,
+            currentRandomImageId: 1
+        }
     },
     // root reducer
     reducers: {
@@ -60,6 +64,7 @@ const backgroundImageSlice = createSlice({
             state.wildlife.isWildlifeSelected = false;
             state.city.isCitySelected = false;
             state.beach.isBeachSelected = false;
+            state.random.isRandomSelected = false;
             // algo for changing the current image to a random image with min and max value
             var max = 5;
             var min = 1;
@@ -74,6 +79,7 @@ const backgroundImageSlice = createSlice({
             state.wildlife.isWildlifeSelected = true;
             state.city.isCitySelected = false;
             state.beach.isBeachSelected = false;
+            state.random.isRandomSelected = false;
             var max = 5;
             var min = 1;
             if (state.wildlife.currentWildlifeImageId == 5) {
@@ -87,6 +93,7 @@ const backgroundImageSlice = createSlice({
             state.wildlife.isWildlifeSelected = false;
             state.city.isCitySelected = true;
             state.beach.isBeachSelected = false;
+            state.random.isRandomSelected = false;
             var max = 5;
             var min = 1;
             if (state.city.currentCityImageId == 5) {
@@ -100,12 +107,27 @@ const backgroundImageSlice = createSlice({
             state.wildlife.isWildlifeSelected = false;
             state.city.isCitySelected = false;
             state.beach.isBeachSelected = true;
+            state.random.isRandomSelected = false;
             var max = 5;
             var min = 1;
             if (state.beach.currentBeachImageId == 5) {
                 state.beach.currentBeachImageId = 1;
             } else {
                 state.beach.currentBeachImageId += 1;
+            }
+        }
+        changeRandomImage(state) {
+            state.space.isSpaceSelected = false;
+            state.wildlife.isWildlifeSelected = false;
+            state.city.isCitySelected = false;
+            state.beach.isBeachSelected = false;
+            state.random.isRandomSelected = true;
+            var max = 5;
+            var min = 1;
+            if (state.beach.currentRandomImageId == 5) {
+                state.beach.currentRandomImageId = 1;
+            } else {
+                state.beach.currentRandomImageId += 1;
             }
         }
     }
@@ -131,9 +153,12 @@ export const selectSpace = state => state.backgroundImage.space.isSpaceSelected;
 export const selectWildlife = state => state.backgroundImage.wildlife.isWildlifeSelected;
 export const selectCity = state => state.backgroundImage.city.isCitySelected;
 export const selectBeach = state => state.backgroundImage.beach.isBeachSelected;
+export const selectRandom = state => state.backgroundImage.beach.isRandomSelected;
 
 //for the image id of respective categories
 export const updatedSpaceImageId = state => state.backgroundImage.space.currentSpaceImageId;
 export const updatedWildlifeImageId = state => state.backgroundImage.wildlife.currentWildlifeImageId;
 export const updatedCityImageId = state => state.backgroundImage.city.currentCityImageId;
 export const updatedBeachImageId = state => state.backgroundImage.beach.currentBeachImageId;
+
+
