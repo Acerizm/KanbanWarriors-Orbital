@@ -1,27 +1,25 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\acehq\\Documents\\GitHub\\KanbanWarriors-Orbital\\back-end\\back-end\\back-end.csproj": {}
+    "/Users/ashiq/Documents/GitHub/KanbanWarriors-Orbital/back-end/back-end/back-end.csproj": {}
   },
   "projects": {
-    "C:\\Users\\acehq\\Documents\\GitHub\\KanbanWarriors-Orbital\\back-end\\back-end\\back-end.csproj": {
+    "/Users/ashiq/Documents/GitHub/KanbanWarriors-Orbital/back-end/back-end/back-end.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\acehq\\Documents\\GitHub\\KanbanWarriors-Orbital\\back-end\\back-end\\back-end.csproj",
+        "projectUniqueName": "/Users/ashiq/Documents/GitHub/KanbanWarriors-Orbital/back-end/back-end/back-end.csproj",
         "projectName": "back-end",
-        "projectPath": "C:\\Users\\acehq\\Documents\\GitHub\\KanbanWarriors-Orbital\\back-end\\back-end\\back-end.csproj",
-        "packagesPath": "C:\\Users\\acehq\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\acehq\\Documents\\GitHub\\KanbanWarriors-Orbital\\back-end\\back-end\\obj\\",
+        "projectPath": "/Users/ashiq/Documents/GitHub/KanbanWarriors-Orbital/back-end/back-end/back-end.csproj",
+        "packagesPath": "/Users/ashiq/.nuget/packages/",
+        "outputPath": "/Users/ashiq/Documents/GitHub/KanbanWarriors-Orbital/back-end/back-end/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\acehq\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+          "/Users/ashiq/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net6.0"
         ],
         "sources": {
-          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -71,7 +69,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.300\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/6.0.203/RuntimeIdentifierGraph.json"
         }
       }
     }

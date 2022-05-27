@@ -42,6 +42,13 @@
              <response code="201">Returns the newly created item</response>
              <response code="400">If the item is null</response>       
         </member>
+        <member name="M:back_end.Controllers.BackgroundImagesController.GetImageFromCategory(System.String)">
+            <summary>
+            Gets all of the backgroundImages based on category Id
+            </summary>
+            <param name="category"></param>
+            <returns></returns>
+        </member>
         <member name="M:back_end.Controllers.BackgroundImagesController.CreateNewCategory(System.String,System.Collections.Generic.List{System.Int32},System.String)">
              <summary>
              Create a new category of images
@@ -52,7 +59,7 @@
                   /CreateNewCategory
                  {
                     "id": "5cea58888578a12e180e9703",
-                    "category": "Samsung",
+                    "category": "Wildlife",
                     "backgroundImages": [1,2],
                     "cloudinaryRP": "./."
                  }

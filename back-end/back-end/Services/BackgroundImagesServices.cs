@@ -49,6 +49,12 @@ namespace back_end.Services
             return images;
         }
 
+        public Images GetCategory(string category)
+        {
+            Images images = imagesCollection.Find(images => images.category == category).FirstOrDefault();
+            return images;
+        }
+
         // 3.Create a new category of images
         public Images Create(Images images)
         {

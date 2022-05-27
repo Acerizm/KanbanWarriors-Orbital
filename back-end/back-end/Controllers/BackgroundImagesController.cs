@@ -80,6 +80,32 @@ namespace back_end.Controllers
         }
 
         /// <summary>
+        /// Gets all of the backgroundImages based on category Id
+        /// </summary>
+        /// Sample request:
+        ///
+        ///      /GetImagesFromCategory/{Id}
+        ///     {
+        ///        "id": "5ce37619a9e07c300c1e6a7d",
+        ///        "category": "Nature",
+        ///        "backgroundImages": [1,2],
+        ///        "cloudinaryRP": "/relative_path"
+        ///     }
+        ///
+        /// <param name="category"></param>
+        /// <returns></returns>
+        [Route("GetImagefromCategory/{category}")]
+        [HttpGet]
+        public async Task<ActionResult<Images>> GetImageFromCategory(string category)
+        {
+            Images images = await Task.Run(() => backgroundImagesServices.GetCategory(category));
+            if (images == null)
+                return null;
+            else
+                return images;
+        }
+
+        /// <summary>
         /// Create a new category of images
         /// </summary>
         /// <remarks>
