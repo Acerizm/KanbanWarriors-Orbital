@@ -7,7 +7,7 @@ import * as CSS from "./css.js"
 // import Auth Components here
 //import { GoogleSignIn } from "../../Firebase/index.js";
 //import { useAuthState } from 'react-firebase-hooks/auth';
-import { useSignInWithGoogle } from 'react-firebase-hooks/auth';
+import { useSignInWithGoogle,useSignInWithFacebook, useSignInWithTwitter } from 'react-firebase-hooks/auth';
 import { auth } from "../../Firebase/index.js";
 
 import { Navigate } from "react-router-dom";
@@ -48,31 +48,29 @@ export const CustomDivider = () => {
 
 export const LoginSection = () => {
     const [signInWithGoogle, user, loading, error] = useSignInWithGoogle(auth);
-    if(loading) {
+    const [signInWithFacebook, userFacebook, loadingFacebook, errorFacebook] = useSignInWithFacebook(auth);
+    const [signInWithTwitter, userTwitter, loadingTwitter, errorTwitter] = useSignInWithTwitter(auth);
+    if(loading || loadingFacebook || loadingTwitter) {
         //show loading screen in the future
     }
-    if(user) {
+    if(user || userFacebook || userTwitter) {
         // when the user manages to log in
-        //return <Navigate to="/home" replace="true" />
-        console.log(auth);
         window.location.assign("/home");
     } 
-    if(error) {
-        console.log(error);
+    if(error || errorFacebook || errorTwitter) {
+        console.log(errorTwitter);
     }
     return(
        <div id="LoginSection" style={{...CSS.LoginSectionContainerStyle}}>
-           <div id="GoogleLoginButton" style={{...CSS.LoginButtonStyle}} onClick={
-               () => signInWithGoogle()
-           }>
+           <div id="GoogleLoginButton" style={{...CSS.LoginButtonStyle}} onClick={() => signInWithGoogle()}>
                 <Google sx={{...CSS.IconStyle}}/>
                 <div className="SSO link" style={{...CSS.SsoLinkStyle}}>Continue with Google</div>
            </div>
-           <div id="TwitterLoginButton" style={{...CSS.LoginButtonStyle}}>
+           <div id="TwitterLoginButton" style={{...CSS.LoginButtonStyle}} onClick={() => signInWithTwitter()}>
                 <Twitter sx={{...CSS.IconStyle}}/>
                 <div className="SSO link" style={{...CSS.SsoLinkStyle}}>Continue with Twitter</div>
             </div>
-           <div id="FacebookLoginButton" style={{...CSS.LoginButtonStyle}}>
+           <div id="FacebookLoginButton" style={{...CSS.LoginButtonStyle}} onClick={() => signInWithFacebook()}>
                 <Facebook sx={{...CSS.IconStyle}}/>
                 <div className="SSO link" style={{...CSS.SsoLinkStyle}}>Continue with Facebook</div>
            </div>
