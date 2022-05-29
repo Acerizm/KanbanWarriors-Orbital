@@ -5,8 +5,12 @@ import { ThemeProvider } from '@mui/material/styles';
 import * as CSS from "./css.js"
 
 // import Auth Components here
-import { GoogleSignIn } from "../../Firebase/index.js";
+//import { GoogleSignIn } from "../../Firebase/index.js";
+//import { useAuthState } from 'react-firebase-hooks/auth';
+import { useSignInWithGoogle } from 'react-firebase-hooks/auth';
+import { auth } from "../../Firebase/index.js";
 
+import { Navigate } from "react-router-dom";
 const ariaLabel = { 'aria-label': 'description' };
 
 export const TextInputSection = () => {
@@ -43,12 +47,24 @@ export const CustomDivider = () => {
 }
 
 export const LoginSection = () => {
+    //const selector = useSelector(selectSignInMethod);
+    // Initialize Firebase Authentication and get a reference to the service
+    //const auth = getAuth(app);
+    const [signInWithGoogle, user, loading, error] = useSignInWithGoogle(auth);
+    if(loading) {
+        //show loading screen in the future
+        console.log("loading")
+    } else if (user) {
+        // when the user manages to log in
+        //return <Navigate to="/home" replace="true" />
+        window.location.assign("/home");
+    } else {
+        //return <Navigate to="/SignIn" replace="true" />
+    }
     return(
        <div id="LoginSection" style={{...CSS.LoginSectionContainerStyle}}>
            <div id="GoogleLoginButton" style={{...CSS.LoginButtonStyle}} onClick={
-               () => {
-                   GoogleSignIn();
-               }
+               () => signInWithGoogle()
            }>
                 <Google sx={{...CSS.IconStyle}}/>
                 <div className="SSO link" style={{...CSS.SsoLinkStyle}}>Continue with Google</div>

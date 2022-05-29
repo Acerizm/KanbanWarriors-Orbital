@@ -3,17 +3,27 @@ import { createSlice } from "@reduxjs/toolkit";
 const AuthenticationSlice = createSlice({
     name: "Authentication",
     initialState: {
-        user: null
+        method: "none",
+
     },
     reducers: {
-        saveUserAuthentication(state,action) {
-            state.user = action.payload;
+        signInWith(state,action) {
+            // switch(action.payload) {
+            //     case "Google":
+            //         state.method = "Google"
+            //         break;
+            //     default:
+            //         break;
+            // }
+            if (action.payload == "Google") {
+                state.method = "Google";
+            }
         }
     }
 });
 
-export const {saveUserAuthentication} = AuthenticationSlice.actions;
+export const {signInWith} = AuthenticationSlice.actions;
 export default AuthenticationSlice.reducer;
 
 //Selectors
-export const selectUserAuth = state => state.AuthenticationSlice.user;
+export const selectSignInMethod = state => state.Authentication.method;

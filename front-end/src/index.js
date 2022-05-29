@@ -7,13 +7,18 @@ import * as CSS from "./css.js";
 import { createRoot } from "react-dom/client";
 
 //import redux stuff here
-import { Provider } from 'react-redux';
+import { Provider,useSelector } from 'react-redux';
 import store from "./Components/Redux/Store/store.js";
+import { selectSignInMethod } from './Components/Redux/Reducers/Authentication/AuthenticationSlice';
 
 // import React Routing components here
 import { BrowserRouter, Routes, Route, Navigate,Outlet } from 'react-router-dom';
 
-import { getAuth, onAuthStateChanged } from 'firebase/auth';
+// import Auth stuff here
+import { onAuthStateChanged } from 'firebase/auth';
+import { auth } from './Components/Auth/Firebase';
+import { useAuthState } from 'react-firebase-hooks/auth';
+// import { GoogleSignIn } from './Components/Auth/Firebase';
 
 
 
@@ -24,21 +29,22 @@ const container = document.getElementById("root");
 const root = createRoot(container);
 
 const ProtectedRoute = ({children}) => {
-  const auth = getAuth();
-  onAuthStateChanged(auth, (user) => {
-    if (user) {
-        // User is signed in, see docs for a list of available properties
-        // https://firebase.google.com/docs/reference/js/firebase.User
-        console.log("hello");
-        console.log(children);
-        return children;
-    } else {
-        console.log("yolo");
-        return <Navigate to="/SignIn" replace />;
-    }
-  });
+  //const [currentUser, setCurrentUser] = React.useState(null);
+  const [user, loading, error] = useAuthState(auth);
+  // console.log(auth);
+  // console.log(user);
+  if (loading) {
+    console.log("ord");
+  }
+  if (user) {
+    return children ? children : <Outlet />;
+  }
+  if (error || error == undefined) {
+    //need to show error message
+    console.log("error")
+    return <Navigate to="/SignIn" replace="true" />
+  }
 }
-
 
 root.render(
   <div id="app" style={{...CSS.appStyle}}>
