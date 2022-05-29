@@ -47,19 +47,18 @@ export const CustomDivider = () => {
 }
 
 export const LoginSection = () => {
-    //const selector = useSelector(selectSignInMethod);
-    // Initialize Firebase Authentication and get a reference to the service
-    //const auth = getAuth(app);
     const [signInWithGoogle, user, loading, error] = useSignInWithGoogle(auth);
     if(loading) {
         //show loading screen in the future
-        console.log("loading")
-    } else if (user) {
+    }
+    if(user) {
         // when the user manages to log in
         //return <Navigate to="/home" replace="true" />
+        console.log(auth);
         window.location.assign("/home");
-    } else {
-        //return <Navigate to="/SignIn" replace="true" />
+    } 
+    if(error) {
+        console.log(error);
     }
     return(
        <div id="LoginSection" style={{...CSS.LoginSectionContainerStyle}}>

@@ -29,19 +29,14 @@ const container = document.getElementById("root");
 const root = createRoot(container);
 
 const ProtectedRoute = ({children}) => {
-  //const [currentUser, setCurrentUser] = React.useState(null);
   const [user, loading, error] = useAuthState(auth);
-  // console.log(auth);
-  // console.log(user);
   if (loading) {
-    console.log("ord");
+    // show loading screen in the future
   }
   if (user) {
     return children ? children : <Outlet />;
-  }
-  if (error || error == undefined) {
+  } else if (error == undefined && user == null && loading == false) {
     //need to show error message
-    console.log("error")
     return <Navigate to="/SignIn" replace="true" />
   }
 }
