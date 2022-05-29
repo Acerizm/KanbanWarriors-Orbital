@@ -18,6 +18,7 @@ import { BrowserRouter, Routes, Route, Navigate,Outlet } from 'react-router-dom'
 import { onAuthStateChanged } from 'firebase/auth';
 import { auth } from './Components/Auth/Firebase';
 import { useAuthState } from 'react-firebase-hooks/auth';
+import { CreateNewUser } from './Components/Auth/CreateNewUser';
 // import { GoogleSignIn } from './Components/Auth/Firebase';
 
 
@@ -51,7 +52,7 @@ root.render(
           </Route>
           <Route path="/" element = {<SignInPage/>} />
           <Route path="/SignIn" element= {<SignInPage/>} />
-          {/* <Route path="/home" element={<HomePage/>}/> */}
+          <Route path="/NewUser" element={<CreateNewUser/>}/>
         </Routes>
       </BrowserRouter>
       {/* <HomePage></HomePage> */}

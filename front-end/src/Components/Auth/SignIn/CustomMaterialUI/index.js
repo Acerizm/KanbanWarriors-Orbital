@@ -1,4 +1,4 @@
-import React from "react";
+import React,{useState} from "react";
 import { Input,Divider,Button } from "@mui/material";
 import { Facebook,Twitter,Google,QuestionMark } from "@mui/icons-material";
 import { ThemeProvider } from '@mui/material/styles';
@@ -7,29 +7,60 @@ import * as CSS from "./css.js"
 // import Auth Components here
 //import { GoogleSignIn } from "../../Firebase/index.js";
 //import { useAuthState } from 'react-firebase-hooks/auth';
-import { useSignInWithGoogle,useSignInWithFacebook, useSignInWithTwitter } from 'react-firebase-hooks/auth';
+import { useSignInWithGoogle,useSignInWithFacebook, useSignInWithTwitter, useSignInWithEmailAndPassword } from 'react-firebase-hooks/auth';
 import { auth } from "../../Firebase/index.js";
 
 import { Navigate } from "react-router-dom";
 const ariaLabel = { 'aria-label': 'description' };
 
 export const TextInputSection = () => {
+    // React hooks is sufficient enough to know the state of the text fields
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [
+        signInWithEmailAndPassword,
+        user,
+        loading,
+        error,
+      ] = useSignInWithEmailAndPassword(auth);
+    if(error) {
+        // show error here
+        
+    }
+    if(loading) {
+
+    }
+    if(user) {
+        window.location.assign("/home");
+    }
     return (
         <div id="EmailSection" style={{...CSS.EmailSectionContainerStyle}}>
             <div className="emailSection" style={{...CSS.emailSectionStyle}}>
                 <div className="textInputHeadings" style={{...CSS.TextInputHeadings}}>EMAIL ADDRESS</div>
                 <ThemeProvider theme={{...CSS.EmailAddressTheme}}>
-                    <Input id="emailAddressInput" placeholder="name@example.com" inputProps={ariaLabel}/>
+                    <Input id="emailAddressInput" placeholder="name@example.com" inputProps={ariaLabel}
+                        onChange={
+                            (e) => setEmail(e.target.value)
+                        }
+                    />
                 </ThemeProvider>
             </div>
             <div className="passwordSection" style={{...CSS.passwordSectionStyle}}>
                 <ThemeProvider theme={{...CSS.PasswordTheme}}>
                     <div className="textInputHeadings" style={{...CSS.TextInputHeadings}}>PASSWORD</div>
-                    <Input id="passwordInput" placeholder="password" inputProps={ariaLabel}/>
+                    <Input id="passwordInput" placeholder="password" inputProps={ariaLabel}
+                        onChange={
+                            (e) => setPassword(e.target.value)
+                        }
+                    />
                 </ThemeProvider>    
             </div>
             <ThemeProvider theme={{...CSS.LoginButtonTheme}}>
-                <Button color="minimalistic" variant="outlined" sx={{marginRight: "30px"}}>Login</Button>
+                <Button color="minimalistic" variant="outlined" sx={{marginRight: "30px"}} 
+                    onClick={
+                        () => signInWithEmailAndPassword(email, password)
+                    }
+                >Login</Button>
             </ThemeProvider>
        </div>
     )
@@ -58,7 +89,7 @@ export const LoginSection = () => {
         window.location.assign("/home");
     } 
     if(error || errorFacebook || errorTwitter) {
-        console.log(errorTwitter);
+        // console.log(errorTwitter);
     }
     return(
        <div id="LoginSection" style={{...CSS.LoginSectionContainerStyle}}>
