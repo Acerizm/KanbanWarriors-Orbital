@@ -10,6 +10,7 @@ import { useNavigate } from "react-router-dom";
 // import Auth Components here
 import { useSignInWithEmailAndPassword } from 'react-firebase-hooks/auth';
 import { auth } from "../Firebase";
+import LinearDeterminate from "../../CustomMaterialUI/Loading";
 
 // ------------------------------------------- Sign in Feature -----------------------------------------------
 const SignInPage = () => {
@@ -56,10 +57,14 @@ const TextInputSection = () => {
       ] = useSignInWithEmailAndPassword(auth);
     if(error) {
         // show error here
-        
+        return (
+            <div>
+              <p>Error! Pls refresh the page and enter again! This feature is still experimental :p </p>
+            </div>
+          );
     }
     if(loading) {
-
+        return <LinearDeterminate/>
     }
     if(user) {
         window.location.assign("/home");
