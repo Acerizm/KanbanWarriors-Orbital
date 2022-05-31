@@ -7,19 +7,17 @@ import * as CSS from "./css.js";
 import { createRoot } from "react-dom/client";
 
 //import redux stuff here
-import { Provider,useSelector } from 'react-redux';
+import { Provider } from 'react-redux';
 import store from "./Components/Redux/Store/store.js";
-import { selectSignInMethod } from './Components/Redux/Reducers/Authentication/AuthenticationSlice';
 
 // import React Routing components here
 import { BrowserRouter, Routes, Route, Navigate,Outlet } from 'react-router-dom';
 
 // import Auth stuff here
-import { onAuthStateChanged } from 'firebase/auth';
 import { auth } from './Components/Auth/Firebase';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { CreateNewUser } from './Components/Auth/CreateNewUser';
-// import { GoogleSignIn } from './Components/Auth/Firebase';
+import { NewUserEmail } from './Components/Auth/NewUserEmail';
 
 
 
@@ -53,6 +51,7 @@ root.render(
           <Route path="/" element = {<SignInPage/>} />
           <Route path="/SignIn" element= {<SignInPage/>} />
           <Route path="/NewUser" element={<CreateNewUser/>}/>
+          <Route path="/NewEmail" element={<NewUserEmail/>} />
         </Routes>
       </BrowserRouter>
       {/* <HomePage></HomePage> */}
