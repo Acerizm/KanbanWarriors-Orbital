@@ -22,6 +22,7 @@ const SignInPage = () => {
     const navigate = useNavigate();
     return(
         <React.Fragment>
+            {alert(welcomeText)}
             <div id="SignInDesktopContainer" style={{...CSS.SignInDesktopContainerStyle}}>
                 <TextInputSection/>
                 <CustomDivider/>
@@ -142,5 +143,6 @@ const ErrorTextComponent = () => {
 }
 
 const errorText = "Error! You have entered either an invalid email or invalid password. Please try again."
+const welcomeText = "Welcome to KanbanWarriors Orbital Project. This is still a work in progress! :p"
 
 export default SignInPage;
