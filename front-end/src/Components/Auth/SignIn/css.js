@@ -68,17 +68,17 @@ export const LoginSectionContainerStyle = {
     alignItems: "center"
 }
 
-export const LoginButtonStyle = {
-    border: "2px solid black",
-    borderRadius: "5px",
-    height: "80%",
-    width: "380px",
-    display: "flex",
-    flexDirection: "row",
-    alignItems: "center",
-    cursor: "pointer",
-    marginLeft: "30px"
-}
+// export const LoginButtonStyle = {
+//     border: "2px solid black",
+//     borderRadius: "5px",
+//     height: "80%",
+//     width: "380px",
+//     display: "flex",
+//     flexDirection: "row",
+//     alignItems: "center",
+//     cursor: "pointer",
+//     marginLeft: "30px"
+// }
 
 export const IconStyle = {
     fontSize: "30px",
@@ -93,10 +93,33 @@ export const SsoLinkStyle = {
 
 export const NewUserLinkStyle = {
     fontSize: "13px",
+    fontFamily: "arial",
     gridRow: "3 / 4",
-    gridColumn: "2 / 3",
-    alignSelf: "start",
-    color: "black"
+    gridColumn: "1 / 1",
+    marginRight: "200px",
+    marginTop: "100px",
+    color: "black",
+    height: "20px",
+    //width: "50px"
+}
+
+export const ForgetPasswordLinkStyle = {
+    fontSize: "13px",
+    fontFamily: "arial",
+    gridRow: "3 / 4",
+    gridColumn: "1 / 1",
+    marginRight: "170px",
+    marginTop: "150px",
+    color: "black",
+    height: "20px",
+    //width: "50px"
+}
+
+export const errorTextComponentStyle = {
+    color: "red", 
+    fontFamily: "arial",
+    gridColumn: "1 / 2",
+    gridRow: "3 / 4"
 }
 
 //------------------------- Material UI Custom Styling --------------------------------------
@@ -142,7 +165,9 @@ export const LoginButtonTheme = createTheme({
                 root: {
                     width: "430px",
                     height: "45px",
-                    marginTop: "20px"
+                    marginTop: "20px",
+                    gridColumn: "1 / 1",
+                    gridRow: "3 / 4"
                 }
             }
         }

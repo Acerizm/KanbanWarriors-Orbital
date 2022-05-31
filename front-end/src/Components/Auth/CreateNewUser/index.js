@@ -9,7 +9,6 @@ export const CreateNewUser = () => {
     const navigate = useNavigate();
     return(
         <React.Fragment>
-            <Desktop>
                 <div id="CreateNewUserContainer" style={{...CSS.createNewUserContainerStyle}}>
                     <Button variant="text" sx={{...CSS.BackNavigationStyle}}
                         onClick={
@@ -23,7 +22,6 @@ export const CreateNewUser = () => {
                     >Login</Button>
                     <CreateNewAccountSsoButtons/>
                 </div>
-            </Desktop>
         </React.Fragment>
     )
 }

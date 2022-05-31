@@ -1,6 +1,8 @@
 import React,{useState} from "react";
 import * as CSS from "./css.js";
-import { Button, Input } from "@mui/material";
+import { Button, Input,InputAdornment,IconButton  } from "@mui/material";
+import Visibility from '@mui/icons-material/Visibility';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { ThemeProvider } from '@mui/material/styles';
 import Link from '@mui/material/Link';
 import { useNavigate } from "react-router-dom";
@@ -13,6 +15,7 @@ const ariaLabel = { 'aria-label': 'description' };
 export const NewUserEmail = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [isPasswordShown, togglePassword] = useState(false);
     const [
         createUserWithEmailAndPassword,
         user,
@@ -59,6 +62,28 @@ export const NewUserEmail = () => {
                     onChange={
                         (e) => setPassword(e.target.value)
                     }
+                    type={isPasswordShown ? 'text': 'password'}
+                        endAdornment={
+                            <InputAdornment position="end">
+                              <IconButton
+                                aria-label="toggle password visibility"
+                                onClick={
+                                    () => {
+                                        if(isPasswordShown) {
+                                            togglePassword(false)
+                                        } else {
+                                            togglePassword(true)
+                                        }
+                                    }
+                                }
+                                onMouseDown={
+                                    (e) => e.preventDefault()
+                                }
+                              >
+                                {isPasswordShown ? <VisibilityOff /> : <Visibility />}
+                              </IconButton>
+                            </InputAdornment>
+                        }
                 />
                 <ThemeProvider theme={{...CSS.continueButtonTheme}}>
                     <div className="TermsAndConditions" style={{...CSS.TermsAndConditionsStyle}}> By creating an account, you agree with our  

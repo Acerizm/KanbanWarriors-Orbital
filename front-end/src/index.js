@@ -18,6 +18,7 @@ import { auth } from './Components/Auth/Firebase';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { CreateNewUser } from './Components/Auth/CreateNewUser';
 import { NewUserEmail } from './Components/Auth/NewUserEmail';
+import { ForgetPasswordPage } from './Components/Auth/ForgetPassword';
 
 
 
@@ -46,15 +47,17 @@ root.render(
       <BrowserRouter>
         <Routes>
           <Route element={<ProtectedRoute/>}>
+              <Route path="/" element = {<HomePage/>} />
               <Route path="/home" element={<HomePage/>}/>
           </Route>
-          <Route path="/" element = {<SignInPage/>} />
           <Route path="/SignIn" element= {<SignInPage/>} />
           <Route path="/NewUser" element={<CreateNewUser/>}/>
           <Route path="/NewEmail" element={<NewUserEmail/>} />
+          <Route path="/ForgetPassword" element={<ForgetPasswordPage/>} />
+          {/* Route for when the user enters invalid URL // Do error page in the future */}
+          <Route path="*" element={<SignInPage/>} />
         </Routes>
       </BrowserRouter>
-      {/* <HomePage></HomePage> */}
     </Provider>
   </div>
 )
