@@ -1,4 +1,5 @@
 import * as React from 'react';
+import * as CSS from "./css.js";
 
 // import Material UI Stuff here
 import Box from '@mui/material/Box';
@@ -17,6 +18,9 @@ import "./BackgroundCategories.css";
 // Import ImageKit APIs here
 import { IKImage } from 'imagekitio-react';
 import { urlEndpoint } from "../../Routes/index.js";
+
+//Import Youtube here
+import YouTube from 'react-youtube';
 
 // import Redux stuff here
 // import { selectDrawerState, toggleDrawerOff, changeSpaceImage, selectSpaceImageState, changeSpaceImageId } from '../Redux/Reducers/BackgroundImage/BackgroundImageSlice';
@@ -92,9 +96,9 @@ export const TemporaryDrawer = () => {
 // ----------------------------------- Background Images Feature/Component ------------------------------------------------------------------------------------------
 
 // rng component for calculating 
-// const rng = () => {
-//   return Math.floor(Math.random() * 5) + 1;
-// }
+const rng = () => {
+  return Math.floor(Math.random() * 2) + 1;
+}
 
 // Imagekit API here for conditional rendering
 // IKImage component refers to the component to retrieve/store images using Imagekit.io API
@@ -116,33 +120,102 @@ export const BackgroundImage = () => {
 
   // relative path for ImageKitAPI
   var path;
+  let background;
   // check what is selected
   if(isSpaceSelected) {
     path = "../Categories/Space/" + updatedSpaceImageId + ".jpg";
-  } else if (isWildlifeSelected) {
-    path = "../Categories/Wildlife/" + updatedWildlifeImageId + ".jpg";
+    background = <ImageKitBackground urlEndpoint={urlEndpoint} path={path}/>
+  } else if (isWildlifeSelected) { 
+    let randomRng = rng();
+    if(randomRng == 1) {
+      path = "../Categories/Wildlife/" + updatedWildlifeImageId + ".jpg";
+      background = <ImageKitBackground urlEndpoint={urlEndpoint} path={path}/>
+    } else {
+      background = <Youtube2Background/>
+    }
   } else if (isBeachSelected) {
     path = "../Categories/Beach/" + updatedBeachImageId + ".jpg";
+    background = <ImageKitBackground urlEndpoint={urlEndpoint} path={path}/>
   } else if (isCitySelected) {
     path = "../Categories/City/" + updatedCityImageId + ".jpg";
-    console.log(path);
+    background = <ImageKitBackground urlEndpoint={urlEndpoint} path={path}/>
   } else {
     // when the user dosn't select anything else
-    path = "../Categories/Wildlife/" + updatedWildlifeImageId + ".jpg"
+    //path = "../Categories/Wildlife/" + updatedWildlifeImageId + ".jpg"
+    background = <Youtube2Background/>
   }
 
   return(
       <React.Fragment>
-          <IKImage 
-              urlEndpoint={urlEndpoint}
-              path={path}
-              width="100%"
-              height="100%"
-              id="background"
-              // Example API URL -> https://ik.imagekit.io/acerizm/KanbanWarriors/Categories/Space/1.jpg
-          />
+          {/* <ImageKitBackground urlEndpoint={urlEndpoint} path={path}/> */}
+          {/* <YoutubeBackground/> */}
+          {/* <Youtube2Background/> */}
+          {background}
       </React.Fragment>
   )
 }
 
-// --------------------------- Exporting Components ---------------------------------------------
+// this is where the imagekit component is
+
+const ImageKitBackground = ({urlEndpoint,path}) => {
+  return(
+    <React.Fragment>
+      <IKImage 
+          urlEndpoint={urlEndpoint}
+          path={path}
+          width="100%"
+          height="100%"
+          id="background"
+          // Example API URL -> https://ik.imagekit.io/acerizm/KanbanWarriors/Categories/Space/1.jpg
+      />
+    </React.Fragment>
+  )
+}
+
+// this is a test feature
+const Youtube2Background = () => {
+  return(
+    <div id="wrapperTest" style={{...CSS.wrapperTestStyle}}> 
+      <iframe id="iframeTest "src="https://www.youtube.com/embed/HjvIAJMbXi4?vq=hd1440&autoplay=1&controls=0&disablekb=1&loop=1&modestbranding=1&playsinline=1&color=white&mute=1&playlist=HjvIAJMbXi4&allowfullscreen&start=100" 
+        style={{...CSS.iframeStyle}}
+        frameborder="0" 
+        allow="fullscreen;"
+      >
+      </iframe>
+    </div>
+  )
+}
+
+// Youtube background component
+const YoutubeBackground = () => {
+  const opts = {
+    height: '100%',
+    width: '100%',  
+    playerVars: {
+      // https://developers.google.com/youtube/player_parameters
+      autoplay: 1,
+      controls: 0,
+      playsinline: 1,
+      disablekb: 1,
+      fs: 0,
+      iv_load_policy: 3,
+      loop: 1,
+      modestbranding: 1,
+      //start: 200,
+      rel: 0, 
+      mute: 1,
+
+    },
+  }
+  const onReady = (event) => {
+      event.target.pauseVideo();
+  }
+  return(
+    <React.Fragment>
+      {/* Pull the video ids from the database in the future */}
+      return <YouTube videoId="spxtEt6RaS4" opts={opts} onReady={(e) => onReady(e)} style={{...CSS.youtubeBackgroundStyle}} />;
+    </React.Fragment>
+  )
+}
+
+
