@@ -28,7 +28,9 @@ namespace back_end.Services
 
             var mongoDatabase = mongoClient.GetDatabase(backgroundImagesDatabaseSettings.Value.DatabaseName);
 
-            imagesCollection = mongoDatabase.GetCollection<Images>(backgroundImagesDatabaseSettings.Value.CollectionName);
+            imagesCollection = mongoDatabase.GetCollection<Images>(backgroundImagesDatabaseSettings.Value.CollectionNames.Find(
+                collectionName => collectionName == "Images"
+                )) ;
         }
 
         // CRUD interfaces will be done here

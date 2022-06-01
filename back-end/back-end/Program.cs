@@ -8,7 +8,11 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.Configure<BackgroundImagesDatabaseSettings>(
     builder.Configuration.GetSection("BackgroundImagesDatabase"));
+
+// Just keep adding services below
 builder.Services.AddSingleton<BackgroundImagesServices>();
+builder.Services.AddSingleton<VideosServices>();
+
 builder.Services.AddControllers()
     .AddJsonOptions(
         options => options.JsonSerializerOptions.PropertyNamingPolicy = null);
@@ -19,9 +23,11 @@ builder.Services.AddSwaggerGen(options =>
 {
     options.SwaggerDoc("v1", new OpenApiInfo
     {
-        Version = "v0.1",
+        Version = "v 0.2",
         Title = "KanbanWarriors APIs",
-        Description = "An ASP.NET Core Web API done by Haiqel & Ashiqur",
+        Description = 
+            "An ASP.NET Core Web Mircroservices backend done by Haiqel & Ashiqur." +
+            " This UI exists during development only and for testing of APIs",
     });
 
     var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";

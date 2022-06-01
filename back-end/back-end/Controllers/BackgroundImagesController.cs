@@ -67,7 +67,7 @@ namespace back_end.Controllers
         /// </remarks>
         /// <response code="201">Returns the newly created item</response>
         /// <response code="400">If the item is null</response>       
-        // GET: api/BackgroundImages/GetAllImages
+        // GET: api/BackgroundImages/GetImagesFromCategory/{Id}
         [Route("GetImagesFromCategory/{Id}")]
         [HttpGet]
         public async Task<ActionResult<Images>> GetImagesFromCategory(string Id)
