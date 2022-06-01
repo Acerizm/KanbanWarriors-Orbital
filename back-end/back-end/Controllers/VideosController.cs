@@ -241,7 +241,7 @@ namespace back_end.Controllers
         /// <remarks>
         /// Sample request:
         ///
-        ///      /AddVideosFromCategory
+        ///      /AddVideoFromCategory
         ///     {
         ///        "id": "62979eb0c19fd38c79cdb3b8",
         ///        "category": "Wildlife",
@@ -251,7 +251,7 @@ namespace back_end.Controllers
         /// </remarks>
         /// <response code="201">Returns the newly created item</response>
         /// <response code="400">If the item is null</response>       
-        // POST: api/BackgroundImages/UpdateVideosFromCategory
+        // POST: api/BackgroundImages/UpdateVideoFromCategory
 
         [Route("AddVideoFromCategory")]
         [HttpPut]
@@ -268,6 +268,37 @@ namespace back_end.Controllers
            updatedVideoCategory.videoList.Add(newVideoId);
             await videosServices.UpdateByCategoryAsync(category, updatedVideoCategory);
             return updatedVideoCategory;
+        }
+
+
+        /// <summary>
+        /// delete ALL videos from an exisiting category!
+        /// Please note that the video list contains "youtube video ids"
+        /// </summary>
+        /// <remarks>
+        /// Sample request:
+        ///
+        ///      /DeleteAllVideosFromCategory
+        ///     {
+        ///        "id": "62979eb0c19fd38c79cdb3b8",
+        ///        "category": "Wildlife",
+        ///        "videoList": ["anotherVideoId"],     
+        ///     }
+        ///
+        /// </remarks>
+        /// <response code="201">Returns the newly created item</response>
+        /// <response code="400">If the item is null</response>       
+        // POST: api/BackgroundImages/DeleteAllVideosFromCategory
+
+        [Route("DeleteAllVideosFromCategory")]
+        [HttpDelete]
+        public async Task<ActionResult<string>> DeleteAllVideosFromCategory(string category)
+        {
+            await videosServices.RemoveAsync(category);
+            // change the logic here in the future
+            // at the momemnt there is no use of deletion
+            // this is just an example to show a use case of deletion for other features such as To-Do list
+            return "Videos has been deleted :p";
         }
 
 

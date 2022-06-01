@@ -63,17 +63,17 @@ namespace back_end.Services
         }
 
         // Update existing category by category
+        // Change all interfaces in the future to be asynchronus
         public async Task UpdateByCategoryAsync(string category,Videos updatedVideos)
         {
             await videosCollection.ReplaceOneAsync(oldVideos => oldVideos.category == category, updatedVideos);
         }
 
 
-        // 5. Remove the whole category of images
-        public object Remove(string id)
+        // 5. Remove the whole category of videos by category
+        public async Task RemoveAsync(string category)
         {
-            var result = videosCollection.DeleteOne(videos => videos.id == id);
-            return result;
+            await videosCollection.DeleteOneAsync(videos => videos.category == category);
         }
     }
 }

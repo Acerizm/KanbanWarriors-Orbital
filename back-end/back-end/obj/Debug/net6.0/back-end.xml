@@ -180,7 +180,26 @@
              <remarks>
              Sample request:
             
-                  /AddVideosFromCategory
+                  /AddVideoFromCategory
+                 {
+                    "id": "62979eb0c19fd38c79cdb3b8",
+                    "category": "Wildlife",
+                    "videoList": ["anotherVideoId"],     
+                 }
+            
+             </remarks>
+             <response code="201">Returns the newly created item</response>
+             <response code="400">If the item is null</response>       
+        </member>
+        <member name="M:back_end.Controllers.VideosController.DeleteAllVideosFromCategory(System.String)">
+             <summary>
+             delete ALL videos from an exisiting category!
+             Please note that the video list contains "youtube video ids"
+             </summary>
+             <remarks>
+             Sample request:
+            
+                  /DeleteAllVideosFromCategory
                  {
                     "id": "62979eb0c19fd38c79cdb3b8",
                     "category": "Wildlife",
