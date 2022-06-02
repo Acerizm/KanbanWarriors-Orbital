@@ -19,6 +19,6 @@ export const iframeStyle = {
     //transform:"translateY(-50%)",
      width: "100vw",
      height: "100vh",
-    transform: "scale(1.5)"
+    transform: "scale(1.2)"
   }
   

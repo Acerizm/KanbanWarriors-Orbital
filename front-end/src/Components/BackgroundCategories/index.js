@@ -27,6 +27,9 @@ import YouTube from 'react-youtube';
 import { useDispatch, useSelector } from 'react-redux';
 import * as REDUX from "../Redux/Reducers/BackgroundImage/BackgroundImageSlice.js";
 
+// import AJAX stuff here
+import axios from "axios";
+
 // ------------------------------------- Drawer (Material UI) Feature/Component ------------------------------------------------------------------------------------
 // styling for Drawer
 export const TemporaryDrawer = () => {
@@ -97,7 +100,7 @@ export const TemporaryDrawer = () => {
 
 // rng component for calculating 
 const rng = () => {
-  return Math.floor(Math.random() * 2) + 1;
+  return Math.floor(Math.random() * 100) + 1;
 }
 
 // Imagekit API here for conditional rendering
@@ -117,21 +120,32 @@ export const BackgroundImage = () => {
   const updatedBeachImageId = useSelector(REDUX.updatedBeachImageId);
   const isCitySelected = useSelector(REDUX.selectCity);
   const updatedCityImageId = useSelector(REDUX.updatedCityImageId);
+  // ----------------------- for future
+  // Maybe move all this logic to the backend in the future
 
   // relative path for ImageKitAPI
   var path;
   let background;
+  // for youtube
+  const [videoId,setVideoId] = React.useState("");
   // check what is selected
   if(isSpaceSelected) {
     path = "../Categories/Space/" + updatedSpaceImageId + ".jpg";
     background = <ImageKitBackground urlEndpoint={urlEndpoint} path={path}/>
   } else if (isWildlifeSelected) { 
     let randomRng = rng();
-    if(randomRng == 1) {
+    console.log(randomRng);
+    if(randomRng <= 10) {
       path = "../Categories/Wildlife/" + updatedWildlifeImageId + ".jpg";
       background = <ImageKitBackground urlEndpoint={urlEndpoint} path={path}/>
     } else {
-      background = <Youtube2Background/>
+      // get the video from our api using Axios/AJAX
+      axios.get("http://159.223.91.154:500/api/Videos/GetRandomVideoFromCategory?category=Wildlife")
+        .then((response) => {
+          setVideoId(response.data);
+        }
+      );
+      background = <Youtube2Background videoId={videoId}/>
     }
   } else if (isBeachSelected) {
     path = "../Categories/Beach/" + updatedBeachImageId + ".jpg";
@@ -142,14 +156,11 @@ export const BackgroundImage = () => {
   } else {
     // when the user dosn't select anything else
     //path = "../Categories/Wildlife/" + updatedWildlifeImageId + ".jpg"
-    background = <Youtube2Background/>
+    background = <Youtube2Background videoId={"udJ8GniptHU"}/>
   }
 
   return(
       <React.Fragment>
-          {/* <ImageKitBackground urlEndpoint={urlEndpoint} path={path}/> */}
-          {/* <YoutubeBackground/> */}
-          {/* <Youtube2Background/> */}
           {background}
       </React.Fragment>
   )
@@ -173,10 +184,11 @@ const ImageKitBackground = ({urlEndpoint,path}) => {
 }
 
 // this is a test feature
-const Youtube2Background = () => {
+const Youtube2Background = ({videoId}) => {
+  let videoSource = "https://www.youtube.com/embed/" + videoId +"?vq=hd1440&autoplay=1&controls=0&disablekb=1&loop=1&modestbranding=1&playsinline=1&color=white&mute=1&playlist=" + videoId +"&allowfullscreen&start=100"
   return(
     <div id="wrapperTest" style={{...CSS.wrapperTestStyle}}> 
-      <iframe id="iframeTest "src="https://www.youtube.com/embed/HjvIAJMbXi4?vq=hd1440&autoplay=1&controls=0&disablekb=1&loop=1&modestbranding=1&playsinline=1&color=white&mute=1&playlist=HjvIAJMbXi4&allowfullscreen&start=100" 
+      <iframe id="iframeTest " src={videoSource} 
         style={{...CSS.iframeStyle}}
         frameborder="0" 
         allow="fullscreen;"
@@ -187,35 +199,35 @@ const Youtube2Background = () => {
 }
 
 // Youtube background component
-const YoutubeBackground = () => {
-  const opts = {
-    height: '100%',
-    width: '100%',  
-    playerVars: {
-      // https://developers.google.com/youtube/player_parameters
-      autoplay: 1,
-      controls: 0,
-      playsinline: 1,
-      disablekb: 1,
-      fs: 0,
-      iv_load_policy: 3,
-      loop: 1,
-      modestbranding: 1,
-      //start: 200,
-      rel: 0, 
-      mute: 1,
+// const YoutubeBackground = () => {
+//   const opts = {
+//     height: '100%',
+//     width: '100%',  
+//     playerVars: {
+//       // https://developers.google.com/youtube/player_parameters
+//       autoplay: 1,
+//       controls: 0,
+//       playsinline: 1,
+//       disablekb: 1,
+//       fs: 0,
+//       iv_load_policy: 3,
+//       loop: 1,
+//       modestbranding: 1,
+//       //start: 200,
+//       rel: 0, 
+//       mute: 1,
 
-    },
-  }
-  const onReady = (event) => {
-      event.target.pauseVideo();
-  }
-  return(
-    <React.Fragment>
-      {/* Pull the video ids from the database in the future */}
-      return <YouTube videoId="spxtEt6RaS4" opts={opts} onReady={(e) => onReady(e)} style={{...CSS.youtubeBackgroundStyle}} />;
-    </React.Fragment>
-  )
-}
+//     },
+//   }
+//   const onReady = (event) => {
+//       event.target.pauseVideo();
+//   }
+//   return(
+//     <React.Fragment>
+//       {/* Pull the video ids from the database in the future */}
+//       return <YouTube videoId="spxtEt6RaS4" opts={opts} onReady={(e) => onReady(e)} style={{...CSS.youtubeBackgroundStyle}} />;
+//     </React.Fragment>
+//   )
+// }
 
 

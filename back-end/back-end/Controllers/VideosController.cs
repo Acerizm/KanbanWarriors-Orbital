@@ -25,6 +25,8 @@ namespace back_end.Controllers
         // Update -> HttpPut
         // Delete -> HttpDelete
 
+        // ---------------------------------------------------------------------------- HTTPGET / READ -------------------------------------------------------------------------------------
+
         /// <summary>
         /// Gets all of the videos regardless of category
         /// </summary>
@@ -41,7 +43,7 @@ namespace back_end.Controllers
         /// </remarks>
         /// <response code="201">Returns the newly created item</response>
         /// <response code="400">If the item is null</response>       
-        // GET: api/BackgroundImages/GetAllVideos
+        // GET: api/Videos/GetAllVideos
 
         [Route("GetAllVideos")]
         [HttpGet]
@@ -70,7 +72,7 @@ namespace back_end.Controllers
         /// </remarks>
         /// <response code="201">Returns the newly created item</response>
         /// <response code="400">If the item is null</response>       
-        // GET: api/BackgroundImages/GetVideosFromCategoryId/{id}
+        // GET: api/Videos/GetVideosFromCategoryId/{id}
 
         [Route("GetVideosFromCategoryId/{id}")]
         [HttpGet]
@@ -99,7 +101,7 @@ namespace back_end.Controllers
         /// </remarks>
         /// <response code="201">Returns the newly created item</response>
         /// <response code="400">If the item is null</response>       
-        // GET: api/BackgroundImages/GetVideosFromCategory/{category}
+        // GET: api/Videos/GetVideosFromCategory/{category}
 
         [Route("GetVideosFromCategory/{category}")]
         [HttpGet]
@@ -111,6 +113,37 @@ namespace back_end.Controllers
             else
                 return videos;
         }
+
+        /// <summary>
+        /// Gets a random video id based on category type eg. "Wildlife"
+        /// </summary>
+        /// <remarks>
+        /// Sample request:
+        ///
+        ///      /GetRandomVideoFromCategory/{category}
+        ///     {
+        ///        "id": "62979eb0c19fd38c79cdb3b8",
+        ///        "category": "Wildlife",
+        ///        "videoList": ["HjvIAJMbXi4","anotherYoutubeVideoId"],     
+        ///     }
+        ///
+        /// </remarks>
+        /// <response code="201">Returns the newly created item</response>
+        /// <response code="400">If the item is null</response>       
+        // GET: api/Videos/GetRandomVideoFromCategory/{category}
+
+        [Route("GetRandomVideoFromCategory")]
+        [HttpGet]
+        public async Task<ActionResult<string>> GetRandomVideoFromCategory(string category)
+        {
+            Videos videos = await Task.Run(() => videosServices.GetFromCategory(category));
+            int numOfVideos = videos.videoList.Count();
+            Random rng = new Random();
+            int randomNumber = rng.Next(1,numOfVideos + 1);  
+            return videos.videoList.ElementAt(randomNumber - 1);
+        }
+
+        // ---------------------------------------------------------------------------- HTTPPOST / CREATE -------------------------------------------------------------------------------------
 
         /// <summary>
         /// Create a new category of videos.
@@ -129,7 +162,7 @@ namespace back_end.Controllers
         /// </remarks>
         /// <response code="201">Returns the newly created item</response>
         /// <response code="400">If the item is null</response>       
-        // POST: api/BackgroundImages/CreateNewVideoCategory
+        // POST: api/Videos/CreateNewVideoCategory
 
         [Route("CreateNewVideoCategory")]
         [HttpPost]
@@ -156,6 +189,8 @@ namespace back_end.Controllers
             }
         }
 
+        // ---------------------------------------------------------------------------- HTTPPUT / UPDATE -------------------------------------------------------------------------------------
+
         /// <summary>
         /// update videos from a particular category based on category type.
         /// Please note that the video list contains "youtube video ids"
@@ -173,7 +208,7 @@ namespace back_end.Controllers
         /// </remarks>
         /// <response code="201">Returns the newly created item</response>
         /// <response code="400">If the item is null</response>       
-        // POST: api/BackgroundImages/UpdateVideosFromCategory
+        // POST: api/Videos/UpdateVideosFromCategory
 
         [Route("UpdateVideosFromCategory")]
         [HttpPut]
@@ -209,7 +244,7 @@ namespace back_end.Controllers
         /// </remarks>
         /// <response code="201">Returns the newly created item</response>
         /// <response code="400">If the item is null</response>       
-        // POST: api/BackgroundImages/UpdateVideosFromCategory
+        // POST: api/Videos/UpdateVideosFromCategory
 
         [Route("AddVideosFromCategory")]
         [HttpPut]
@@ -251,7 +286,7 @@ namespace back_end.Controllers
         /// </remarks>
         /// <response code="201">Returns the newly created item</response>
         /// <response code="400">If the item is null</response>       
-        // POST: api/BackgroundImages/UpdateVideoFromCategory
+        // POST: api/Videos/UpdateVideoFromCategory
 
         [Route("AddVideoFromCategory")]
         [HttpPut]
@@ -270,6 +305,7 @@ namespace back_end.Controllers
             return updatedVideoCategory;
         }
 
+        // ---------------------------------------------------------------------------- HTTPDELETE / DELETE -------------------------------------------------------------------------------------
 
         /// <summary>
         /// delete ALL videos from an exisiting category!
@@ -288,7 +324,7 @@ namespace back_end.Controllers
         /// </remarks>
         /// <response code="201">Returns the newly created item</response>
         /// <response code="400">If the item is null</response>       
-        // POST: api/BackgroundImages/DeleteAllVideosFromCategory
+        // POST: api/Videos/DeleteAllVideosFromCategory
 
         [Route("DeleteAllVideosFromCategory")]
         [HttpDelete]
@@ -318,7 +354,7 @@ namespace back_end.Controllers
         /// </remarks>
         /// <response code="201">Returns the newly created item</response>
         /// <response code="400">If the item is null</response>       
-        // POST: api/BackgroundImages/DeleteVideoFromCategory
+        // POST: api/Videos/DeleteVideoFromCategory
 
         [Route("DeleteVideoFromCategory")]
         [HttpDelete]
@@ -347,7 +383,7 @@ namespace back_end.Controllers
         /// </remarks>
         /// <response code="201">Returns the newly created item</response>
         /// <response code="400">If the item is null</response>       
-        // POST: api/BackgroundImages/DeleteVideoFromCategory
+        // POST: api/Videos/DeleteVideoFromCategory
 
         [Route("DeleteVideosFromCategory")]
         [HttpDelete]

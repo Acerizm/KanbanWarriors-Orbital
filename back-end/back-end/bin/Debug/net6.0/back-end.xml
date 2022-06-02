@@ -115,6 +115,24 @@
              <response code="201">Returns the newly created item</response>
              <response code="400">If the item is null</response>       
         </member>
+        <member name="M:back_end.Controllers.VideosController.GetRandomVideoFromCategory(System.String)">
+             <summary>
+             Gets a random video id based on category type eg. "Wildlife"
+             </summary>
+             <remarks>
+             Sample request:
+            
+                  /GetRandomVideoFromCategory/{category}
+                 {
+                    "id": "62979eb0c19fd38c79cdb3b8",
+                    "category": "Wildlife",
+                    "videoList": ["HjvIAJMbXi4","anotherYoutubeVideoId"],     
+                 }
+            
+             </remarks>
+             <response code="201">Returns the newly created item</response>
+             <response code="400">If the item is null</response>       
+        </member>
         <member name="M:back_end.Controllers.VideosController.CreateNewVideoCategory(System.String,System.Collections.Generic.List{System.String})">
              <summary>
              Create a new category of videos.
