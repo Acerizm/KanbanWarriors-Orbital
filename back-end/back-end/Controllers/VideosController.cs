@@ -301,6 +301,69 @@ namespace back_end.Controllers
             return "Videos has been deleted :p";
         }
 
+        /// <summary>
+        /// delete a video from an exisiting category!
+        /// Please note that the video list contains "youtube video ids"
+        /// </summary>
+        /// <remarks>
+        /// Sample request:
+        ///
+        ///      /DeleteAllVideosFromCategory
+        ///     {
+        ///        "id": "62979eb0c19fd38c79cdb3b8",
+        ///        "category": "Wildlife",
+        ///        "videoList": ["anotherVideoId"],     
+        ///     }
+        ///
+        /// </remarks>
+        /// <response code="201">Returns the newly created item</response>
+        /// <response code="400">If the item is null</response>       
+        // POST: api/BackgroundImages/DeleteVideoFromCategory
+
+        [Route("DeleteVideoFromCategory")]
+        [HttpDelete]
+        public async Task<ActionResult<string>> DeleteVideoFromCategory(string category, string videoId)
+        {
+            Videos videos = videosServices.GetFromCategory(category);
+            videos.videoList.Remove(videoId);
+            await videosServices.UpdateByCategoryAsync(category, videos);
+            return String.Format("{0} has been deleted!",videoId);
+        }
+
+        /// <summary>
+        /// delete multiple videos from an exisiting category!
+        /// Please note that the video list contains "youtube video ids"
+        /// </summary>
+        /// <remarks>
+        /// Sample request:
+        ///
+        ///      /DeleteAllVideosFromCategory
+        ///     {
+        ///        "id": "62979eb0c19fd38c79cdb3b8",
+        ///        "category": "Wildlife",
+        ///        "videoList": ["anotherVideoId"],     
+        ///     }
+        ///
+        /// </remarks>
+        /// <response code="201">Returns the newly created item</response>
+        /// <response code="400">If the item is null</response>       
+        // POST: api/BackgroundImages/DeleteVideoFromCategory
+
+        [Route("DeleteVideosFromCategory")]
+        [HttpDelete]
+        public async Task<ActionResult<string>> DeleteVideosFromCategory(string category, List<string> videosToBeDeleted)
+        {
+            Videos videos = videosServices.GetFromCategory(category);
+            string alertVideosDeleted = "";
+            foreach(var videosToBeDeletedItem in videosToBeDeleted)
+            {
+                alertVideosDeleted += videosToBeDeletedItem + ", ";
+                videos.videoList.Remove(videosToBeDeletedItem);
+            }
+            await videosServices.UpdateByCategoryAsync(category, videos);
+            return alertVideosDeleted + " has been deleted!";
+        }
+
 
 
 

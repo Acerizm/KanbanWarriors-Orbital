@@ -210,5 +210,43 @@
              <response code="201">Returns the newly created item</response>
              <response code="400">If the item is null</response>       
         </member>
+        <member name="M:back_end.Controllers.VideosController.DeleteVideoFromCategory(System.String,System.String)">
+             <summary>
+             delete a video from an exisiting category!
+             Please note that the video list contains "youtube video ids"
+             </summary>
+             <remarks>
+             Sample request:
+            
+                  /DeleteAllVideosFromCategory
+                 {
+                    "id": "62979eb0c19fd38c79cdb3b8",
+                    "category": "Wildlife",
+                    "videoList": ["anotherVideoId"],     
+                 }
+            
+             </remarks>
+             <response code="201">Returns the newly created item</response>
+             <response code="400">If the item is null</response>       
+        </member>
+        <member name="M:back_end.Controllers.VideosController.DeleteVideosFromCategory(System.String,System.Collections.Generic.List{System.String})">
+             <summary>
+             delete multiple videos from an exisiting category!
+             Please note that the video list contains "youtube video ids"
+             </summary>
+             <remarks>
+             Sample request:
+            
+                  /DeleteAllVideosFromCategory
+                 {
+                    "id": "62979eb0c19fd38c79cdb3b8",
+                    "category": "Wildlife",
+                    "videoList": ["anotherVideoId"],     
+                 }
+            
+             </remarks>
+             <response code="201">Returns the newly created item</response>
+             <response code="400">If the item is null</response>       
+        </member>
     </members>
 </doc>
