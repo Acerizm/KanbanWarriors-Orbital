@@ -99,6 +99,8 @@ export const TemporaryDrawer = () => {
 // ----------------------------------- Background Images Feature/Component ------------------------------------------------------------------------------------------
 
 // rng component for calculating 
+// do rng in the backend in the future
+
 const rng = () => {
   return Math.floor(Math.random() * 100) + 1;
 }
@@ -134,7 +136,6 @@ export const BackgroundImage = () => {
     background = <ImageKitBackground urlEndpoint={urlEndpoint} path={path}/>
   } else if (isWildlifeSelected) { 
     let randomRng = rng();
-    console.log(randomRng);
     if(randomRng <= 10) {
       path = "../Categories/Wildlife/" + updatedWildlifeImageId + ".jpg";
       background = <ImageKitBackground urlEndpoint={urlEndpoint} path={path}/>
