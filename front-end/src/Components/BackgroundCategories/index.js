@@ -126,15 +126,25 @@ export const BackgroundImage = () => {
   // relative path for ImageKitAPI
   var path;
   let background;
+  let randomRng = rng();
   // for youtube
   const [videoId,setVideoId] = React.useState("");
   // check what is selected
   if(isSpaceSelected) {
-    path = "../Categories/Space/" + updatedSpaceImageId + ".jpg";
-    background = <ImageKitBackground urlEndpoint={urlEndpoint} path={path}/>
+    if(randomRng <= 10) {
+      path = "../Categories/Space/" + updatedSpaceImageId + ".jpg";
+      background = <ImageKitBackground urlEndpoint={urlEndpoint} path={path}/>
+    }
+    else {
+      // get the video from our api using Axios/AJAX
+      axios.get("http://159.223.91.154:500/api/Videos/GetRandomVideoFromCategory?category=Space")
+        .then((response) => {
+          setVideoId(response.data);
+        }
+      );
+      background = <Youtube2Background videoId={videoId}/>
+    }
   } else if (isWildlifeSelected) { 
-    let randomRng = rng();
-    console.log(randomRng);
     if(randomRng <= 10) {
       path = "../Categories/Wildlife/" + updatedWildlifeImageId + ".jpg";
       background = <ImageKitBackground urlEndpoint={urlEndpoint} path={path}/>
