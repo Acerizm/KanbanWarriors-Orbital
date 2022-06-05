@@ -57,6 +57,54 @@ namespace back_end.Controllers
         }
 
         /// <summary>
+        /// Gets a random video regardless of category
+        /// </summary>
+        /// <remarks>
+        /// Sample request:
+        ///
+        ///      /GetRandomVideo
+        ///     {
+        ///        "id": "62979eb0c19fd38c79cdb3b8",
+        ///        "category": "Wildlife",
+        ///        "videoList": ["HjvIAJMbXi4","anotherYoutubeVideoId"],     
+        ///     }
+        ///     {
+        ///        "id": "123124523124123452341",
+        ///        "category": "Space",
+        ///        "videoList": ["HjvIAJMbXi4","anotherYoutubeVideoId"],     
+        ///     }
+        ///
+        /// </remarks>
+        /// <response code="201">Returns the newly created item</response>
+        /// <response code="400">If the item is null</response>       
+        // GET: api/Videos/GetAllVideos
+
+        [Route("GetRandomVideo")]
+        [HttpGet]
+        public async Task<ActionResult<string>> GetRandomVideo()
+        {
+            List<Videos> videos = await Task.Run(() => videosServices.GetAllVideos());
+            List<string> allVideos = new List<string>();
+            if (videos == null)
+                return null;
+            else
+            {
+                videos.ForEach((category) =>
+                {
+                    category.videoList.ForEach((videoId) =>
+                    {
+                        allVideos.Add(videoId);
+                    });
+                });
+                // RNG 
+                var random = new Random();
+                int randomVideoIndex = random.Next(allVideos.Count);
+                string randomVideo = allVideos[randomVideoIndex];
+                return randomVideo;
+            }
+        }
+
+        /// <summary>
         /// Gets all of the videos based on category id
         /// </summary>
         /// <remarks>

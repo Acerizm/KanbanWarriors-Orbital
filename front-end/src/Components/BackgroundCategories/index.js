@@ -158,7 +158,7 @@ const rngStaticImageId = () => {
 };
 
 const rngForPlayback = () => {
-	return Math.floor(Math.random() * 500 + 1);
+	return Math.floor(Math.random() * 1000 + 1);
 };
 
 // Imagekit API here for conditional rendering
@@ -196,7 +196,34 @@ export const BackgroundImage = () => {
 					});
 				break;
 			}
+			case 3: {
+				axios
+					.get(
+						"http://159.223.91.154:500/api/Videos/GetRandomVideoFromCategory?category=City"
+					)
+					.then((response) => {
+						setVideoId(response.data);
+						setNewBackground(true);
+					});
+				break;
+			}
+			case 4: {
+				axios
+					.get(
+						"http://159.223.91.154:500/api/Videos/GetRandomVideoFromCategory?category=Beach"
+					)
+					.then((response) => {
+						setVideoId(response.data);
+						setNewBackground(true);
+					});
+				break;
+			}
 			default:
+				axios
+					.get("http://159.223.91.154:500/api/Videos/GetRandomVideo")
+					.then((response) => {
+						setVideoId(response.data);
+					});
 				break;
 		}
 	}, [currentCategorySelected, currentImageId]);
@@ -204,9 +231,12 @@ export const BackgroundImage = () => {
 	// --------------------------------- VERY HACKY HERE--------------------------------------------------------------------------------
 	// if API havnt return to us our data, show loading
 	// State machine logic: Render Loading Screen -> Get APIs' Data -> Do RNG to get static image or video -> Render the background
-	if (videoId == null && newBackground == false) {
+	if (
+		(videoId == null && newBackground == false) ||
+		(videoId != null && newBackground == false)
+	) {
 		//background = <Youtube2Background videoId={"udJ8GniptHU"} />;
-		background = <YoutubeBackground id={"udJ8GniptHU"} />;
+		background = <YoutubeBackground id={videoId} />;
 		return <React.Fragment>{background}</React.Fragment>;
 	} else if (videoId == null && newBackground == true) {
 		return <div>loading....</div>;
@@ -214,7 +244,6 @@ export const BackgroundImage = () => {
 		let randomRng = rng();
 		let randomStaticImageId = rngStaticImageId();
 		var path;
-		console.log(randomRng);
 		// Maybe move all this logic to the backend in the future
 		switch (currentCategorySelected) {
 			case 1: {
@@ -250,26 +279,42 @@ export const BackgroundImage = () => {
 						/>
 					);
 				} else {
+					console.log(videoId);
 					background = <YoutubeBackground id={videoId} />;
 				}
 				break;
 			}
 			case 3: {
-				// if beach is selected
-				// beach == 3
-				path = "../Categories/Beach/" + randomStaticImageId + ".jpg";
-				background = (
-					<ImageKitBackground urlEndpoint={urlEndpoint} path={path} />
-				);
+				// if City is selected
+				// City == 3
+				if (randomRng <= 10) {
+					path = "../Categories/City/" + randomStaticImageId + ".jpg";
+					background = (
+						<ImageKitBackground
+							urlEndpoint={urlEndpoint}
+							path={path}
+						/>
+					);
+				} else {
+					background = <YoutubeBackground id={videoId} />;
+				}
 				break;
 			}
 			case 4: {
-				// if City Selected
-				// City == 4
-				path = "../Categories/City/" + randomStaticImageId + ".jpg";
-				background = (
-					<ImageKitBackground urlEndpoint={urlEndpoint} path={path} />
-				);
+				// if beach Selected
+				// Beach == 4
+				if (randomRng <= 10) {
+					path =
+						"../Categories/Beach/" + randomStaticImageId + ".jpg";
+					background = (
+						<ImageKitBackground
+							urlEndpoint={urlEndpoint}
+							path={path}
+						/>
+					);
+				} else {
+					background = <YoutubeBackground id={videoId} />;
+				}
 				break;
 			}
 			default: {
@@ -337,6 +382,7 @@ const YoutubeBackground = ({ id }) => {
 			start: rngValue,
 			rel: 0,
 			mute: 1,
+			playlist: currentId,
 		},
 	};
 	const onReady = (event) => {
