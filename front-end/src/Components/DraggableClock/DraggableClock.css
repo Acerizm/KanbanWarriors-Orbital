@@ -7,4 +7,9 @@
 	font-family: Courier New;
 	font-size: 75px ;
 	text-shadow: 2px 2px 2px black;
+	cursor: pointer;
+}
+
+.clock:active {
+	cursor: grab;
 }
