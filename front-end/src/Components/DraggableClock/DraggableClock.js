@@ -19,7 +19,11 @@ function DraggableClock() {
 
 	return (
 		<React.Fragment>
-			<div className='clock clockHandle' onClick={handleChangeTextColor} style={{color:textColor}}>
+			<div 
+				className='clock clockHandle' 
+				onDoubleClick={() => handleChangeTextColor()} 
+				style={{color:textColor}}
+				>
 				{clockState}
 			</div>
 		</React.Fragment>
