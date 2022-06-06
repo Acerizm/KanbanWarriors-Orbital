@@ -5,7 +5,7 @@ import * as CSS from "./css.js";
 import Draggable from 'react-draggable'; 
 import React from "react";
 import { BackgroundImage } from "../BackgroundCategories/index.js";
-
+import DraggableClock from "../DraggableClock/DraggableClock"
 // import custom css file here
 import "./HomePage.css";
 
@@ -25,6 +25,17 @@ const HomePage = () =>  {
                     >
                         <div>
                             <NavBar></NavBar>
+                        </div>
+                    </Draggable>
+                    <Draggable
+                        axis="both"
+                        handle=".clockHandle"
+                        position={null}
+                        defaultClassName="draggableClock"
+                        scale={1}
+                        >
+                        <div>
+                            <DraggableClock></DraggableClock>
                         </div>
                     </Draggable>
                 </div>

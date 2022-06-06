@@ -8,4 +8,14 @@
     justify-self: center;
 }
 
+.draggableClock {
+    z-index: 0;
+    grid-column: 1;
+    grid-row: 1;
+    height: 100px;
+    width: 240px;
+    justify-self: center;
+    align-self: center;
+}
+
 
