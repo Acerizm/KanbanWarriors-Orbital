@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import * as CSS from "./css";
 import { VolumeUpOutlined, VolumeOffOutlined } from "@mui/icons-material";
 import Slider, { SliderThumb } from "@mui/material/Slider";
@@ -6,6 +6,9 @@ import { styled } from "@mui/material/styles";
 import { useDispatch, useSelector } from "react-redux";
 import * as REDUX from "../Redux/Reducers/AmbienceSounds/AmbienceSoundsSlice.js";
 import Draggable from "react-draggable";
+import ReactPlayer from "react-player";
+
+import raindrop from "../AmbienceSounds/Sounds/raindrops.mp3";
 
 export const AmbienceMusic = () => {
 	const playerStatus = useSelector(REDUX.selectPlayerStatus);
@@ -150,6 +153,23 @@ const VolumeIconRain = () => {
 		</Fragment>
 	);
 };
+
+// audio component here
+export const AudioPlayer = () => {
+	//console.log(ReactPlayer.canPlay(raindrop));
+	const [isPlaying, setPlaying] = useState(false);
+	return (
+		<ReactPlayer
+			url={raindrop}
+			volume={0.5}
+			muted={true}
+			playing={isPlaying}
+			onReady={() => setPlaying(true)}
+			onError={() => console.log("why")}
+		/>
+	);
+};
+
 const CustomSlider = ({ soundTitle }) => {
 	const dispatch = useDispatch();
 	let muteSound = "Mute" + soundTitle;

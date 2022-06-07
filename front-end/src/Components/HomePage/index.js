@@ -7,8 +7,10 @@ import React from "react";
 import { BackgroundImage } from "../BackgroundCategories/index.js";
 import DraggableClock from "../DraggableClock/DraggableClock";
 import { AmbienceMusic } from "../DraggableAmbienceMusic/index.js";
+import { AudioPlayer } from "../DraggableAmbienceMusic/index.js";
 // import custom css file here
 import "./HomePage.css";
+import raindrop from "../AmbienceSounds/Sounds/raindrops.mp3";
 
 const HomePage = () => {
 	return (
@@ -42,6 +44,7 @@ const HomePage = () => {
 						</div>
 					</Draggable>
 					<AmbienceMusic />
+					<AudioPlayer />
 				</div>
 			</Desktop>
 			<Tablet></Tablet>
