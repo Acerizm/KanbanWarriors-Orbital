@@ -30,6 +30,7 @@ import * as REDUX from "../Redux/Reducers/BackgroundImage/BackgroundImageSlice.j
 // import AJAX stuff here
 import axios from "axios";
 
+
 // ------------------------------------- Drawer (Material UI) Feature/Component ------------------------------------------------------------------------------------
 // styling for Drawer
 export const TemporaryDrawer = () => {
@@ -166,8 +167,11 @@ const rngForPlayback = () => {
 // link -> https://docs.imagekit.io/getting-started/quickstart-guides/react
 
 export const BackgroundImage = () => {
+	// Redux hooks are here
 	const currentCategorySelected = useSelector(REDUX.selectCategory);
 	const currentImageId = useSelector(REDUX.updatedImageId);
+	const currentLoadingBarStatus = useSelector(REDUX.loadingBarState);
+	// React hooks are here
 	const [videoId, setVideoId] = React.useState(null);
 	const [newBackground, setNewBackground] = React.useState(false);
 	let background;
@@ -279,7 +283,6 @@ export const BackgroundImage = () => {
 						/>
 					);
 				} else {
-					console.log(videoId);
 					background = <YoutubeBackground id={videoId} />;
 				}
 				break;
@@ -321,9 +324,20 @@ export const BackgroundImage = () => {
 				break;
 			}
 		}
-		return <React.Fragment>{background}</React.Fragment>;
+		return (
+			<React.Fragment>
+				{/* {currentLoadingBarStatus ? LoadingBar : background} */}
+				{background}
+				</React.Fragment>
+		);
 	}
 };
+
+const LoadingBar = () => {
+	return(
+		<div>Loading....</div>
+	)
+}
 
 // this is where the imagekit component is
 
@@ -343,34 +357,34 @@ const ImageKitBackground = ({ urlEndpoint, path }) => {
 };
 
 // this is a test feature
-// const Youtube2Background = ({ videoId }) => {
-// 	let videoSource =
-// 		"https://www.youtube.com/embed/" +
-// 		videoId +
-// 		"?vq=hd1440&autoplay=1&controls=0&disablekb=1&loop=1&modestbranding=1&playsinline=1&color=white&mute=1&playlist=" +
-// 		videoId +
-// 		"&allowfullscreen&start=100";
-// 	return (
-// 		<div id="wrapperTest" style={{ ...CSS.wrapperTestStyle }}>
-// 			<iframe
-// 				id="iframeTest "
-// 				src={videoSource}
-// 				style={{ ...CSS.iframeStyle }}
-// 				allow="fullscreen"
-// 			></iframe>
-// 		</div>
-// 	);
-// };
+const Youtube2Background = ({ id }) => {
+	let videoSource =
+		"https://www.youtube.com/embed/" +
+		id +
+		"?vq=hd1440&autoplay=1&controls=0&disablekb=1&loop=1&modestbranding=1&playsinline=1&color=white&mute=1&playlist=" +
+		id +
+		"&allowfullscreen&start=100";
+	return (
+		<div id="wrapperTest" style={{ ...CSS.wrapperTestStyle }}>
+			<iframe
+				id="iframeTest "
+				src={videoSource}
+				style={{ ...CSS.iframeStyle }}
+				allow="fullscreen"
+			></iframe>
+		</div>
+	);
+};
 
 // Youtube background component
 const YoutubeBackground = ({ id }) => {
 	let currentId = "" + id;
 	let rngValue = rngForPlayback();
+	const dispatch = useDispatch();
 	const opts = {
 		height: "100%",
 		width: "100%",
 		playerVars: {
-			// https://developers.google.com/youtube/player_parameters
 			autoplay: 1,
 			controls: 0,
 			playsinline: 1,
@@ -388,13 +402,14 @@ const YoutubeBackground = ({ id }) => {
 	const onReady = (event) => {
 		event.target.playVideo();
 	};
+	console.log("test");
 	return (
 		<React.Fragment>
 			<YouTube
 				videoId={currentId}
 				opts={opts}
 				onReady={(e) => onReady(e)}
-				style={{ ...CSS.iframeStyle }}
+				style={{...CSS.iframeStyle}}
 			/>
 			;
 		</React.Fragment>

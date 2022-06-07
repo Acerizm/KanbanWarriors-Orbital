@@ -9,6 +9,7 @@ const backgroundImageSlice = createSlice({
 		isDrawerOn: false,
 		currentCategorySelected: 0,
 		currentImageId: 0,
+		loadingBar: false,
 	},
 	// root reducer
 	reducers: {
@@ -32,12 +33,15 @@ const backgroundImageSlice = createSlice({
 				state.currentImageId += 1;
 			}
 		},
+		toggleLoadingBar(state,action) {
+			state.loadingBar = action.payload;
+		}
 	},
 });
 
 // ------------------------------- Exporting Actions/Reducers ---------------------------------------------------------------------------
 
-export const { toggleDrawerOn, toggleDrawerOff, changeCategory, changeImage } =
+export const { toggleDrawerOn, toggleDrawerOff, changeCategory, changeImage, toggleLoadingBar } =
 	backgroundImageSlice.actions;
 
 export default backgroundImageSlice.reducer;
@@ -57,3 +61,6 @@ export const selectCategory = (state) =>
 
 //for the image id of respective categories
 export const updatedImageId = (state) => state.backgroundImage.currentImageId;
+
+// for toggling the loading bar
+export const loadingBarState = state => state.backgroundImage.loadingBar;
