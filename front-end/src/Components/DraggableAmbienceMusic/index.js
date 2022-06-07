@@ -5,31 +5,45 @@ import Slider, { SliderThumb } from "@mui/material/Slider";
 import { styled } from "@mui/material/styles";
 import { useDispatch, useSelector } from "react-redux";
 import * as REDUX from "../Redux/Reducers/AmbienceSounds/AmbienceSoundsSlice.js";
+import Draggable from "react-draggable";
 
 export const AmbienceMusic = () => {
+	const playerStatus = useSelector(REDUX.selectPlayerStatus);
 	return (
-		<div
-			className="AmbienceMusicContainer"
-			style={{ ...CSS.AmbienceMusicContainerStyle }}
-		>
-			<div
-				id="AmbienceMusicHeading"
-				style={{ ...CSS.AmbienceMusicHeadingStyle }}
-			>
-				<div
-					id="AmbienceMusicTitle"
-					style={{ ...CSS.AmbienceMusicTitleStyle }}
+		<Fragment>
+			{playerStatus ? (
+				<Draggable
+					axis="both"
+					handle="#AmbienceMusicHeading"
+					position={null}
+					defaultClassName="draggableAmbienceMusicPlayer"
+					scale={1}
 				>
-					Ambience Sounds
-				</div>
-			</div>
-			<AmbienceSound gridRow={2} soundTitle={"Ocean"} />
-			<AmbienceSound gridRow={3} soundTitle={"Fireplace"} />
-			<AmbienceSound gridRow={4} soundTitle={"Cafe"} />
-			<AmbienceSound gridRow={5} soundTitle={"Nature"} />
-			<AmbienceSound gridRow={6} soundTitle={"Keyboard"} />
-			<AmbienceSound gridRow={7} soundTitle={"Rain"} />
-		</div>
+					<div
+						className="AmbienceMusicContainer"
+						style={{ ...CSS.AmbienceMusicContainerStyle }}
+					>
+						<div
+							id="AmbienceMusicHeading"
+							style={{ ...CSS.AmbienceMusicHeadingStyle }}
+						>
+							<div
+								id="AmbienceMusicTitle"
+								style={{ ...CSS.AmbienceMusicTitleStyle }}
+							>
+								Ambience Sounds
+							</div>
+						</div>
+						<AmbienceSound gridRow={2} soundTitle={"Ocean"} />
+						<AmbienceSound gridRow={3} soundTitle={"Fireplace"} />
+						<AmbienceSound gridRow={4} soundTitle={"Cafe"} />
+						<AmbienceSound gridRow={5} soundTitle={"Nature"} />
+						<AmbienceSound gridRow={6} soundTitle={"Keyboard"} />
+						<AmbienceSound gridRow={7} soundTitle={"Rain"} />
+					</div>
+				</Draggable>
+			) : null}
+		</Fragment>
 	);
 };
 
@@ -146,7 +160,6 @@ const CustomSlider = ({ soundTitle }) => {
 			aria-label="pretto slider"
 			defaultValue={0}
 			onChangeCommitted={(event, value) => {
-				console.log(value);
 				if (value == 0) {
 					dispatch(REDUX.toggleMuteStatus(muteSound));
 				} else {

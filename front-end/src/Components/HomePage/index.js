@@ -41,17 +41,7 @@ const HomePage = () => {
 							<DraggableClock></DraggableClock>
 						</div>
 					</Draggable>
-					<Draggable
-						axis="both"
-						handle="#AmbienceMusicHeading"
-						position={null}
-						defaultClassName="draggableAmbienceMusicPlayer"
-						scale={1}
-					>
-						<div>
-							<AmbienceMusic />
-						</div>
-					</Draggable>
+					<AmbienceMusic />
 				</div>
 			</Desktop>
 			<Tablet></Tablet>

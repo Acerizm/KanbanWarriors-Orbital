@@ -3,6 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 const AmbienceSoundsSlice = createSlice({
 	name: "AmbienceSounds",
 	initialState: {
+		isPlayerShown: false,
 		Ocean: {
 			isMuted: true,
 		},
@@ -77,11 +78,18 @@ const AmbienceSoundsSlice = createSlice({
 					break;
 			}
 		},
+		togglePlayer(state) {
+			if (state.isPlayerShown) {
+				state.isPlayerShown = false;
+			} else {
+				state.isPlayerShown = true;
+			}
+		},
 	}, // end of reducers
 });
 
 // export actions
-export const { toggleMuteStatus } = AmbienceSoundsSlice.actions;
+export const { toggleMuteStatus, togglePlayer } = AmbienceSoundsSlice.actions;
 // export reducer
 export default AmbienceSoundsSlice.reducer;
 //Selectors
@@ -93,4 +101,4 @@ export const selectNatureState = (state) => state.AmbienceSounds.Nature.isMuted;
 export const selectKeyboardState = (state) =>
 	state.AmbienceSounds.Keyboard.isMuted;
 export const selectRainState = (state) => state.AmbienceSounds.Rain.isMuted;
-export const selectAllState = (state) => state;
+export const selectPlayerStatus = (state) => state.AmbienceSounds.isPlayerShown;

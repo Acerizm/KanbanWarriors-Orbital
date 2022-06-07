@@ -18,11 +18,5 @@
     align-self: center;
 }
 
-.draggableAmbienceMusicPlayer {
-    height: 450px;
-    width: 350px;
-    grid-row: 1;
-    grid-column: 1;
-}
 
 

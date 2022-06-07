@@ -1,8 +1,10 @@
 export const AmbienceMusicContainerStyle = {
 	//border: "2px solid red",
-	height: "100%",
-	width: "100%",
+	height: "450px",
+	width: "350px",
 	borderRadius: "10px",
+	gridRow: "1",
+	gridColumn: "1",
 	display: "grid",
 	gridTemplateColumn: "100%",
 	gridTemplateRows:
