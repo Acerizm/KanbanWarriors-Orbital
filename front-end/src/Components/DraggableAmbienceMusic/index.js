@@ -3,7 +3,7 @@ import * as CSS from "./css";
 import { VolumeUpOutlined, VolumeOffOutlined } from "@mui/icons-material";
 import Slider, { SliderThumb } from "@mui/material/Slider";
 import { styled } from "@mui/material/styles";
-import MinimizeRoundedIcon from '@mui/icons-material/MinimizeRounded';
+import MinimizeRoundedIcon from "@mui/icons-material/MinimizeRounded";
 import { useDispatch, useSelector } from "react-redux";
 import * as REDUX from "../Redux/Reducers/AmbienceSounds/AmbienceSoundsSlice.js";
 import Draggable from "react-draggable";
@@ -15,18 +15,45 @@ import cafe from "../AmbienceSounds/Sounds/cafe.mp3";
 import nature from "../AmbienceSounds/Sounds/nature.mp3";
 import keyboard from "../AmbienceSounds/Sounds/keyboard.mp3";
 import ocean from "../AmbienceSounds/Sounds/ocean.mp3";
-import MinimizeIcon from '@mui/icons-material/Minimize';
+import MinimizeIcon from "@mui/icons-material/Minimize";
 
+const ListOfAmbienceSounds = [
+	"Ocean",
+	"Fireplace",
+	"Cafe",
+	"Nature",
+	"Keyboard",
+	"Rain",
+];
 export const AmbienceMusic = () => {
 	const playerStatus = useSelector(REDUX.selectPlayerStatus);
+	const lastPlayerPosition = useSelector(REDUX.selectLastPlayerPosition);
 	const dispatch = useDispatch();
+	// map all ambience sounds
+	// DRY -> Dont repeat yrself
+	const ambienceSounds = ListOfAmbienceSounds.map((title, index) => {
+		let gridRow = index + 2;
+		return (
+			<AmbienceSound key={index} gridRow={gridRow} soundTitle={title} />
+		);
+	});
 	return (
 		<Fragment>
 			{playerStatus ? (
 				<Draggable
 					axis="both"
 					handle="#AmbienceMusicHeading"
+					defaultPosition={lastPlayerPosition}
 					position={null}
+					onStop={(event, data) => {
+						// peek the API through the method using Intellisense
+						// developer of draggable component never document properly
+						let position = {
+							x: data.lastX,
+							y: data.lastY,
+						};
+						dispatch(REDUX.updatePlayerLastPosition(position));
+					}}
 					defaultClassName="draggableAmbienceMusicPlayer"
 					scale={1}
 				>
@@ -44,16 +71,13 @@ export const AmbienceMusic = () => {
 							>
 								Ambience Sounds
 							</div> */}
-							<MinimizeIcon fontSize="large" sx={{...CSS.minimizeStyle}} onClick={
-								() => dispatch(REDUX.togglePlayer())
-							}/>
+							<MinimizeIcon
+								fontSize="large"
+								sx={{ ...CSS.minimizeStyle }}
+								onClick={() => dispatch(REDUX.togglePlayer())}
+							/>
 						</div>
-						<AmbienceSound gridRow={2} soundTitle={"Ocean"} />
-						<AmbienceSound gridRow={3} soundTitle={"Fireplace"} />
-						<AmbienceSound gridRow={4} soundTitle={"Cafe"} />
-						<AmbienceSound gridRow={5} soundTitle={"Nature"} />
-						<AmbienceSound gridRow={6} soundTitle={"Keyboard"} />
-						<AmbienceSound gridRow={7} soundTitle={"Rain"} />
+						{ambienceSounds}
 					</div>
 				</Draggable>
 			) : null}
@@ -64,29 +88,72 @@ export const AmbienceMusic = () => {
 const AmbienceSound = ({ gridRow, soundTitle }) => {
 	let gridRowString = "" + gridRow + " / " + (gridRow + 1);
 	let volumeIcon;
+	let customSlider;
 	switch (soundTitle) {
 		case "Ocean": {
-			volumeIcon = <VolumeIconOcean />;
+			volumeIcon = <VolumeIcon selector={REDUX.selectOceanMutedStatus} />;
+			customSlider = (
+				<CustomSlider
+					soundTitle={soundTitle}
+					selectorVolume={REDUX.selectOceanVolume}
+				/>
+			);
 			break;
 		}
 		case "Fireplace": {
-			volumeIcon = <VolumeIconFireplace />;
+			volumeIcon = (
+				<VolumeIcon selector={REDUX.selectFireplaceMutedStatus} />
+			);
+			customSlider = (
+				<CustomSlider
+					soundTitle={soundTitle}
+					selectorVolume={REDUX.selectFireplaceVolume}
+				/>
+			);
 			break;
 		}
 		case "Cafe": {
-			volumeIcon = <VolumeIconCafe />;
+			volumeIcon = <VolumeIcon selector={REDUX.selectCafeMutedStatus} />;
+			customSlider = (
+				<CustomSlider
+					soundTitle={soundTitle}
+					selectorVolume={REDUX.selectCafeVolume}
+				/>
+			);
 			break;
 		}
 		case "Nature": {
-			volumeIcon = <VolumeIconNature />;
+			volumeIcon = (
+				<VolumeIcon selector={REDUX.selectNatureMutedStatus} />
+			);
+			customSlider = (
+				<CustomSlider
+					soundTitle={soundTitle}
+					selectorVolume={REDUX.selectNatureVolume}
+				/>
+			);
 			break;
 		}
 		case "Keyboard": {
-			volumeIcon = <VolumeIconKeyboard />;
+			volumeIcon = (
+				<VolumeIcon selector={REDUX.selectKeyboardMutedStatus} />
+			);
+			customSlider = (
+				<CustomSlider
+					soundTitle={soundTitle}
+					selectorVolume={REDUX.selectKeyboardVolume}
+				/>
+			);
 			break;
 		}
 		case "Rain": {
-			volumeIcon = <VolumeIconRain />;
+			volumeIcon = <VolumeIcon selector={REDUX.selectRainMutedStatus} />;
+			customSlider = (
+				<CustomSlider
+					soundTitle={soundTitle}
+					selectorVolume={REDUX.selectRainVolume}
+				/>
+			);
 			break;
 		}
 	}
@@ -110,54 +177,18 @@ const AmbienceSound = ({ gridRow, soundTitle }) => {
 					style={{ ...CSS.AmbienceSoundPlayerStyle }}
 				>
 					{volumeIcon}
-					<CustomSlider soundTitle={soundTitle} />
+					{/* <CustomSlider soundTitle={soundTitle} /> */}
+					{customSlider}
 				</div>
 			</div>
 		</Fragment>
 	);
 };
-const VolumeIconOcean = () => {
-	let mutedStatus = useSelector(REDUX.selectOceanMutedStatus);
-	return (
-		<Fragment>
-			{!mutedStatus ? <VolumeUpOutlined /> : <VolumeOffOutlined />}
-		</Fragment>
-	);
-};
-const VolumeIconFireplace = () => {
-	let mutedStatus = useSelector(REDUX.selectFireplaceMutedStatus);
-	return (
-		<Fragment>
-			{!mutedStatus ? <VolumeUpOutlined /> : <VolumeOffOutlined />}
-		</Fragment>
-	);
-};
-const VolumeIconCafe = () => {
-	let mutedStatus = useSelector(REDUX.selectCafeMutedStatus);
-	return (
-		<Fragment>
-			{!mutedStatus ? <VolumeUpOutlined /> : <VolumeOffOutlined />}
-		</Fragment>
-	);
-};
-const VolumeIconNature = () => {
-	let mutedStatus = useSelector(REDUX.selectNatureMutedStatus);
-	return (
-		<Fragment>
-			{!mutedStatus ? <VolumeUpOutlined /> : <VolumeOffOutlined />}
-		</Fragment>
-	);
-};
-const VolumeIconKeyboard = () => {
-	let mutedStatus = useSelector(REDUX.selectKeyboardMutedStatus);
-	return (
-		<Fragment>
-			{!mutedStatus ? <VolumeUpOutlined /> : <VolumeOffOutlined />}
-		</Fragment>
-	);
-};
-const VolumeIconRain = () => {
-	let mutedStatus = useSelector(REDUX.selectRainMutedStatus);
+
+// Volume icon should receive individual selectors
+// DRY to prevent coding multiple icons just for a different redux selector
+const VolumeIcon = ({ selector }) => {
+	let mutedStatus = useSelector(selector);
 	return (
 		<Fragment>
 			{!mutedStatus ? <VolumeUpOutlined /> : <VolumeOffOutlined />}
@@ -230,29 +261,35 @@ export const AudioPlayer = () => {
 	);
 };
 
-const CustomSlider = ({ soundTitle }) => {
+const CustomSlider = ({ soundTitle, selectorVolume }) => {
 	const dispatch = useDispatch();
 	let muteSound = "Mute" + soundTitle;
 	let unmuteSound = "Unmute" + soundTitle;
+	let defaultVolume = useSelector(selectorVolume);
 	return (
 		<PrettoSlider
 			valueLabelDisplay="auto"
 			aria-label="pretto slider"
-			defaultValue={0}
+			defaultValue={defaultVolume}
 			onChangeCommitted={(event, value) => {
 				if (value == 0) {
-					dispatch(REDUX.toggleMuteStatus(muteSound));
-					dispatch(REDUX.updateVolume({type: soundTitle,volume: value}));
+					dispatch(REDUX.toggleMuteStatus(muteSound) ?? 0);
+					dispatch(
+						REDUX.updateVolume({ type: soundTitle, volume: value })
+					);
 				} else {
 					dispatch(REDUX.toggleMuteStatus(unmuteSound));
 					// disptach another action to fire the ambience music
-					dispatch(REDUX.updateVolume({type: soundTitle,volume: value}));
+					dispatch(
+						REDUX.updateVolume({ type: soundTitle, volume: value })
+					);
 				}
 			}}
 		/>
 	);
 };
 
+// Material UI custom slider
 const PrettoSlider = styled(Slider)({
 	color: "#4c68d7",
 	height: 8,

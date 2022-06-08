@@ -4,6 +4,10 @@ const AmbienceSoundsSlice = createSlice({
 	name: "AmbienceSounds",
 	initialState: {
 		isPlayerShown: false,
+		playerLastPosition: {
+			x: 50,
+			y: 100,
+		},
 		Ocean: {
 			volume: 0,
 			isMuted: true,
@@ -13,7 +17,7 @@ const AmbienceSoundsSlice = createSlice({
 			isMuted: true,
 		},
 		Cafe: {
-			volume:0,
+			volume: 0,
 			isMuted: true,
 		},
 		Nature: {
@@ -121,29 +125,46 @@ const AmbienceSoundsSlice = createSlice({
 					break;
 			}
 		},
+		updatePlayerLastPosition(state, action) {
+			state.playerLastPosition = action.payload;
+		},
 	}, // end of reducers
 });
 
 // export actions
-export const { toggleMuteStatus, togglePlayer, updateVolume } =
-	AmbienceSoundsSlice.actions;
+export const {
+	toggleMuteStatus,
+	togglePlayer,
+	updateVolume,
+	updatePlayerLastPosition,
+} = AmbienceSoundsSlice.actions;
 // export reducer
 export default AmbienceSoundsSlice.reducer;
 //Selectors
-export const selectOceanMutedStatus = (state) => state.AmbienceSounds.Ocean.isMuted;
+export const selectOceanMutedStatus = (state) =>
+	state.AmbienceSounds.Ocean.isMuted;
 export const selectFireplaceMutedStatus = (state) =>
 	state.AmbienceSounds.Fireplace.isMuted;
-export const selectCafeMutedStatus = (state) => state.AmbienceSounds.Cafe.isMuted;
-export const selectNatureMutedStatus = (state) => state.AmbienceSounds.Nature.isMuted;
+export const selectCafeMutedStatus = (state) =>
+	state.AmbienceSounds.Cafe.isMuted;
+export const selectNatureMutedStatus = (state) =>
+	state.AmbienceSounds.Nature.isMuted;
 export const selectKeyboardMutedStatus = (state) =>
 	state.AmbienceSounds.Keyboard.isMuted;
-export const selectRainMutedStatus = (state) => state.AmbienceSounds.Rain.isMuted;
+export const selectRainMutedStatus = (state) =>
+	state.AmbienceSounds.Rain.isMuted;
 export const selectPlayerStatus = (state) => state.AmbienceSounds.isPlayerShown;
 
 // for video player
-export const selectOceanVolume = state => state.AmbienceSounds.Ocean.volume;
-export const selectFireplaceVolume = state => state.AmbienceSounds.Fireplace.volume;
-export const selectCafeVolume = state => state.AmbienceSounds.Cafe.volume;
-export const selectNatureVolume = state => state.AmbienceSounds.Nature.volume;
-export const selectKeyboardVolume = state => state.AmbienceSounds.Keyboard.volume;
-export const selectRainVolume = state => state.AmbienceSounds.Rain.volume;
+export const selectOceanVolume = (state) => state.AmbienceSounds.Ocean.volume;
+export const selectFireplaceVolume = (state) =>
+	state.AmbienceSounds.Fireplace.volume;
+export const selectCafeVolume = (state) => state.AmbienceSounds.Cafe.volume;
+export const selectNatureVolume = (state) => state.AmbienceSounds.Nature.volume;
+export const selectKeyboardVolume = (state) =>
+	state.AmbienceSounds.Keyboard.volume;
+export const selectRainVolume = (state) => state.AmbienceSounds.Rain.volume;
+
+// for draggable
+export const selectLastPlayerPosition = (state) =>
+	state.AmbienceSounds.playerLastPosition;
