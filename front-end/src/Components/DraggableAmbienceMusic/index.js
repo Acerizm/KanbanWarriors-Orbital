@@ -3,6 +3,7 @@ import * as CSS from "./css";
 import { VolumeUpOutlined, VolumeOffOutlined } from "@mui/icons-material";
 import Slider, { SliderThumb } from "@mui/material/Slider";
 import { styled } from "@mui/material/styles";
+import MinimizeRoundedIcon from '@mui/icons-material/MinimizeRounded';
 import { useDispatch, useSelector } from "react-redux";
 import * as REDUX from "../Redux/Reducers/AmbienceSounds/AmbienceSoundsSlice.js";
 import Draggable from "react-draggable";
@@ -14,9 +15,11 @@ import cafe from "../AmbienceSounds/Sounds/cafe.mp3";
 import nature from "../AmbienceSounds/Sounds/nature.mp3";
 import keyboard from "../AmbienceSounds/Sounds/keyboard.mp3";
 import ocean from "../AmbienceSounds/Sounds/ocean.mp3";
+import MinimizeIcon from '@mui/icons-material/Minimize';
 
 export const AmbienceMusic = () => {
 	const playerStatus = useSelector(REDUX.selectPlayerStatus);
+	const dispatch = useDispatch();
 	return (
 		<Fragment>
 			{playerStatus ? (
@@ -35,12 +38,15 @@ export const AmbienceMusic = () => {
 							id="AmbienceMusicHeading"
 							style={{ ...CSS.AmbienceMusicHeadingStyle }}
 						>
-							<div
+							{/* <div
 								id="AmbienceMusicTitle"
 								style={{ ...CSS.AmbienceMusicTitleStyle }}
 							>
 								Ambience Sounds
-							</div>
+							</div> */}
+							<MinimizeIcon fontSize="large" sx={{...CSS.minimizeStyle}} onClick={
+								() => dispatch(REDUX.togglePlayer())
+							}/>
 						</div>
 						<AmbienceSound gridRow={2} soundTitle={"Ocean"} />
 						<AmbienceSound gridRow={3} soundTitle={"Fireplace"} />
