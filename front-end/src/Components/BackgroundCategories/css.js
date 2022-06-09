@@ -16,10 +16,9 @@ export const wrapperTestStyle = {
 
 export const iframeStyle = {
 	pointerEvents: "none",
-	//transform:"translateY(-50%)",
 	gridRow: "1 / 3",
 	gridColumn: "1 / 2",
-	width: "100vw",
-	height: "100vh",
+	// width: "100%",
+	// height: "100%",
 	transform: "scale(1.2)",
 };

@@ -1,3 +1,4 @@
+import { faBullseye } from "@fortawesome/free-solid-svg-icons";
 import { createSlice } from "@reduxjs/toolkit";
 
 // ------------------------------- Reducers ------------------------------------------------------------------------------------------------------
@@ -7,6 +8,7 @@ const backgroundImageSlice = createSlice({
 	// the initial default state
 	initialState: {
 		isDrawerOn: false,
+		showLoadingArea: true,
 		currentCategorySelected: 0,
 		currentImageId: 0,
 	},
@@ -32,13 +34,21 @@ const backgroundImageSlice = createSlice({
 				state.currentImageId += 1;
 			}
 		},
+		toggleLoadingArea(state, action) {
+			state.showLoadingArea = action.payload;
+		},
 	},
 });
 
 // ------------------------------- Exporting Actions/Reducers ---------------------------------------------------------------------------
 
-export const { toggleDrawerOn, toggleDrawerOff, changeCategory, changeImage } =
-	backgroundImageSlice.actions;
+export const {
+	toggleDrawerOn,
+	toggleDrawerOff,
+	changeCategory,
+	changeImage,
+	toggleLoadingArea,
+} = backgroundImageSlice.actions;
 
 export default backgroundImageSlice.reducer;
 
@@ -57,3 +67,7 @@ export const selectCategory = (state) =>
 
 //for the image id of respective categories
 export const updatedImageId = (state) => state.backgroundImage.currentImageId;
+
+// for the loading area
+export const selectLoadingArea = (state) =>
+	state.backgroundImage.showLoadingArea;

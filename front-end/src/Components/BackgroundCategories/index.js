@@ -20,7 +20,7 @@ import { IKImage } from "imagekitio-react";
 import { urlEndpoint } from "../../Routes/index.js";
 
 //Import Youtube here
-import YouTube from "react-youtube";
+import ReactPlayer from "react-player/youtube";
 
 // import Redux stuff here
 // import { selectDrawerState, toggleDrawerOff, changeSpaceImage, selectSpaceImageState, changeSpaceImageId } from '../Redux/Reducers/BackgroundImage/BackgroundImageSlice';
@@ -29,6 +29,9 @@ import * as REDUX from "../Redux/Reducers/BackgroundImage/BackgroundImageSlice.j
 
 // import AJAX stuff here
 import axios from "axios";
+
+// import loading area here
+import { LoadingArea } from "../LoadingArea/index.js";
 
 // ------------------------------------- Drawer (Material UI) Feature/Component ------------------------------------------------------------------------------------
 // styling for Drawer
@@ -139,6 +142,12 @@ export const TemporaryDrawer = () => {
 				anchor={"bottom"}
 				open={isDrawerOn}
 				onClose={() => dispatch(REDUX.toggleDrawerOff())}
+				hideBackdrop={false}
+				ModalProps={{
+					BackdropProps: {
+						invisible: true,
+					},
+				}}
 			>
 				{list()}
 			</Drawer>
@@ -235,7 +244,6 @@ export const BackgroundImage = () => {
 		(videoId == null && newBackground == false) ||
 		(videoId != null && newBackground == false)
 	) {
-		//background = <Youtube2Background videoId={"udJ8GniptHU"} />;
 		background = <YoutubeBackground id={videoId} />;
 		return <React.Fragment>{background}</React.Fragment>;
 	} else if (videoId == null && newBackground == true) {
@@ -279,7 +287,6 @@ export const BackgroundImage = () => {
 						/>
 					);
 				} else {
-					console.log(videoId);
 					background = <YoutubeBackground id={videoId} />;
 				}
 				break;
@@ -326,7 +333,6 @@ export const BackgroundImage = () => {
 };
 
 // this is where the imagekit component is
-
 const ImageKitBackground = ({ urlEndpoint, path }) => {
 	return (
 		<React.Fragment>
@@ -342,61 +348,44 @@ const ImageKitBackground = ({ urlEndpoint, path }) => {
 	);
 };
 
-// this is a test feature
-// const Youtube2Background = ({ videoId }) => {
-// 	let videoSource =
-// 		"https://www.youtube.com/embed/" +
-// 		videoId +
-// 		"?vq=hd1440&autoplay=1&controls=0&disablekb=1&loop=1&modestbranding=1&playsinline=1&color=white&mute=1&playlist=" +
-// 		videoId +
-// 		"&allowfullscreen&start=100";
-// 	return (
-// 		<div id="wrapperTest" style={{ ...CSS.wrapperTestStyle }}>
-// 			<iframe
-// 				id="iframeTest "
-// 				src={videoSource}
-// 				style={{ ...CSS.iframeStyle }}
-// 				allow="fullscreen"
-// 			></iframe>
-// 		</div>
-// 	);
-// };
-
-// Youtube background component
 const YoutubeBackground = ({ id }) => {
+	let youtubeLink = "https://www.youtube.com/watch?v=" + id;
 	let currentId = "" + id;
 	let rngValue = rngForPlayback();
-	const opts = {
-		height: "100%",
-		width: "100%",
-		playerVars: {
-			// https://developers.google.com/youtube/player_parameters
-			autoplay: 1,
-			controls: 0,
-			playsinline: 1,
-			disablekb: 1,
-			fs: 0,
-			iv_load_policy: 3,
-			loop: 1,
-			modestbranding: 1,
-			start: rngValue,
-			rel: 0,
-			mute: 1,
-			playlist: currentId,
-		},
-	};
-	const onReady = (event) => {
-		event.target.playVideo();
-	};
+	const dispatch = useDispatch();
 	return (
 		<React.Fragment>
-			<YouTube
-				videoId={currentId}
-				opts={opts}
-				onReady={(e) => onReady(e)}
+			{<LoadingArea />}
+			<ReactPlayer
+				url={youtubeLink}
+				config={{
+					playerVars: {
+						// https://developers.google.com/youtube/player_parameters
+						autoplay: 1,
+						controls: 0,
+						playsinline: 1,
+						disablekb: 1,
+						fs: 0,
+						iv_load_policy: 3,
+						loop: 1,
+						modestbranding: 1,
+						start: rngValue,
+						rel: 0,
+						mute: 1,
+						playlist: currentId,
+					},
+				}}
+				width={"100%"}
+				height={"100%"}
 				style={{ ...CSS.iframeStyle }}
+				playing={true}
+				onBuffer={() => {
+					dispatch(REDUX.toggleLoadingArea(true));
+				}}
+				onPlay={() => {
+					dispatch(REDUX.toggleLoadingArea(false));
+				}}
 			/>
-			;
 		</React.Fragment>
 	);
 };
