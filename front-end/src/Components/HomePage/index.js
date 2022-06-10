@@ -6,7 +6,7 @@ import Draggable from 'react-draggable';
 import React from "react";
 import { BackgroundImage } from "../BackgroundCategories/index.js";
 import DraggableClock from "../DraggableClock/DraggableClock"
-import Timer from "../Timer/Timer"
+import DraggableTimer from "../Timer/DraggableTimer"
 // import custom css file here
 import "./HomePage.css";
 
@@ -48,7 +48,7 @@ const HomePage = () =>  {
                         scale={1}
                         >
                         <div>
-                            <Timer/>
+                            <DraggableTimer></DraggableTimer>
                         </div>
                     </Draggable>
                 </div>
