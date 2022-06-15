@@ -5,6 +5,7 @@ import { configureStore } from "@reduxjs/toolkit";
 import backgroundImageReducer from "../Reducers/BackgroundImage/BackgroundImageSlice.js";
 import AuthenticationReducer from "../Reducers/Authentication/AuthenticationSlice.js";
 import AmbienceSoundsReducer from "../Reducers/AmbienceSounds/AmbienceSoundsSlice.js";
+import SettingsReducer from "../Reducers/Settings/SettingsSlice.js";
 
 const store = configureStore({
 	// root reducer is here
@@ -20,6 +21,7 @@ const store = configureStore({
 		backgroundImage: backgroundImageReducer,
 		Authentication: AuthenticationReducer,
 		AmbienceSounds: AmbienceSoundsReducer,
+		Settings: SettingsReducer,
 	},
 });
 

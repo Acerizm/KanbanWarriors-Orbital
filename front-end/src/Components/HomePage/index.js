@@ -10,7 +10,7 @@ import { AmbienceMusic } from "../DraggableAmbienceMusic/index.js";
 import { AudioPlayer } from "../DraggableAmbienceMusic/index.js";
 // import custom css file here
 import "./HomePage.css";
-import raindrop from "../AmbienceSounds/Sounds/raindrops.mp3";
+import SettingsButton from "../Settings/index.js";
 
 const HomePage = () => {
 	return (
@@ -43,6 +43,7 @@ const HomePage = () => {
 							<DraggableClock></DraggableClock>
 						</div>
 					</Draggable>
+					<SettingsButton />
 					<AmbienceMusic />
 					<AudioPlayer />
 				</div>
