@@ -1,30 +1,23 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { styled, alpha } from "@mui/material/styles";
 import Button from "@mui/material/Button";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import EditIcon from "@mui/icons-material/Edit";
 import Divider from "@mui/material/Divider";
-import ArchiveIcon from "@mui/icons-material/Archive";
 import FileCopyIcon from "@mui/icons-material/FileCopy";
-import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import * as CSS from "./css.js";
 import Draggable from "react-draggable";
 import { useDispatch, useSelector } from "react-redux";
 import * as REDUX from "../Redux/Reducers/Settings/SettingsSlice.js";
-import { ConstructionOutlined } from "@mui/icons-material";
 import PowerSettingsNewIcon from "@mui/icons-material/PowerSettingsNew";
 import { auth } from "../Auth/Firebase/index.js";
 import { signOut } from "firebase/auth";
 import Backdrop from "@mui/material/Backdrop";
-
-// material ui stuff here
-import LogoutIcon from "@mui/icons-material/Logout";
-import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
-
-// lottie icons
-import { Player, Controls } from "@lottiefiles/react-lottie-player";
+import { useNavigate } from "react-router-dom";
+// lottie player
+import { Player } from "@lottiefiles/react-lottie-player";
 
 const logout = () => {
 	signOut(auth);
@@ -145,9 +138,14 @@ const SettingsButton = () => {
 							color: "black",
 							backgroundColor: "white",
 						}}
-						endIcon={<KeyboardArrowDownIcon />}
+						// endIcon={<KeyboardArrowDownIcon />}
 					>
-						Options
+						<Player
+							autoplay
+							loop
+							src="https://assets5.lottiefiles.com/packages/lf20_8y92hieq.json"
+							style={{ ...CSS.lotticonStyle }}
+						/>
 					</Button>
 					<StyledMenu
 						id="demo-customized-menu"
@@ -188,6 +186,7 @@ const SettingsButton = () => {
 const CustomLogoutBackdrop = () => {
 	const showBackdrop = useSelector(REDUX.selectBackdropState);
 	const dispatch = useDispatch();
+	const navigate = useNavigate();
 	return (
 		<React.Fragment>
 			{showBackdrop ? (
@@ -228,6 +227,7 @@ const CustomLogoutBackdrop = () => {
 								onClick={() => {
 									dispatch(REDUX.toggleBackdrop());
 									logout();
+									navigate("/Goodbye");
 								}}
 							>
 								{SignOutHeading}

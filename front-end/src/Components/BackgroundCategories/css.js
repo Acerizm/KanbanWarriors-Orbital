@@ -22,3 +22,10 @@ export const iframeStyle = {
 	// height: "100%",
 	transform: "scale(1.2)",
 };
+
+export const lotticonStyle = {
+	height: "50px",
+	width: "50px",
+	borderRadius: "50px",
+	//border: "2px solid black",
+};

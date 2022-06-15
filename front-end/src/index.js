@@ -26,6 +26,7 @@ import { CreateNewUser } from "./Components/Auth/CreateNewUser";
 import { NewUserEmail } from "./Components/Auth/NewUserEmail";
 import { ForgetPasswordPage } from "./Components/Auth/ForgetPassword";
 import { LoadingArea } from "./Components/LoadingArea";
+import AfterSignOutPage from "./Components/Auth/AfterSignOut";
 
 // React 18
 // The origins of the whole react app is found in ./Public/index.html
@@ -52,9 +53,11 @@ root.render(
 			<BrowserRouter>
 				<Routes>
 					<Route element={<ProtectedRoute />}>
+						{/* All protected routes are written here */}
 						<Route path="/" element={<HomePage />} />
 						<Route path="/home" element={<HomePage />} />
 					</Route>
+					{/* All non-protected routes are written here */}
 					<Route path="/SignIn" element={<SignInPage />} />
 					<Route path="/NewUser" element={<CreateNewUser />} />
 					<Route path="/NewEmail" element={<NewUserEmail />} />
@@ -62,6 +65,7 @@ root.render(
 						path="/ForgetPassword"
 						element={<ForgetPasswordPage />}
 					/>
+					<Route path="/Goodbye" element={<AfterSignOutPage />} />
 					{/* Route for when the user enters invalid URL // Do error page in the future */}
 					<Route path="*" element={<SignInPage />} />
 				</Routes>

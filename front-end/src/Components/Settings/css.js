@@ -44,3 +44,10 @@ export const LogoutButtonContainerStyle = {
 	flexDirection: "row",
 	justifyContent: "center",
 };
+
+export const lotticonStyle = {
+	height: "30px",
+	width: "30px",
+	borderRadius: "50px",
+	//border: "2px solid black",
+};

@@ -33,6 +33,9 @@ import axios from "axios";
 // import loading area here
 import { LoadingArea } from "../LoadingArea/index.js";
 
+// import lotticon
+import { Player } from "@lottiefiles/react-lottie-player";
+
 // ------------------------------------- Drawer (Material UI) Feature/Component ------------------------------------------------------------------------------------
 // styling for Drawer
 export const TemporaryDrawer = () => {
@@ -58,11 +61,15 @@ export const TemporaryDrawer = () => {
 			>
 				<Stack
 					direction="column"
-					spacing={1}
+					spacing={0}
 					justifyContent="center"
 					alignItems="center"
 				>
-					<Typography variant="button" display="block">
+					<Typography
+						variant="button"
+						display="block"
+						// sx={{ marginTop: "20px" }}
+					>
 						Space
 					</Typography>
 					<IconButton
@@ -72,12 +79,18 @@ export const TemporaryDrawer = () => {
 							dispatch(REDUX.changeImage());
 						}}
 					>
-						<RocketIcon />
+						{/* <RocketIcon /> */}
+						<Player
+							autoplay
+							loop
+							src="https://assets5.lottiefiles.com/packages/lf20_RYmOmk.json"
+							style={{ ...CSS.lotticonStyle }}
+						/>
 					</IconButton>
 				</Stack>
 				<Stack
 					direction="column"
-					spacing={1}
+					spacing={0}
 					justifyContent="center"
 					alignItems="center"
 				>
@@ -91,12 +104,18 @@ export const TemporaryDrawer = () => {
 							dispatch(REDUX.changeImage());
 						}}
 					>
-						<PetsIcon />
+						{/* <PetsIcon /> */}
+						<Player
+							autoplay
+							loop
+							src="https://assets6.lottiefiles.com/packages/lf20_gn57ndas.json"
+							style={{ ...CSS.lotticonStyle }}
+						/>
 					</IconButton>
 				</Stack>
 				<Stack
 					direction="column"
-					spacing={1}
+					spacing={0}
 					justifyContent="center"
 					alignItems="center"
 				>
@@ -110,12 +129,18 @@ export const TemporaryDrawer = () => {
 							dispatch(REDUX.changeImage());
 						}}
 					>
-						<LocationCityIcon />
+						{/* <LocationCityIcon /> */}
+						<Player
+							autoplay
+							loop
+							src="https://assets10.lottiefiles.com/packages/lf20_EzPrWM.json"
+							style={{ ...CSS.lotticonStyle }}
+						/>
 					</IconButton>
 				</Stack>
 				<Stack
 					direction="column"
-					spacing={1}
+					spacing={0}
 					justifyContent="center"
 					alignItems="center"
 				>
@@ -129,7 +154,13 @@ export const TemporaryDrawer = () => {
 							dispatch(REDUX.changeImage());
 						}}
 					>
-						<SurfingIcon />
+						{/* <SurfingIcon /> */}
+						<Player
+							autoplay
+							loop
+							src="https://assets5.lottiefiles.com/packages/lf20_nbsthdus.json"
+							style={{ ...CSS.lotticonStyle }}
+						/>
 					</IconButton>
 				</Stack>
 			</Stack>
@@ -383,7 +414,9 @@ const YoutubeBackground = ({ id }) => {
 					dispatch(REDUX.toggleLoadingArea(true));
 				}}
 				onPlay={() => {
-					dispatch(REDUX.toggleLoadingArea(false));
+					setTimeout(() => {
+						dispatch(REDUX.toggleLoadingArea(false));
+					}, 1000);
 				}}
 			/>
 		</React.Fragment>
