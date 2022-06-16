@@ -6,6 +6,7 @@ import backgroundImageReducer from "../Reducers/BackgroundImage/BackgroundImageS
 import AuthenticationReducer from "../Reducers/Authentication/AuthenticationSlice.js";
 import AmbienceSoundsReducer from "../Reducers/AmbienceSounds/AmbienceSoundsSlice.js";
 import SettingsReducer from "../Reducers/Settings/SettingsSlice.js";
+import LiveRoomReducer from "../Reducers/LiveRoom/LiveRoomSlice.js";
 
 const store = configureStore({
 	// root reducer is here
@@ -22,6 +23,7 @@ const store = configureStore({
 		Authentication: AuthenticationReducer,
 		AmbienceSounds: AmbienceSoundsReducer,
 		Settings: SettingsReducer,
+		LiveRoom: LiveRoomReducer,
 	},
 });
 

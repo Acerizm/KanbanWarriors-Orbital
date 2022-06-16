@@ -28,6 +28,7 @@ import { ForgetPasswordPage } from "./Components/Auth/ForgetPassword";
 import { LoadingArea } from "./Components/LoadingArea";
 import AfterSignOutPage from "./Components/Auth/AfterSignOut";
 import ErrorPage from "./Components/Auth/ErrorPage";
+import LiveRoomPage from "./Components/LiveRoom";
 
 // React 18
 // The origins of the whole react app is found in ./Public/index.html
@@ -67,6 +68,7 @@ root.render(
 						element={<ForgetPasswordPage />}
 					/>
 					<Route path="/Goodbye" element={<AfterSignOutPage />} />
+					<Route path="/LiveRoom" element={<LiveRoomPage />} />
 					{/* Route for when the user enters invalid URL // Do error page in the future */}
 					<Route path="*" element={<ErrorPage />} />
 				</Routes>

@@ -196,6 +196,7 @@ const CustomLogoutBackdrop = () => {
 						zIndex: 100,
 					}}
 					open={true}
+					onClick={() => dispatch(REDUX.toggleBackdrop())}
 				>
 					<div
 						id="LogoutContainer"
