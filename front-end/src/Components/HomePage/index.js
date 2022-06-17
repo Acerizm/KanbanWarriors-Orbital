@@ -22,17 +22,7 @@ const HomePage = () => {
 				style={{ ...CSS.homeDesktopContainerStyle }}
 			>
 				<BackgroundImage />
-				<Draggable
-					axis="both"
-					handle=".handle"
-					position={null}
-					defaultClassName="draggableNavBar"
-					scale={1}
-				>
-					<div>
-						<NavBar></NavBar>
-					</div>
-				</Draggable>
+				<NavBar />
 				<Draggable
 					axis="both"
 					handle=".clockHandle"

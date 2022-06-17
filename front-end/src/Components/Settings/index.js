@@ -97,7 +97,7 @@ const SettingsButton = () => {
 			});
 			//also update positions for other users!
 			if (selectRoomId !== null) {
-				socket.emit("send_user_positions", {
+				socket.emit("send_user_settings_positions", {
 					position: currentPosition,
 					roomId: roomId,
 				});
@@ -109,11 +109,13 @@ const SettingsButton = () => {
 		y: 0,
 	});
 	const roomId = useSelector(selectRoomId);
-	//const currentPosition = useSelector(REDUX.selectSettingsLastPosition);
 	useEffect(() => {
-		socket.on("receive_other_users_positions", (settingsLastPosition) => {
-			updatePosition(settingsLastPosition);
-		});
+		socket.on(
+			"receive_other_users_settings_positions",
+			(settingsLastPosition) => {
+				updatePosition(settingsLastPosition);
+			}
+		);
 	}, [socket]);
 
 	return (
@@ -121,14 +123,18 @@ const SettingsButton = () => {
 			<Draggable
 				axis="both"
 				handle="#demo-customized-button"
+				positionOffset={{
+					x: "95vw",
+					y: "3vh",
+				}}
 				position={currentPosition}
 				defaultClassName="draggableSettingsButton"
 				scale={1}
 				onStart={(event, data) => {
-					eventControl(event);
+					eventControl(event, data);
 				}}
 				onStop={(event, data) => {
-					eventControl(event);
+					eventControl(event, data);
 				}}
 				onDrag={(event, data) => {
 					eventControl(event, data);

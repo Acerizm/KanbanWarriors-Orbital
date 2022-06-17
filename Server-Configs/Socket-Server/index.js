@@ -35,10 +35,15 @@ io.on("connection", (socket) => {
 	// while server sends "receive_other_users_positions" to react app users
 	// Observer pattern is used here :)
 	// IT WORKS GG
-	socket.on("send_user_positions", (data) => {
+	socket.on("send_user_settings_positions", (data) => {
 		socket
 			.to(data.roomId)
-			.emit("receive_other_users_positions", data.position);
+			.emit("receive_other_users_settings_positions", data.position);
+	});
+	socket.on("send_user_navbar_positions", (data) => {
+		socket
+			.to(data.roomId)
+			.emit("receive_other_users_navbar_positions", data.position);
 	});
 });
 
