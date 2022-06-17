@@ -1,5 +1,4 @@
 import React, { Fragment, useEffect, useState } from "react";
-import io from "socket.io-client";
 import { Button } from "@mui/material";
 import Draggable from "react-draggable";
 import Backdrop from "@mui/material/Backdrop";
@@ -98,12 +97,6 @@ const LiveRoomButton = () => {
 	);
 };
 const SubmitButton = () => {
-	const joinRoom = (socket, roomId) => {
-		socket.emit("join_room", roomId);
-	};
-	const createRoom = (socket, roomId) => {
-		socket.emit("create_room", roomId);
-	};
 	const isJoinOthersSelected = useSelector(REDUX.selectShowJoinOthersInput);
 	const isInviteOthersSelected = useSelector(REDUX.selectInviteOthersInput);
 	const JoinOthersRoomId = useSelector(REDUX.selectJoinOthersInput);

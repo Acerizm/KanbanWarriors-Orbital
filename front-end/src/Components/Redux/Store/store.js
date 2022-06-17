@@ -11,6 +11,7 @@ import SocketReducer from "../Reducers/Socket/SocketSlice.js";
 
 //custom middlewares here
 import { SocketMiddleware } from "../Middlewares/index.js";
+import { socket } from "../../SocketClient/index.js";
 
 const store = configureStore({
 	// root reducer is here
@@ -36,7 +37,7 @@ const store = configureStore({
 	// documentation -> https://redux-toolkit.js.org/usage/usage-guide#working-with-non-serializable-data
 	// why -> https://stackoverflow.com/questions/61704805/getting-an-error-a-non-serializable-value-was-detected-in-the-state-when-using
 	middleware: (getDefaultMiddleware) =>
-		getDefaultMiddleware().concat(SocketMiddleware),
+		getDefaultMiddleware().concat(SocketMiddleware(socket)),
 });
 
 export default store;

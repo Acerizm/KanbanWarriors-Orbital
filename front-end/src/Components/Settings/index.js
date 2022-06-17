@@ -6,12 +6,10 @@ import MenuItem from "@mui/material/MenuItem";
 import EditIcon from "@mui/icons-material/Edit";
 import Divider from "@mui/material/Divider";
 import FileCopyIcon from "@mui/icons-material/FileCopy";
-import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import * as CSS from "./css.js";
 import Draggable from "react-draggable";
 import { useDispatch, useSelector } from "react-redux";
 import * as REDUX from "../Redux/Reducers/Settings/SettingsSlice.js";
-import * as SOCKETREDUX from "../Redux/Reducers/Socket/SocketSlice.js";
 import PowerSettingsNewIcon from "@mui/icons-material/PowerSettingsNew";
 import { auth } from "../Auth/Firebase/index.js";
 import { signOut } from "firebase/auth";
@@ -19,6 +17,9 @@ import Backdrop from "@mui/material/Backdrop";
 import { useNavigate } from "react-router-dom";
 // lottie player
 import { Player } from "@lottiefiles/react-lottie-player";
+import { selectRoomId } from "../Redux/Reducers/Socket/SocketSlice.js";
+
+import { socket } from "../SocketClient/index.js";
 
 const logout = () => {
 	signOut(auth);
@@ -77,9 +78,8 @@ const SettingsButton = () => {
 		setAnchorEl(null);
 	};
 	const dispatch = useDispatch();
-	const settingsLastPosition = useSelector(REDUX.selectSettingsLastPosition);
 	const [isDragging, updateDraggingStatus] = React.useState(false);
-	const eventControl = (event) => {
+	const eventControl = (event, data) => {
 		if (event.type === "mousedown" || event.type === "touchmove") {
 			// do nothing
 		}
@@ -91,24 +91,47 @@ const SettingsButton = () => {
 		}
 		if (event.type === "mousemove") {
 			updateDraggingStatus(true);
+			updatePosition({
+				x: data.x,
+				y: data.y,
+			});
+			//also update positions for other users!
+			if (selectRoomId !== null) {
+				socket.emit("send_user_positions", {
+					position: currentPosition,
+					roomId: roomId,
+				});
+			}
 		}
 	};
+	const [currentPosition, updatePosition] = React.useState({
+		x: 0,
+		y: 0,
+	});
+	const roomId = useSelector(selectRoomId);
+	//const currentPosition = useSelector(REDUX.selectSettingsLastPosition);
+	useEffect(() => {
+		socket.on("receive_other_users_positions", (settingsLastPosition) => {
+			updatePosition(settingsLastPosition);
+		});
+	}, [socket]);
+
 	return (
 		<React.Fragment>
 			<Draggable
 				axis="both"
 				handle="#demo-customized-button"
-				position={null}
+				position={currentPosition}
 				defaultClassName="draggableSettingsButton"
 				scale={1}
-				onStart={(event) => {
+				onStart={(event, data) => {
 					eventControl(event);
 				}}
-				onStop={(event) => {
+				onStop={(event, data) => {
 					eventControl(event);
 				}}
-				onDrag={(event) => {
-					eventControl(event);
+				onDrag={(event, data) => {
+					eventControl(event, data);
 				}}
 			>
 				<div

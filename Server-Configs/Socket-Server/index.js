@@ -34,8 +34,11 @@ io.on("connection", (socket) => {
 	// user in react app sends "send_user_positions"!
 	// while server sends "receive_other_users_positions" to react app users
 	// Observer pattern is used here :)
+	// IT WORKS GG
 	socket.on("send_user_positions", (data) => {
-		socket.to(data.room).emit("receive_other_users_positions", data);
+		socket
+			.to(data.roomId)
+			.emit("receive_other_users_positions", data.position);
 	});
 });
 
