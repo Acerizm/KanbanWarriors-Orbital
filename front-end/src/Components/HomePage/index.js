@@ -11,44 +11,45 @@ import { AudioPlayer } from "../DraggableAmbienceMusic/index.js";
 // import custom css file here
 import "./HomePage.css";
 import SettingsButton from "../Settings/index.js";
+import Notifications from "../Notifications/index.js";
+import LiveRoomButton from "../LiveRoom/index.js";
 
 const HomePage = () => {
 	return (
 		<div id="Home" style={{ ...CSS.homeStyle }}>
-			<Desktop>
-				<div
-					id="HomeDesktopContainer"
-					style={{ ...CSS.homeDesktopContainerStyle }}
+			<div
+				id="HomeDesktopContainer"
+				style={{ ...CSS.homeDesktopContainerStyle }}
+			>
+				<BackgroundImage />
+				<Draggable
+					axis="both"
+					handle=".handle"
+					position={null}
+					defaultClassName="draggableNavBar"
+					scale={1}
 				>
-					<BackgroundImage />
-					<Draggable
-						axis="both"
-						handle=".handle"
-						position={null}
-						defaultClassName="draggableNavBar"
-						scale={1}
-					>
-						<div>
-							<NavBar></NavBar>
-						</div>
-					</Draggable>
-					<Draggable
-						axis="both"
-						handle=".clockHandle"
-						position={null}
-						defaultClassName="draggableClock"
-						scale={1}
-					>
-						<div>
-							<DraggableClock></DraggableClock>
-						</div>
-					</Draggable>
-					<SettingsButton />
-					<AmbienceMusic />
-					<AudioPlayer />
-				</div>
-			</Desktop>
-			<Tablet></Tablet>
+					<div>
+						<NavBar></NavBar>
+					</div>
+				</Draggable>
+				<Draggable
+					axis="both"
+					handle=".clockHandle"
+					position={null}
+					defaultClassName="draggableClock"
+					scale={1}
+				>
+					<div>
+						<DraggableClock></DraggableClock>
+					</div>
+				</Draggable>
+				<SettingsButton />
+				<LiveRoomButton />
+				<AmbienceMusic />
+				<AudioPlayer />
+				<Notifications />
+			</div>
 		</div>
 	);
 };

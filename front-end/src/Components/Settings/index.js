@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { styled, alpha } from "@mui/material/styles";
 import Button from "@mui/material/Button";
 import Menu from "@mui/material/Menu";
@@ -11,6 +11,7 @@ import * as CSS from "./css.js";
 import Draggable from "react-draggable";
 import { useDispatch, useSelector } from "react-redux";
 import * as REDUX from "../Redux/Reducers/Settings/SettingsSlice.js";
+import * as SOCKETREDUX from "../Redux/Reducers/Socket/SocketSlice.js";
 import PowerSettingsNewIcon from "@mui/icons-material/PowerSettingsNew";
 import { auth } from "../Auth/Firebase/index.js";
 import { signOut } from "firebase/auth";
@@ -92,7 +93,6 @@ const SettingsButton = () => {
 			updateDraggingStatus(true);
 		}
 	};
-
 	return (
 		<React.Fragment>
 			<Draggable
@@ -196,7 +196,7 @@ const CustomLogoutBackdrop = () => {
 						zIndex: 100,
 					}}
 					open={true}
-					onClick={() => dispatch(REDUX.toggleBackdrop())}
+					//onClick={() => dispatch(REDUX.toggleBackdrop())}
 				>
 					<div
 						id="LogoutContainer"

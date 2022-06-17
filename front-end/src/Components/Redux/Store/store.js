@@ -1,5 +1,4 @@
-import { createStore } from "redux";
-import { configureStore } from "@reduxjs/toolkit";
+import { configureStore, getDefaultMiddleware } from "@reduxjs/toolkit";
 
 // import reducers here
 import backgroundImageReducer from "../Reducers/BackgroundImage/BackgroundImageSlice.js";
@@ -7,6 +6,11 @@ import AuthenticationReducer from "../Reducers/Authentication/AuthenticationSlic
 import AmbienceSoundsReducer from "../Reducers/AmbienceSounds/AmbienceSoundsSlice.js";
 import SettingsReducer from "../Reducers/Settings/SettingsSlice.js";
 import LiveRoomReducer from "../Reducers/LiveRoom/LiveRoomSlice.js";
+import NotificationsReducer from "../Reducers/Notifications/NotificationsSlice.js";
+import SocketReducer from "../Reducers/Socket/SocketSlice.js";
+
+//custom middlewares here
+import { SocketMiddleware } from "../Middlewares/index.js";
 
 const store = configureStore({
 	// root reducer is here
@@ -24,7 +28,15 @@ const store = configureStore({
 		AmbienceSounds: AmbienceSoundsReducer,
 		Settings: SettingsReducer,
 		LiveRoom: LiveRoomReducer,
+		Notifications: NotificationsReducer,
+		Socket: SocketReducer,
 	},
+	// --------------------------------------------------------- WARNING-------------------------------------------------
+	// Removed redux default error notifications on console.log for non serializable data
+	// documentation -> https://redux-toolkit.js.org/usage/usage-guide#working-with-non-serializable-data
+	// why -> https://stackoverflow.com/questions/61704805/getting-an-error-a-non-serializable-value-was-detected-in-the-state-when-using
+	middleware: (getDefaultMiddleware) =>
+		getDefaultMiddleware().concat(SocketMiddleware),
 });
 
 export default store;

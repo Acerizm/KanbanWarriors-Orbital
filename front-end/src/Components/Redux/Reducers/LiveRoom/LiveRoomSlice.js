@@ -8,6 +8,7 @@ const LiveRoomSlice = createSlice({
 		showJoinOthersInput: true,
 		InviteOthersInput: "",
 		showInviteOthersInput: true,
+		showBackdrop: false,
 	},
 	reducers: {
 		blockInput(state, action) {
@@ -30,6 +31,9 @@ const LiveRoomSlice = createSlice({
 		updateInviteOthersInput(state, action) {
 			state.InviteOthersInput = action.payload;
 		},
+		toggleBackdrop(state) {
+			state.showBackdrop = !state.showBackdrop;
+		},
 	},
 });
 
@@ -39,6 +43,7 @@ export const {
 	unblockInput,
 	updateInviteOthersInput,
 	updateJoinOthersInput,
+	toggleBackdrop,
 } = LiveRoomSlice.actions;
 
 //export reducers
@@ -52,3 +57,4 @@ export const selectShowInviteOthersInput = (state) =>
 	state.LiveRoom.showInviteOthersInput;
 export const selectInviteOthersInput = (state) =>
 	state.LiveRoom.InviteOthersInput;
+export const selectBackdropState = (state) => state.LiveRoom.showBackdrop;
