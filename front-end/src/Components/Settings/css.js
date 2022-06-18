@@ -3,9 +3,9 @@ export const SettingsButtonContainerStyle = {
 	gridColumn: "1 / 1",
 	height: "50px",
 	width: "50px",
-	// position: "fixed",
-	// top: "3vh",
-	// right: "5vw",
+	position: "fixed",
+	top: "3vh",
+	right: "5vw",
 };
 
 export const BackdropStyle = {

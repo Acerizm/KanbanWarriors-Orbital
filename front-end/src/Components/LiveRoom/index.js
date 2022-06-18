@@ -67,8 +67,8 @@ const LiveRoomButton = () => {
 				axis="both"
 				handle="#LiveRoomButton"
 				positionOffset={{
-					x: "87vw",
-					y: "3vh",
+					x: 0,
+					y: 0,
 				}}
 				position={currentPosition}
 				defaultClassName="draggableLiveRoomButton"

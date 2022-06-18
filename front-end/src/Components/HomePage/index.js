@@ -1,8 +1,5 @@
-import { Desktop } from "../ResponsiveComponent/MediaQuery.js";
-import { Tablet } from "../ResponsiveComponent/MediaQuery.js";
 import NavBar from "../NavBar";
 import * as CSS from "./css.js";
-import Draggable from "react-draggable";
 import React from "react";
 import { BackgroundImage } from "../BackgroundCategories/index.js";
 import DraggableClock from "../DraggableClock/DraggableClock";
@@ -23,17 +20,7 @@ const HomePage = () => {
 			>
 				<BackgroundImage />
 				<NavBar />
-				<Draggable
-					axis="both"
-					handle=".clockHandle"
-					position={null}
-					defaultClassName="draggableClock"
-					scale={1}
-				>
-					<div>
-						<DraggableClock></DraggableClock>
-					</div>
-				</Draggable>
+				<DraggableClock />
 				<SettingsButton />
 				<LiveRoomButton />
 				<AmbienceMusic />

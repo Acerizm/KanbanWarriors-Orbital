@@ -3,9 +3,9 @@ export const LiveRoomButtonContainerStyle = {
 	gridColumn: "1 / 1",
 	height: "40px",
 	width: "115px",
-	// position: "fixed",
-	// top: "3vh",
-	// right: "170px",
+	position: "fixed",
+	top: "3vh",
+	right: "170px",
 };
 
 export const RoomPopUpContainerStyle = {

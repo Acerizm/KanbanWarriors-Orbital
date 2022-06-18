@@ -126,8 +126,8 @@ const SettingsButton = () => {
 				axis="both"
 				handle="#demo-customized-button"
 				positionOffset={{
-					x: "95vw",
-					y: "3vh",
+					x: 0,
+					y: 0,
 				}}
 				position={currentPosition}
 				defaultClassName="draggableSettingsButton"

@@ -19,7 +19,7 @@ const io = new Server(server, {
 io.on("connection", (socket) => {
 	console.log(`user ${socket.id} is connected`);
 
-	// for joining room!
+	// for joining room
 	socket.on("joinRoom", (roomId) => {
 		socket.join(roomId);
 		console.log(`user ${socket.id} joined ${roomId}`);
@@ -57,6 +57,16 @@ io.on("connection", (socket) => {
 		socket
 			.to(data.roomId)
 			.emit("receive_other_users_ambience_positions", data.position);
+	});
+	socket.on("send_user_clock_positions", (data) => {
+		socket
+			.to(data.roomId)
+			.emit("receive_other_users_clock_positions", data.position);
+	});
+	socket.on("send_user_clock_color", (data) => {
+		socket
+			.to(data.roomId)
+			.emit("receive_other_users_clock_color", data.color);
 	});
 });
 
