@@ -1,11 +1,11 @@
 export const LiveRoomButtonContainerStyle = {
 	gridRow: "1 / 2",
 	gridColumn: "1 / 1",
-	//height: "50px",
+	height: "40px",
 	width: "115px",
-	position: "fixed",
-	top: "3vh",
-	right: "170px",
+	// position: "fixed",
+	// top: "3vh",
+	// right: "170px",
 };
 
 export const RoomPopUpContainerStyle = {

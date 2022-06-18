@@ -17,6 +17,10 @@ import keyboard from "../AmbienceSounds/Sounds/keyboard.mp3";
 import ocean from "../AmbienceSounds/Sounds/ocean.mp3";
 import MinimizeIcon from "@mui/icons-material/Minimize";
 
+// socket.io
+import { selectRoomId } from "../Redux/Reducers/Socket/SocketSlice.js";
+import { socket } from "../SocketClient/index.js";
+
 const ListOfAmbienceSounds = [
 	"Ocean",
 	"Fireplace",
@@ -27,7 +31,6 @@ const ListOfAmbienceSounds = [
 ];
 export const AmbienceMusic = () => {
 	const playerStatus = useSelector(REDUX.selectPlayerStatus);
-	const lastPlayerPosition = useSelector(REDUX.selectLastPlayerPosition);
 	const dispatch = useDispatch();
 	// map all ambience sounds
 	// DRY -> Dont repeat yrself
@@ -37,25 +40,68 @@ export const AmbienceMusic = () => {
 			<AmbienceSound key={index} gridRow={gridRow} soundTitle={title} />
 		);
 	});
+
+	// ----------------------------------------------Code for socket.io---------------------------------------------------------------------------
+	const [isDragging, updateDraggingStatus] = React.useState(false);
+	const eventControl = (event, data) => {
+		if (event.type === "mousedown" || event.type === "touchmove") {
+			// do nothing
+		}
+		if (event.type === "mouseup" || event.type === "touchend") {
+			// setTimeout so that user can click it after drag :p
+			setTimeout(() => {
+				updateDraggingStatus(false);
+			}, 100);
+		}
+		if (event.type === "mousemove") {
+			updateDraggingStatus(true);
+			updatePosition({
+				x: data.x,
+				y: data.y,
+			});
+			//also update positions for other users!
+			if (selectRoomId !== null) {
+				socket.emit("send_user_ambience_positions", {
+					position: currentPosition,
+					roomId: roomId,
+				});
+			}
+		}
+	};
+	const [currentPosition, updatePosition] = React.useState({
+		x: 0,
+		y: 0,
+	});
+	const roomId = useSelector(selectRoomId);
+	useEffect(() => {
+		// change code here for other components!
+		socket.on(
+			"receive_other_users_ambience_positions",
+			(settingsLastPosition) => {
+				updatePosition(settingsLastPosition);
+			}
+		);
+	}, [socket]);
+	// // ----------------------------------------------Code for socket.io---------------------------------------------------------------------------
 	return (
 		<Fragment>
 			{playerStatus ? (
 				<Draggable
 					axis="both"
 					handle="#AmbienceMusicHeading"
-					defaultPosition={lastPlayerPosition}
-					position={null}
-					onStop={(event, data) => {
-						// peek the API through the method using Intellisense
-						// developer of draggable component never document properly
-						let position = {
-							x: data.lastX,
-							y: data.lastY,
-						};
-						dispatch(REDUX.updatePlayerLastPosition(position));
-					}}
+					defaultPosition={currentPosition}
+					position={currentPosition}
 					defaultClassName="draggableAmbienceMusicPlayer"
 					scale={1}
+					onStart={(event, data) => {
+						eventControl(event, data);
+					}}
+					onStop={(event, data) => {
+						eventControl(event, data);
+					}}
+					onDrag={(event, data) => {
+						eventControl(event, data);
+					}}
 				>
 					<div
 						className="AmbienceMusicContainer"

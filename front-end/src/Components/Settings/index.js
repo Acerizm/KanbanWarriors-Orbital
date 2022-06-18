@@ -17,8 +17,9 @@ import Backdrop from "@mui/material/Backdrop";
 import { useNavigate } from "react-router-dom";
 // lottie player
 import { Player } from "@lottiefiles/react-lottie-player";
-import { selectRoomId } from "../Redux/Reducers/Socket/SocketSlice.js";
 
+// socket.io
+import { selectRoomId } from "../Redux/Reducers/Socket/SocketSlice.js";
 import { socket } from "../SocketClient/index.js";
 
 const logout = () => {
@@ -78,6 +79,7 @@ const SettingsButton = () => {
 		setAnchorEl(null);
 	};
 	const dispatch = useDispatch();
+	// ----------------------------------------------Code for socket.io---------------------------------------------------------------------------
 	const [isDragging, updateDraggingStatus] = React.useState(false);
 	const eventControl = (event, data) => {
 		if (event.type === "mousedown" || event.type === "touchmove") {
@@ -117,7 +119,7 @@ const SettingsButton = () => {
 			}
 		);
 	}, [socket]);
-
+	// // ----------------------------------------------Code for socket.io---------------------------------------------------------------------------
 	return (
 		<React.Fragment>
 			<Draggable

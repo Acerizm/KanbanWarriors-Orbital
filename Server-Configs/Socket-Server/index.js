@@ -45,6 +45,19 @@ io.on("connection", (socket) => {
 			.to(data.roomId)
 			.emit("receive_other_users_navbar_positions", data.position);
 	});
+	socket.on("send_user_liveroombutton_positions", (data) => {
+		socket
+			.to(data.roomId)
+			.emit(
+				"receive_other_users_liveroombutton_positions",
+				data.position
+			);
+	});
+	socket.on("send_user_ambience_positions", (data) => {
+		socket
+			.to(data.roomId)
+			.emit("receive_other_users_ambience_positions", data.position);
+	});
 });
 
 server.listen(4000, () => {

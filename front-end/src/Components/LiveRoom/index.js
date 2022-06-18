@@ -11,12 +11,17 @@ import * as REDUX from "../Redux/Reducers/LiveRoom/LiveRoomSlice.js";
 import { toggleJoinRoomNotification } from "../Redux/Reducers/Notifications/NotificationsSlice.js";
 import * as SOCKETREDUX from "../Redux/Reducers/Socket/SocketSlice.js";
 
+// socket.io
+import { selectRoomId } from "../Redux/Reducers/Socket/SocketSlice.js";
+import { socket } from "../SocketClient/index.js";
+
 const LiveRoomButton = () => {
 	const dispatch = useDispatch();
 	const showBackdrop = useSelector(REDUX.selectBackdropState);
 	// for draggable
+	// ----------------------------------------------Code for socket.io---------------------------------------------------------------------------
 	const [isDragging, updateDraggingStatus] = React.useState(false);
-	const eventControl = (event) => {
+	const eventControl = (event, data) => {
 		if (event.type === "mousedown" || event.type === "touchmove") {
 			// do nothing
 		}
@@ -28,24 +33,54 @@ const LiveRoomButton = () => {
 		}
 		if (event.type === "mousemove") {
 			updateDraggingStatus(true);
+			updatePosition({
+				x: data.x,
+				y: data.y,
+			});
+			//also update positions for other users!
+			if (selectRoomId !== null) {
+				socket.emit("send_user_liveroombutton_positions", {
+					position: currentPosition,
+					roomId: roomId,
+				});
+			}
 		}
 	};
+	const [currentPosition, updatePosition] = React.useState({
+		x: 0,
+		y: 0,
+	});
+	const roomId = useSelector(selectRoomId);
+	useEffect(() => {
+		// change code here for other components!
+		socket.on(
+			"receive_other_users_liveroombutton_positions",
+			(settingsLastPosition) => {
+				updatePosition(settingsLastPosition);
+			}
+		);
+	}, [socket]);
+	// // ----------------------------------------------Code for socket.io---------------------------------------------------------------------------
 	return (
 		<Fragment>
 			<Draggable
 				axis="both"
 				handle="#LiveRoomButton"
-				position={null}
+				positionOffset={{
+					x: "87vw",
+					y: "3vh",
+				}}
+				position={currentPosition}
 				defaultClassName="draggableLiveRoomButton"
 				scale={1}
-				onStart={(event) => {
-					eventControl(event);
+				onStart={(event, data) => {
+					eventControl(event, data);
 				}}
-				onStop={(event) => {
-					eventControl(event);
+				onStop={(event, data) => {
+					eventControl(event, data);
 				}}
-				onDrag={(event) => {
-					eventControl(event);
+				onDrag={(event, data) => {
+					eventControl(event, data);
 				}}
 			>
 				<div
