@@ -4,7 +4,7 @@ import React from 'react';
 import Settings from './Settings';
 import Modes from './Modes';
 import CountDownClock from './CountDownClock';
-
+import Buttons from './Buttons';
 
 // styles
 import './DraggableTimer.css'
@@ -12,9 +12,10 @@ import './DraggableTimer.css'
 function DraggableTimer() {
     return (
         <div className='timer timerHandle'>
-            {/* <Settings/> */}
-            {/* <Modes/> */}
-            {/* <CountDownClock/> */}
+            <Settings/>
+            <Modes/>
+            <CountDownClock/>
+            <Buttons/>
         </div>
     )
 }

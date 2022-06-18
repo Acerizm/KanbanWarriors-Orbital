@@ -1,0 +1,9 @@
+
+.modes-time-container {
+    display: flex;
+}
+
+.modes-time {
+    display: inline-block;
+}
+

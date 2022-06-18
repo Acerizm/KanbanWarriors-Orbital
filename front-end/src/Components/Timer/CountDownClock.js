@@ -1,21 +1,37 @@
 import React, {useEffect, useState} from 'react';
 
 const CountDownClock = () => {
-    const [timerSeconds, setTimerSeconds] = useState(25 * 60);
-
+    const [timerSeconds, setTimerSeconds] = useState(1 * 60);
+    const [displayMessage, setDisplayMessage] = useState(false)
     
-    let displayedTimerMin = timerSeconds / 60;
+    let displayedTimerMin = Math.floor(timerSeconds / 60);
     let displayedTimerSec = timerSeconds % 60;
 
+    displayedTimerMin = displayedTimerMin < 10 ? `0${displayedTimerMin}` : displayedTimerMin;
+    displayedTimerSec = displayedTimerSec < 10 ? `0${displayedTimerSec}` : displayedTimerSec;
+
     useEffect(() => {
-        setInterval(()=> {
-            setTimerSeconds(timerSeconds-1)
+        let interval = setInterval(()=> {
+            clearInterval(interval);
+            if ( timerSeconds === 0) {
+                let minutes = displayMessage ? 25 : 1;
+                
+                setTimerSeconds(minutes * 60);
+                setDisplayMessage(!displayMessage);
+            } else {
+                setTimerSeconds(timerSeconds => timerSeconds - 1)
+            }
         },1000)
     }, [timerSeconds]);
 
     return (
         <div>
-            {displayedTimerMin}:{displayedTimerSec}
+            <div>
+                {displayMessage && <div>Break time! New session starts in:</div>}
+            </div>
+            <div>
+                {displayedTimerMin}:{displayedTimerSec}
+            </div>
         </div>
     );
 }
