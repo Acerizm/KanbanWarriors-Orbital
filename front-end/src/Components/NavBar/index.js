@@ -29,7 +29,7 @@ const navBarTheme = createTheme({
 		MuiBottomNavigation: {
 			styleOverrides: {
 				root: {
-					width: "100%",
+					width: "700px",
 					borderRadius: "5px",
 				},
 			},

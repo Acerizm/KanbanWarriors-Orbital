@@ -7,7 +7,7 @@ const backgroundImageSlice = createSlice({
 	// the initial default state
 	initialState: {
 		isDrawerOn: false,
-		showLoadingArea: true,
+		showLoadingArea: false,
 		currentCategorySelected: 0,
 		videoId: null,
 		newBackground: false,

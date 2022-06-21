@@ -1,4 +1,4 @@
-import React, { useEffect, Suspense } from "react";
+import React, { useEffect } from "react";
 import * as CSS from "./css.js";
 
 // import Material UI Stuff here
@@ -33,7 +33,6 @@ import { LoadingArea } from "../LoadingArea/index.js";
 import { Player } from "@lottiefiles/react-lottie-player";
 
 // socket.io
-import { selectRoomId } from "../Redux/Reducers/Socket/SocketSlice.js";
 import { socket } from "../SocketClient/index.js";
 
 // ------------------------------------- Drawer (Material UI) Feature/Component ------------------------------------------------------------------------------------
@@ -139,12 +138,14 @@ export const TemporaryDrawer = () => {
 							changeBackground("Wildlife");
 						}}
 					>
-						{/* <PetsIcon /> */}
 						<Player
 							autoplay
 							loop
 							src="https://assets6.lottiefiles.com/packages/lf20_gn57ndas.json"
-							style={{ ...CSS.lotticonStyle }}
+							style={{
+								...CSS.lotticonStyle,
+								transform: "scale(1.8)",
+							}}
 						/>
 					</IconButton>
 				</Stack>
@@ -208,6 +209,100 @@ export const TemporaryDrawer = () => {
 						/>
 					</IconButton>
 				</Stack>
+				<Stack
+					direction="column"
+					spacing={0}
+					justifyContent="center"
+					alignItems="center"
+				>
+					<Typography variant="button" display="block">
+						Study
+					</Typography>
+					<IconButton
+						aria-label="Study"
+						onClick={() => {
+							dispatch(REDUX.changeCategory(5));
+							dispatch(
+								REDUX.changeRng(
+									Math.floor(Math.random() * 100) + 1
+								)
+							);
+							changeBackground("Study");
+						}}
+					>
+						{/* <SurfingIcon /> */}
+						<Player
+							autoplay
+							loop
+							src="https://assets3.lottiefiles.com/packages/lf20_wh5alaq6.json"
+							style={{
+								...CSS.lotticonStyle,
+								transform: "scale(1.5)",
+							}}
+						/>
+					</IconButton>
+				</Stack>
+				<Stack
+					direction="column"
+					spacing={0}
+					justifyContent="center"
+					alignItems="center"
+				>
+					<Typography variant="button" display="block">
+						Drive
+					</Typography>
+					<IconButton
+						aria-label="Drive"
+						onClick={() => {
+							dispatch(REDUX.changeCategory(6));
+							dispatch(
+								REDUX.changeRng(
+									Math.floor(Math.random() * 100) + 1
+								)
+							);
+							changeBackground("Drive");
+						}}
+					>
+						<Player
+							autoplay
+							loop
+							src="https://assets8.lottiefiles.com/packages/lf20_mq190n5d.json"
+							style={{ ...CSS.lotticonStyle }}
+						/>
+					</IconButton>
+				</Stack>
+				<Stack
+					direction="column"
+					spacing={0}
+					justifyContent="center"
+					alignItems="center"
+				>
+					<Typography variant="button" display="block">
+						Walk
+					</Typography>
+					<IconButton
+						aria-label="Walk"
+						onClick={() => {
+							dispatch(REDUX.changeCategory(7));
+							dispatch(
+								REDUX.changeRng(
+									Math.floor(Math.random() * 100) + 1
+								)
+							);
+							changeBackground("Walk");
+						}}
+					>
+						<Player
+							autoplay
+							loop
+							src="https://assets1.lottiefiles.com/packages/lf20_llpnmgts.json"
+							style={{
+								...CSS.lotticonStyle,
+								transform: "scale(2.0)",
+							}}
+						/>
+					</IconButton>
+				</Stack>
 			</Stack>
 		</Box>
 	);
@@ -239,10 +334,8 @@ export const TemporaryDrawer = () => {
 
 export const BackgroundImage = () => {
 	const dispatch = useDispatch();
-	const roomId = useSelector(selectRoomId);
 	const currentCategory = useSelector(REDUX.selectCategory);
 	const videoId = useSelector(REDUX.selectVideoId);
-	const newBackground = useSelector(REDUX.selectNewBackground);
 	const rng = useSelector(REDUX.selectRng);
 	const randomStaticImageId = useSelector(REDUX.selectStaticImageId);
 	let background;
@@ -322,6 +415,12 @@ export const BackgroundImage = () => {
 			}
 			break;
 		}
+		case currentCategory >= 5 && currentCategory <= 10
+			? currentCategory
+			: null: {
+			background = <YoutubeBackground id={videoId} />;
+			break;
+		}
 		default: {
 			background = <YoutubeBackground id={"lTRiuFIWV54"} />;
 			break;
@@ -358,7 +457,11 @@ const YoutubeBackground = ({ id }) => {
 		});
 	}, [socket]);
 	useEffect(() => {
-		dispatch(REDUX.toggleLoadingArea(true));
+		if (rngValue !== null) {
+			dispatch(REDUX.toggleLoadingArea(true));
+		} else {
+			dispatch(REDUX.toggleLoadingArea(false));
+		}
 	}, [rngValue]);
 	return (
 		<React.Fragment>

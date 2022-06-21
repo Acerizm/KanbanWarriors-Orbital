@@ -1,6 +1,6 @@
 .draggableNavBar {
     /* border: 2px solid green; */
-    width: 50%;
+    width: 700px;
     /* Change the height in the future as it is extremely hacky */
     height: 50%;
     grid-column: 1;
