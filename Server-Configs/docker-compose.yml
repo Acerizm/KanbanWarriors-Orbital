@@ -43,5 +43,9 @@ services:
      - "500:500"
     image: "acerizm/kanbanwarriors_backend:latest"
   #   #image for back end (dockerized)
+  liveRoom:
+    ports:
+    - "4000:4000"
+    image: "acerizm/kanbanwarriors_liveroom:latest"
 
 

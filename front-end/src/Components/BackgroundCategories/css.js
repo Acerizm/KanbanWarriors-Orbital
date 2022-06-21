@@ -18,9 +18,11 @@ export const iframeStyle = {
 	pointerEvents: "none",
 	gridRow: "1 / 3",
 	gridColumn: "1 / 2",
-	// width: "100%",
-	// height: "100%",
+	width: "auto",
+	height: "auto",
 	transform: "scale(1.2)",
+	//objectFit: "fill",
+	//aspectRatio: "16/9",
 };
 
 export const lotticonStyle = {

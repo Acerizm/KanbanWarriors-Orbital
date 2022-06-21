@@ -323,7 +323,7 @@ export const BackgroundImage = () => {
 			break;
 		}
 		default: {
-			background = <YoutubeBackground id={"7JPTlqRRf1w"} />;
+			background = <YoutubeBackground id={"lTRiuFIWV54"} />;
 			break;
 		}
 	}
@@ -364,8 +364,10 @@ const YoutubeBackground = ({ id }) => {
 		<React.Fragment>
 			{<LoadingArea />}
 			<ReactPlayer
+				className="react-player"
 				key={rngValue}
 				url={youtubeLink}
+				controls={false}
 				config={{
 					playerVars: {
 						// https://developers.google.com/youtube/player_parameters
@@ -385,7 +387,6 @@ const YoutubeBackground = ({ id }) => {
 				}}
 				width={"100%"}
 				height={"100%"}
-				style={{ ...CSS.iframeStyle }}
 				playing={true}
 				onBuffer={() => {
 					console.log("gg");
