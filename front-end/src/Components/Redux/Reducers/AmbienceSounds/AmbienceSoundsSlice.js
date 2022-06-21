@@ -95,7 +95,44 @@ const AmbienceSoundsSlice = createSlice({
 				state.isPlayerShown = true;
 			}
 		},
+		receiveTogglePlayer(state, action) {
+			if (state.isPlayerShown) {
+				state.isPlayerShown = false;
+			} else {
+				state.isPlayerShown = true;
+			}
+		},
 		updateVolume(state, action) {
+			switch (action.payload.type) {
+				case "Ocean": {
+					state.Ocean.volume = action.payload.volume;
+					break;
+				}
+				case "Fireplace": {
+					state.Fireplace.volume = action.payload.volume;
+					break;
+				}
+				case "Cafe": {
+					state.Cafe.volume = action.payload.volume;
+					break;
+				}
+				case "Nature": {
+					state.Nature.volume = action.payload.volume;
+					break;
+				}
+				case "Keyboard": {
+					state.Keyboard.volume = action.payload.volume;
+					break;
+				}
+				case "Rain": {
+					state.Rain.volume = action.payload.volume;
+					break;
+				}
+				default:
+					break;
+			}
+		},
+		receiveVolume(state, action) {
 			switch (action.payload.type) {
 				case "Ocean": {
 					state.Ocean.volume = action.payload.volume;
@@ -135,7 +172,9 @@ const AmbienceSoundsSlice = createSlice({
 export const {
 	toggleMuteStatus,
 	togglePlayer,
+	receiveTogglePlayer,
 	updateVolume,
+	receiveVolume,
 	updatePlayerLastPosition,
 } = AmbienceSoundsSlice.actions;
 // export reducer

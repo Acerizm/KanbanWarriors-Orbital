@@ -1,9 +1,8 @@
 import React, { Fragment, useEffect, useState } from "react";
 import * as CSS from "./css";
 import { VolumeUpOutlined, VolumeOffOutlined } from "@mui/icons-material";
-import Slider, { SliderThumb } from "@mui/material/Slider";
+import Slider from "@mui/material/Slider";
 import { styled } from "@mui/material/styles";
-import MinimizeRoundedIcon from "@mui/icons-material/MinimizeRounded";
 import { useDispatch, useSelector } from "react-redux";
 import * as REDUX from "../Redux/Reducers/AmbienceSounds/AmbienceSoundsSlice.js";
 import Draggable from "react-draggable";
@@ -81,6 +80,9 @@ export const AmbienceMusic = () => {
 				updatePosition(settingsLastPosition);
 			}
 		);
+		socket.on("receive_other_users_toggle_ambience_player", () => {
+			dispatch(REDUX.receiveTogglePlayer());
+		});
 	}, [socket]);
 	// // ----------------------------------------------Code for socket.io---------------------------------------------------------------------------
 	return (

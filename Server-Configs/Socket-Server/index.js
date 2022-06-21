@@ -34,7 +34,6 @@ io.on("connection", (socket) => {
 	// user in react app sends "send_user_positions"!
 	// while server sends "receive_other_users_positions" to react app users
 	// Observer pattern is used here :)
-	// IT WORKS GG
 	socket.on("send_user_settings_positions", (data) => {
 		socket
 			.to(data.roomId)
@@ -67,6 +66,54 @@ io.on("connection", (socket) => {
 		socket
 			.to(data.roomId)
 			.emit("receive_other_users_clock_color", data.color);
+	});
+	socket.on("send_user_background_settings", (data) => {
+		socket
+			.to(data.roomId)
+			.emit("receive_other_users_background_settings", data);
+	});
+	// -----------------------------------for background feature-----------------------------------------------
+	socket.on("send_user_video_id", (data) => {
+		socket
+			.to(data.roomId)
+			.emit("receive_other_users_video_id", data.videoId);
+	});
+	socket.on("send_user_category_selected", (data) => {
+		socket
+			.to(data.roomId)
+			.emit(
+				"receive_other_users_category_selected",
+				data.categorySelected
+			);
+	});
+	socket.on("send_user_image_id", (data) => {
+		socket
+			.to(data.roomId)
+			.emit("receive_other_users_image_id", data.imageId);
+	});
+	socket.on("send_user_rng", (data) => {
+		socket.to(data.roomId).emit("receive_other_users_rng", data.rng);
+	});
+	socket.on("send_user_youtube_rng", (data) => {
+		socket
+			.to(data.roomId)
+			.emit("receive_other_users_youtube_rng", data.youtubeRng);
+	});
+	socket.on("send_user_drawer_on", (data) => {
+		socket
+			.to(data.roomId)
+			.emit("receive_other_users_drawer_on", data.isDrawerOn);
+	});
+	socket.on("send_user_drawer_off", (data) => {
+		socket
+			.to(data.roomId)
+			.emit("receive_other_users_drawer_off", data.isDrawerOn);
+	});
+	// ----------------------------------------------------------------------------------------------------------
+	socket.on("send_user_toggle_ambience_player", (data) => {
+		socket
+			.to(data.roomId)
+			.emit("receive_other_users_toggle_ambience_player");
 	});
 });
 

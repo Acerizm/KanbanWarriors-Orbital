@@ -111,7 +111,7 @@ const NavBar = ({ props }) => {
 						onChange={(event, newValue) => {
 							setValue(newValue);
 						}}
-						showLabels={isDragging}
+						showLabels={true}
 					>
 						<BottomNavigationAction
 							label="Background"

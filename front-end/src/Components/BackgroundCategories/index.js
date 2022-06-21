@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { useEffect, Suspense } from "react";
 import * as CSS from "./css.js";
 
 // import Material UI Stuff here
@@ -6,10 +6,6 @@ import Box from "@mui/material/Box";
 import Drawer from "@mui/material/Drawer";
 import IconButton from "@mui/material/IconButton";
 import Stack from "@mui/material/Stack";
-import RocketIcon from "@mui/icons-material/Rocket";
-import PetsIcon from "@mui/icons-material/Pets";
-import LocationCityIcon from "@mui/icons-material/LocationCity";
-import SurfingIcon from "@mui/icons-material/Surfing";
 import { Typography } from "@mui/material";
 
 // import custom css file here
@@ -36,6 +32,10 @@ import { LoadingArea } from "../LoadingArea/index.js";
 // import lotticon
 import { Player } from "@lottiefiles/react-lottie-player";
 
+// socket.io
+import { selectRoomId } from "../Redux/Reducers/Socket/SocketSlice.js";
+import { socket } from "../SocketClient/index.js";
+
 // ------------------------------------- Drawer (Material UI) Feature/Component ------------------------------------------------------------------------------------
 // styling for Drawer
 export const TemporaryDrawer = () => {
@@ -43,6 +43,31 @@ export const TemporaryDrawer = () => {
 	const dispatch = useDispatch();
 	// Our redux state here for "isDrawerOn" state
 	const isDrawerOn = useSelector(REDUX.selectDrawerState);
+	useEffect(() => {
+		socket.on("receive_other_users_drawer_on", (isDrawerOn) => {
+			dispatch(REDUX.receiveDrawerOn(isDrawerOn));
+		});
+		socket.on("receive_other_users_drawer_off", (isDrawerOn) => {
+			dispatch(REDUX.receiveDrawerOff(isDrawerOn));
+		});
+	}, [socket]);
+	const changeBackground = (category) => {
+		axios
+			.get(
+				"http://159.223.91.154:500/api/Videos/GetRandomVideoFromCategory?category=" +
+					category
+			)
+			.then((response) => {
+				dispatch(REDUX.changeVideoId(response.data));
+				dispatch(REDUX.toggleNewBackground());
+				dispatch(
+					REDUX.changeStaticImageId(Math.floor(Math.random() * 5) + 1)
+				);
+				dispatch(
+					REDUX.changeYoutubeRng(Math.floor(Math.random() * 1000 + 1))
+				);
+			});
+	};
 
 	const list = () => (
 		<Box
@@ -76,7 +101,12 @@ export const TemporaryDrawer = () => {
 						aria-label="space"
 						onClick={() => {
 							dispatch(REDUX.changeCategory(1));
-							dispatch(REDUX.changeImage());
+							dispatch(
+								REDUX.changeRng(
+									Math.floor(Math.random() * 100) + 1
+								)
+							);
+							changeBackground("Space");
 						}}
 					>
 						{/* <RocketIcon /> */}
@@ -101,7 +131,12 @@ export const TemporaryDrawer = () => {
 						aria-label="Wildlife"
 						onClick={() => {
 							dispatch(REDUX.changeCategory(2));
-							dispatch(REDUX.changeImage());
+							dispatch(
+								REDUX.changeRng(
+									Math.floor(Math.random() * 100) + 1
+								)
+							);
+							changeBackground("Wildlife");
 						}}
 					>
 						{/* <PetsIcon /> */}
@@ -126,7 +161,12 @@ export const TemporaryDrawer = () => {
 						aria-label="City"
 						onClick={() => {
 							dispatch(REDUX.changeCategory(3));
-							dispatch(REDUX.changeImage());
+							dispatch(
+								REDUX.changeRng(
+									Math.floor(Math.random() * 100) + 1
+								)
+							);
+							changeBackground("City");
 						}}
 					>
 						{/* <LocationCityIcon /> */}
@@ -151,7 +191,12 @@ export const TemporaryDrawer = () => {
 						aria-label="Beach"
 						onClick={() => {
 							dispatch(REDUX.changeCategory(4));
-							dispatch(REDUX.changeImage());
+							dispatch(
+								REDUX.changeRng(
+									Math.floor(Math.random() * 100) + 1
+								)
+							);
+							changeBackground("Beach");
 						}}
 					>
 						{/* <SurfingIcon /> */}
@@ -188,179 +233,101 @@ export const TemporaryDrawer = () => {
 
 // ----------------------------------- Background Images Feature/Component ------------------------------------------------------------------------------------------
 
-// rng component for calculating
-const rng = () => {
-	return Math.floor(Math.random() * 100) + 1;
-};
-
-const rngStaticImageId = () => {
-	return Math.floor(Math.random() * 5) + 1;
-};
-
-const rngForPlayback = () => {
-	return Math.floor(Math.random() * 1000 + 1);
-};
-
 // Imagekit API here for conditional rendering
 // IKImage component refers to the component to retrieve/store images using Imagekit.io API
 // link -> https://docs.imagekit.io/getting-started/quickstart-guides/react
 
 export const BackgroundImage = () => {
-	const currentCategorySelected = useSelector(REDUX.selectCategory);
-	const currentImageId = useSelector(REDUX.updatedImageId);
-	const [videoId, setVideoId] = React.useState(null);
-	const [newBackground, setNewBackground] = React.useState(false);
+	const dispatch = useDispatch();
+	const roomId = useSelector(selectRoomId);
+	const currentCategory = useSelector(REDUX.selectCategory);
+	const videoId = useSelector(REDUX.selectVideoId);
+	const newBackground = useSelector(REDUX.selectNewBackground);
+	const rng = useSelector(REDUX.selectRng);
+	const randomStaticImageId = useSelector(REDUX.selectStaticImageId);
 	let background;
-	// UseEffect WILL ONLY RUN AFTER THE COMPONENT RENDERS
-	React.useEffect(() => {
-		switch (currentCategorySelected) {
-			case 1: {
-				axios
-					.get(
-						"http://159.223.91.154:500/api/Videos/GetRandomVideoFromCategory?category=Space"
-					)
-					.then((response) => {
-						setVideoId(response.data);
-						setNewBackground(true);
-					});
-				break;
-			}
-			case 2: {
-				axios
-					.get(
-						"http://159.223.91.154:500/api/Videos/GetRandomVideoFromCategory?category=Wildlife"
-					)
-					.then((response) => {
-						setVideoId(response.data);
-						setNewBackground(true);
-					});
-				break;
-			}
-			case 3: {
-				axios
-					.get(
-						"http://159.223.91.154:500/api/Videos/GetRandomVideoFromCategory?category=City"
-					)
-					.then((response) => {
-						setVideoId(response.data);
-						setNewBackground(true);
-					});
-				break;
-			}
-			case 4: {
-				axios
-					.get(
-						"http://159.223.91.154:500/api/Videos/GetRandomVideoFromCategory?category=Beach"
-					)
-					.then((response) => {
-						setVideoId(response.data);
-						setNewBackground(true);
-					});
-				break;
-			}
-			default:
-				axios
-					.get("http://159.223.91.154:500/api/Videos/GetRandomVideo")
-					.then((response) => {
-						setVideoId(response.data);
-					});
-				break;
-		}
-	}, [currentCategorySelected, currentImageId]);
 
-	// --------------------------------- VERY HACKY HERE--------------------------------------------------------------------------------
-	// if API havnt return to us our data, show loading
-	// State machine logic: Render Loading Screen -> Get APIs' Data -> Do RNG to get static image or video -> Render the background
-	if (
-		(videoId == null && newBackground == false) ||
-		(videoId != null && newBackground == false)
-	) {
-		background = <YoutubeBackground id={videoId} />;
-		return <React.Fragment>{background}</React.Fragment>;
-	} else if (videoId == null && newBackground == true) {
-		return <div>loading....</div>;
-	} else if (videoId != null) {
-		let randomRng = rng();
-		let randomStaticImageId = rngStaticImageId();
-		var path;
-		// Maybe move all this logic to the backend in the future
-		switch (currentCategorySelected) {
-			case 1: {
-				// if space is selected
-				// Space == 1
-				if (randomRng <= 10) {
-					// 10% chance of displaying a static image with ImageKit
-					path =
-						"../Categories/Space/" + randomStaticImageId + ".jpg";
-					background = (
-						<ImageKitBackground
-							urlEndpoint={urlEndpoint}
-							path={path}
-						/>
-					);
-				} else {
-					background = <YoutubeBackground id={videoId} />;
-				}
-				break;
+	React.useEffect(() => {
+		socket.on("receive_other_users_video_id", (videoId) => {
+			dispatch(REDUX.receiveVideoId(videoId));
+		});
+		socket.on(
+			"receive_other_users_category_selected",
+			(categorySelected) => {
+				dispatch(REDUX.receiveCategory(categorySelected));
 			}
-			case 2: {
-				// if Wildlife is selected
-				// Wildlife == 2
-				if (randomRng <= 10) {
-					path =
-						"../Categories/Wildlife/" +
-						randomStaticImageId +
-						".jpg";
-					background = (
-						<ImageKitBackground
-							urlEndpoint={urlEndpoint}
-							path={path}
-						/>
-					);
-				} else {
-					background = <YoutubeBackground id={videoId} />;
-				}
-				break;
+		);
+		socket.on("receive_other_users_image_id", (imageId) => {
+			dispatch(REDUX.receiveStaticImageId(imageId));
+		});
+		socket.on("receive_other_users_rng", (rng) => {
+			dispatch(REDUX.receiveRng(rng));
+		});
+	}, [socket]);
+
+	switch (currentCategory) {
+		case 1: {
+			// if space is selected
+			// Space == 1
+			if (rng <= 10) {
+				// 10% chance of displaying a static image with ImageKit
+				let path =
+					"../Categories/Space/" + randomStaticImageId + ".jpg";
+				background = (
+					<ImageKitBackground urlEndpoint={urlEndpoint} path={path} />
+				);
+			} else {
+				background = <YoutubeBackground id={videoId} />;
 			}
-			case 3: {
-				// if City is selected
-				// City == 3
-				if (randomRng <= 10) {
-					path = "../Categories/City/" + randomStaticImageId + ".jpg";
-					background = (
-						<ImageKitBackground
-							urlEndpoint={urlEndpoint}
-							path={path}
-						/>
-					);
-				} else {
-					background = <YoutubeBackground id={videoId} />;
-				}
-				break;
-			}
-			case 4: {
-				// if beach Selected
-				// Beach == 4
-				if (randomRng <= 10) {
-					path =
-						"../Categories/Beach/" + randomStaticImageId + ".jpg";
-					background = (
-						<ImageKitBackground
-							urlEndpoint={urlEndpoint}
-							path={path}
-						/>
-					);
-				} else {
-					background = <YoutubeBackground id={videoId} />;
-				}
-				break;
-			}
-			default: {
-				break;
-			}
+			break;
 		}
-		return <React.Fragment>{background}</React.Fragment>;
+		case 2: {
+			// if Wildlife is selected
+			// Wildlife == 2
+			if (rng <= 10) {
+				let path =
+					"../Categories/Wildlife/" + randomStaticImageId + ".jpg";
+				background = (
+					<ImageKitBackground urlEndpoint={urlEndpoint} path={path} />
+				);
+			} else {
+				background = <YoutubeBackground id={videoId} />;
+			}
+			break;
+		}
+		case 3: {
+			// if City is selected
+			// City == 3
+			if (rng <= 10) {
+				let path = "../Categories/City/" + randomStaticImageId + ".jpg";
+				background = (
+					<ImageKitBackground urlEndpoint={urlEndpoint} path={path} />
+				);
+			} else {
+				background = <YoutubeBackground id={videoId} />;
+			}
+			break;
+		}
+		case 4: {
+			// if beach Selected
+			// Beach == 4
+			if (rng <= 10) {
+				let path =
+					"../Categories/Beach/" + randomStaticImageId + ".jpg";
+				background = (
+					<ImageKitBackground urlEndpoint={urlEndpoint} path={path} />
+				);
+			} else {
+				background = <YoutubeBackground id={videoId} />;
+			}
+			break;
+		}
+		default: {
+			background = <YoutubeBackground id={"7JPTlqRRf1w"} />;
+			break;
+		}
 	}
+	return <React.Fragment>{background}</React.Fragment>;
 };
 
 // this is where the imagekit component is
@@ -373,6 +340,7 @@ const ImageKitBackground = ({ urlEndpoint, path }) => {
 				width="100%"
 				height="100%"
 				id="background"
+				lqip={{ active: true, quality: 20 }}
 				// Example API URL -> https://ik.imagekit.io/acerizm/KanbanWarriors/Categories/Space/1.jpg
 			/>
 		</React.Fragment>
@@ -380,14 +348,23 @@ const ImageKitBackground = ({ urlEndpoint, path }) => {
 };
 
 const YoutubeBackground = ({ id }) => {
+	const dispatch = useDispatch();
 	let youtubeLink = "https://www.youtube.com/watch?v=" + id;
 	let currentId = "" + id;
-	let rngValue = rngForPlayback();
-	const dispatch = useDispatch();
+	let rngValue = useSelector(REDUX.selectYoutubeRng);
+	useEffect(() => {
+		socket.on("receive_other_users_youtube_rng", (youtubeRng) => {
+			dispatch(REDUX.receiveYoutubeRng(youtubeRng));
+		});
+	}, [socket]);
+	useEffect(() => {
+		dispatch(REDUX.toggleLoadingArea(true));
+	}, [rngValue]);
 	return (
 		<React.Fragment>
 			{<LoadingArea />}
 			<ReactPlayer
+				key={rngValue}
 				url={youtubeLink}
 				config={{
 					playerVars: {
@@ -411,6 +388,7 @@ const YoutubeBackground = ({ id }) => {
 				style={{ ...CSS.iframeStyle }}
 				playing={true}
 				onBuffer={() => {
+					console.log("gg");
 					dispatch(REDUX.toggleLoadingArea(true));
 				}}
 				onPlay={() => {
