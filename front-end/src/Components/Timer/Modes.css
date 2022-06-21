@@ -1,9 +1,35 @@
 
 .modes-time-container {
     display: flex;
+    justify-content: space-evenly;
+    align-content: space-evenly;
 }
 
 .modes-time {
-    display: inline-block;
+    justify-self: center;
+}
+
+.Modes-main {
+    justify-content: center;
+    align-items: center;
+}
+
+.modes-header {
+    justify-self: center;
+}
+
+.closing-icon {
+    align-self: center;
+    justify-self: right;
+}
+
+.modes-applyButton {
+    justify-self: center;
+    border: none;
+}
+
+section {
+    display: grid;
+    align-items: center;
 }
 

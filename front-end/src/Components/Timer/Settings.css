@@ -1,10 +1,6 @@
-.timer {
-	cursor: pointer;
-    display: grid;
-}
-
-.timer:active {
-	cursor: grab;
+.settings {
+    display: flex;
+    justify-self: right;
 }
 
 .settings-button {
@@ -14,10 +10,5 @@
     cursor: pointer;
     overflow: hidden;
     outline: none;
+    z-index: 0;
 }
-
-.CountdownClockComponent {
-    justify-self: center;
-}
-
-

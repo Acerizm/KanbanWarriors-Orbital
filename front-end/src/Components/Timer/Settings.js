@@ -1,10 +1,14 @@
 import React from 'react';
 import iconSettings from './assets/settings-icon.svg'
+import './Settings.css';
 
-const Settings = () => {
+const Settings = ({buttonClick}) => {
   return (
     <div className="settings">
-      <button className='settings-button' onClick={ () => console.log('click')}>
+      <button 
+        className='settings-button' 
+        onClick={buttonClick}
+        >
         <img src={iconSettings} alt="icon-settings" height= '20' />
       </button>
     </div>

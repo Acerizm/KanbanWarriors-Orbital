@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 
-const CountDownClock = () => {
-    const [timerSeconds, setTimerSeconds] = useState(1 * 60);
+const CountDownClock = ({pomodoroTime, breakTime}) => {
+    const [timerSeconds, setTimerSeconds] = useState(pomodoroTime * 60);
     const [displayMessage, setDisplayMessage] = useState(false)
     
     let displayedTimerMin = Math.floor(timerSeconds / 60);
@@ -14,7 +14,7 @@ const CountDownClock = () => {
         let interval = setInterval(()=> {
             clearInterval(interval);
             if ( timerSeconds === 0) {
-                let minutes = displayMessage ? 25 : 1;
+                let minutes = displayMessage ? pomodoroTime : breakTime;
                 
                 setTimerSeconds(minutes * 60);
                 setDisplayMessage(!displayMessage);
