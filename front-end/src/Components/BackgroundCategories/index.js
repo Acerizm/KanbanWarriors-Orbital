@@ -70,7 +70,7 @@ export const TemporaryDrawer = () => {
 
 	const list = () => (
 		<Box
-			sx={{ width: "auto", height: "10vh" }}
+			sx={{ width: "auto", height: "20vh" }}
 			role="presentation"
 			// make onClick and onKeyDown change "isDrawerOpen" to false
 			// onClick={() => dispatch(toggleDrawerOff())}
@@ -78,21 +78,23 @@ export const TemporaryDrawer = () => {
 		>
 			<Stack
 				direction="row"
-				spacing={20}
+				spacing={10}
 				justifyContent="center"
 				alignItems="center"
 				height="100%"
+				//sx={{border: "2px solid red"}}
 			>
 				<Stack
 					direction="column"
 					spacing={0}
 					justifyContent="center"
 					alignItems="center"
+					//sx={{border: "2px solid green"}}
 				>
 					<Typography
 						variant="button"
 						display="block"
-						// sx={{ marginTop: "20px" }}
+						//sx={{ marginTop: "20px" }}
 					>
 						Space
 					</Typography>
