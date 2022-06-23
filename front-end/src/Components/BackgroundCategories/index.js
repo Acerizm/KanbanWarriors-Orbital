@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import * as CSS from "./css.js";
 
 // import Material UI Stuff here
@@ -7,6 +7,7 @@ import Drawer from "@mui/material/Drawer";
 import IconButton from "@mui/material/IconButton";
 import Stack from "@mui/material/Stack";
 import { Typography } from "@mui/material";
+import Carousel from "react-material-ui-carousel";
 
 // import custom css file here
 import "./BackgroundCategories.css";
@@ -68,20 +69,88 @@ export const TemporaryDrawer = () => {
 			});
 	};
 
-	const list = () => (
-		<Box
-			sx={{ width: "auto", height: "20vh" }}
-			role="presentation"
-			// make onClick and onKeyDown change "isDrawerOpen" to false
-			// onClick={() => dispatch(toggleDrawerOff())}
-			onKeyDown={() => dispatch(REDUX.toggleDrawerOff())}
-		>
+	const CategoriesCarousell = () => {
+		//const [currentIndex, setIndex] = useState(0);
+		return (
+			<Box
+				sx={{ width: "auto", height: "20vh" }}
+				role="presentation"
+				onKeyDown={() => dispatch(REDUX.toggleDrawerOff())}
+			>
+				<Carousel
+					autoPlay={false}
+					sx={{ height: "20vh" }}
+					navButtonsAlwaysVisible={true}
+					animation={"fade"}
+					duration={500}
+					navButtonsProps={{
+						// Change the colors and radius of the actual buttons. THIS STYLES BOTH BUTTONS
+						style: {
+							backgroundColor: "cornflowerblue",
+							//borderRadius: 0,
+						},
+					}}
+					navButtonsWrapperProps={{
+						// Move the buttons to the bottom. Unsetting top here to override default style.
+						style: {
+							marginRight: "200px",
+							marginLeft: "200px",
+						},
+					}}
+				>
+					<FirstStack />
+					<SecondStack />
+				</Carousel>
+			</Box>
+		);
+	};
+
+	return (
+		<div>
+			<Drawer
+				anchor={"bottom"}
+				open={isDrawerOn}
+				onClose={() => dispatch(REDUX.toggleDrawerOff())}
+				hideBackdrop={false}
+				ModalProps={{
+					BackdropProps: {
+						invisible: true,
+					},
+				}}
+			>
+				<CategoriesCarousell />
+			</Drawer>
+		</div>
+	);
+};
+
+const FirstStack = () => {
+	const dispatch = useDispatch();
+	const changeBackground = (category) => {
+		axios
+			.get(
+				"http://159.223.91.154:500/api/Videos/GetRandomVideoFromCategory?category=" +
+					category
+			)
+			.then((response) => {
+				dispatch(REDUX.changeVideoId(response.data));
+				dispatch(REDUX.toggleNewBackground());
+				dispatch(
+					REDUX.changeStaticImageId(Math.floor(Math.random() * 5) + 1)
+				);
+				dispatch(
+					REDUX.changeYoutubeRng(Math.floor(Math.random() * 1000 + 1))
+				);
+			});
+	};
+	return (
+		<Fragment>
 			<Stack
 				direction="row"
 				spacing={10}
 				justifyContent="center"
 				alignItems="center"
-				height="100%"
+				height="20vh"
 				//sx={{border: "2px solid red"}}
 			>
 				<Stack
@@ -232,14 +301,13 @@ export const TemporaryDrawer = () => {
 							changeBackground("Study");
 						}}
 					>
-						{/* <SurfingIcon /> */}
 						<Player
 							autoplay
 							loop
 							src="https://assets3.lottiefiles.com/packages/lf20_wh5alaq6.json"
 							style={{
 								...CSS.lotticonStyle,
-								transform: "scale(1.5)",
+								//transform: "scale(1.5)",
 							}}
 						/>
 					</IconButton>
@@ -306,25 +374,201 @@ export const TemporaryDrawer = () => {
 					</IconButton>
 				</Stack>
 			</Stack>
-		</Box>
+		</Fragment>
 	);
+};
 
+const SecondStack = () => {
+	const dispatch = useDispatch();
+	const changeBackground = (category) => {
+		axios
+			.get(
+				"http://159.223.91.154:500/api/Videos/GetRandomVideoFromCategory?category=" +
+					category
+			)
+			.then((response) => {
+				dispatch(REDUX.changeVideoId(response.data));
+				dispatch(REDUX.toggleNewBackground());
+				dispatch(
+					REDUX.changeStaticImageId(Math.floor(Math.random() * 5) + 1)
+				);
+				dispatch(
+					REDUX.changeYoutubeRng(Math.floor(Math.random() * 1000 + 1))
+				);
+			});
+	};
 	return (
-		<div>
-			<Drawer
-				anchor={"bottom"}
-				open={isDrawerOn}
-				onClose={() => dispatch(REDUX.toggleDrawerOff())}
-				hideBackdrop={false}
-				ModalProps={{
-					BackdropProps: {
-						invisible: true,
-					},
-				}}
+		<Fragment>
+			<Stack
+				direction="row"
+				spacing={10}
+				justifyContent="center"
+				alignItems="center"
+				height="20vh"
+				//sx={{border: "2px solid red"}}
 			>
-				{list()}
-			</Drawer>
-		</div>
+				<Stack
+					direction="column"
+					spacing={0}
+					justifyContent="center"
+					alignItems="center"
+				>
+					<Typography variant="button" display="block">
+						Cyberpunk
+					</Typography>
+					<IconButton
+						aria-label="Cyberpunk"
+						onClick={() => {
+							dispatch(REDUX.changeCategory(7));
+							dispatch(
+								REDUX.changeRng(
+									Math.floor(Math.random() * 100) + 1
+								)
+							);
+							changeBackground("Cyberpunk");
+						}}
+					>
+						<Player
+							autoplay
+							loop
+							src="https://assets7.lottiefiles.com/packages/lf20_g7zn41ai.json"
+							style={{
+								...CSS.lotticonStyle,
+								transform: "scale(1.5)",
+							}}
+						/>
+					</IconButton>
+				</Stack>
+				<Stack
+					direction="column"
+					spacing={0}
+					justifyContent="center"
+					alignItems="center"
+				>
+					<Typography variant="button" display="block">
+						Visual
+					</Typography>
+					<IconButton
+						aria-label="Visual"
+						onClick={() => {
+							dispatch(REDUX.changeCategory(8));
+							dispatch(
+								REDUX.changeRng(
+									Math.floor(Math.random() * 100) + 1
+								)
+							);
+							changeBackground("Visual");
+						}}
+					>
+						<Player
+							autoplay
+							loop
+							src="https://assets3.lottiefiles.com/packages/lf20_Vl8oMi.json"
+							style={{
+								...CSS.lotticonStyle,
+								transform: "scale(1.2)",
+							}}
+						/>
+					</IconButton>
+				</Stack>
+				<Stack
+					direction="column"
+					spacing={0}
+					justifyContent="center"
+					alignItems="center"
+				>
+					<Typography variant="button" display="block">
+						Game
+					</Typography>
+					<IconButton
+						aria-label="Game"
+						onClick={() => {
+							dispatch(REDUX.changeCategory(9));
+							dispatch(
+								REDUX.changeRng(
+									Math.floor(Math.random() * 100) + 1
+								)
+							);
+							changeBackground("Game");
+						}}
+					>
+						<Player
+							autoplay
+							loop
+							src="https://assets5.lottiefiles.com/private_files/lf30_gvdwzaoj.json"
+							style={{
+								...CSS.lotticonStyle,
+								transform: "scale(2.0)",
+							}}
+						/>
+					</IconButton>
+				</Stack>
+				<Stack
+					direction="column"
+					spacing={0}
+					justifyContent="center"
+					alignItems="center"
+				>
+					<Typography variant="button" display="block">
+						Window
+					</Typography>
+					<IconButton
+						aria-label="Window"
+						onClick={() => {
+							dispatch(REDUX.changeCategory(9));
+							dispatch(
+								REDUX.changeRng(
+									Math.floor(Math.random() * 100) + 1
+								)
+							);
+							changeBackground("Window");
+						}}
+					>
+						<Player
+							autoplay
+							loop
+							src="https://assets5.lottiefiles.com/packages/lf20_rrmxkdru.json"
+							style={{
+								...CSS.lotticonStyle,
+								transform: "scale(1.2)",
+							}}
+						/>
+					</IconButton>
+				</Stack>
+				<Stack
+					direction="column"
+					spacing={0}
+					justifyContent="center"
+					alignItems="center"
+				>
+					<Typography variant="button" display="block">
+						Lo-Fi
+					</Typography>
+					<IconButton
+						aria-label="Lo-Fi"
+						onClick={() => {
+							dispatch(REDUX.changeCategory(10));
+							dispatch(
+								REDUX.changeRng(
+									Math.floor(Math.random() * 100) + 1
+								)
+							);
+							changeBackground("Lo-Fi");
+						}}
+					>
+						<Player
+							autoplay
+							loop
+							src="https://assets6.lottiefiles.com/packages/lf20_your4qur.json"
+							style={{
+								...CSS.lotticonStyle,
+								//transform: "scale(1.2)",
+							}}
+						/>
+					</IconButton>
+				</Stack>
+			</Stack>
+		</Fragment>
 	);
 };
 
