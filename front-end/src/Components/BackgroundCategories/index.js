@@ -93,8 +93,8 @@ export const TemporaryDrawer = () => {
 					navButtonsWrapperProps={{
 						// Move the buttons to the bottom. Unsetting top here to override default style.
 						style: {
-							marginRight: "200px",
-							marginLeft: "200px",
+							marginRight: "10px",
+							marginLeft: "10px",
 						},
 					}}
 				>
