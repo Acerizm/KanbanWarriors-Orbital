@@ -159,6 +159,9 @@ const SettingsButton = () => {
 						onClick={(event) => {
 							handleClick(event);
 						}}
+						onTouchEnd={(event) => {
+							handleClick(event);
+						}}
 						sx={{
 							"&.MuiButton-root.Mui-disabled": {
 								backgroundColor: "white",
