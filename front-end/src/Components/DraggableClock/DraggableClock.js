@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "./DraggableClock.css";
 import Draggable from "react-draggable";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 
 // socket.io
 import { selectRoomId } from "../Redux/Reducers/Socket/SocketSlice.js";
@@ -96,8 +96,7 @@ function DraggableClock() {
 						handleChangeTextColor();
 					}
 				}}
-				onTouchEnd={() => {
-					console.log(isDragging);
+				onTouchEndCapture={() => {
 					if (!isDragging) {
 						handleChangeTextColor();
 					}
