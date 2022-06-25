@@ -36,3 +36,7 @@
     position: fixed;
     pointer-events: none;
   }
+
+  .lf-player-container div svg {
+    transform: none!important;
+  }
