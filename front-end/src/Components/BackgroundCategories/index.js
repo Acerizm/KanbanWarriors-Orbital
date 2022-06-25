@@ -1251,7 +1251,6 @@ const YoutubeBackground = ({ id }) => {
 				height={"100%"}
 				playing={true}
 				onBuffer={() => {
-					console.log("gg");
 					dispatch(REDUX.toggleLoadingArea(true));
 				}}
 				onPlay={() => {

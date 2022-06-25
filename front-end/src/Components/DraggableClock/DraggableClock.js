@@ -30,7 +30,7 @@ function DraggableClock() {
 	// ----------------------------------------------Code for socket.io---------------------------------------------------------------------------
 	const [isDragging, updateDraggingStatus] = React.useState(false);
 	const eventControl = (event, data) => {
-		if (event.type === "mousedown" || event.type === "touchmove") {
+		if (event.type === "mousedown" || event.type === "touchstart") {
 			// do nothing
 		}
 		if (event.type === "mouseup" || event.type === "touchend") {
@@ -39,7 +39,7 @@ function DraggableClock() {
 				updateDraggingStatus(false);
 			}, 100);
 		}
-		if (event.type === "mousemove") {
+		if (event.type === "mousemove" || event.type === "touchmove") {
 			updateDraggingStatus(true);
 			updatePosition({
 				x: data.x,
@@ -92,6 +92,12 @@ function DraggableClock() {
 			<div
 				className="clock clockHandle"
 				onClick={() => {
+					if (!isDragging) {
+						handleChangeTextColor();
+					}
+				}}
+				onTouchEnd={() => {
+					console.log(isDragging);
 					if (!isDragging) {
 						handleChangeTextColor();
 					}

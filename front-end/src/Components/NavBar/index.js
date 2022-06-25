@@ -47,7 +47,7 @@ const NavBar = ({ props }) => {
 	const dispatch = useDispatch();
 	const [isDragging, updateDraggingStatus] = React.useState(false);
 	const eventControl = (event, data) => {
-		if (event.type === "mousedown" || event.type === "touchmove") {
+		if (event.type === "mousedown" || event.type === "touchstart") {
 			// do nothing
 		}
 		if (event.type === "mouseup" || event.type === "touchend") {
@@ -56,7 +56,7 @@ const NavBar = ({ props }) => {
 				updateDraggingStatus(false);
 			}, 100);
 		}
-		if (event.type === "mousemove") {
+		if (event.type === "mousemove" || event.type === "touchmove") {
 			updateDraggingStatus(true);
 			updatePosition({
 				x: data.x,
@@ -114,30 +114,46 @@ const NavBar = ({ props }) => {
 						showLabels={true}
 					>
 						<BottomNavigationAction
+							disabled={isDragging}
 							label="Background"
 							icon={<WallpaperIcon />}
 							onClick={() => dispatch(toggleDrawerOn())}
+							onTouchEnd={() => {
+								if (!isDragging) {
+									dispatch(toggleDrawerOn());
+								}
+							}}
 						/>
 						<BottomNavigationAction
 							label="Timer"
 							icon={<TimerIcon />}
+							disabled={isDragging}
 						/>
 						<BottomNavigationAction
 							label="Music"
 							icon={<AudiotrackIcon />}
+							disabled={isDragging}
 						/>
 						<BottomNavigationAction
 							label="Ambience"
 							icon={<GraphicEqIcon />}
+							disabled={isDragging}
 							onClick={() => dispatch(togglePlayer())}
+							onTouchEnd={() => {
+								if (!isDragging) {
+									dispatch(togglePlayer());
+								}
+							}}
 						/>
 						<BottomNavigationAction
 							label="To-Do"
 							icon={<NotesIcon />}
+							disabled={isDragging}
 						/>
 						<BottomNavigationAction
 							label="Settings"
 							icon={<SettingsIcon />}
+							disabled={isDragging}
 						/>
 					</BottomNavigation>
 				</ThemeProvider>
