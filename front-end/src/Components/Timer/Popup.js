@@ -1,26 +1,34 @@
 import React from'react'
-import iconClose from './assets/icon-close.svg';
-import './Popup.css'
 
-const Popup = ({trigger, setTrigger, children, buttonClick}) => {
-    return (trigger) ? (
+// Redux
+import { useDispatch, useSelector } from 'react-redux';
+import { getModesOpen, toggleModesOpen } from '../Redux/Reducers/PomodoroTimer/PomodoroTimerSlice';
+
+// styles
+import './Popup.css'
+import IconButton from '@mui/material/IconButton';
+import CloseIcon from '@mui/icons-material/Close';
+
+const Popup = ({children}) => {
+    const dispatch = useDispatch();
+    const ModesOpen = useSelector(getModesOpen)
+
+
+    const onCloseButtonClicked = () => {
+        dispatch(toggleModesOpen());
+    }
+
+    return (ModesOpen) ? (
         <div className="popup">
-            <div className="popup-inner">
-                <button 
-                    className="close-btn" 
-                    onClick={buttonClick}
-                >
-                    <img 
-                        src={iconClose}  
-                        alt="closing-icon"
-                        className = "closing-icon"
-                        height = '15'
-                        width = '15'
-                    />
-                </button>
-                {children}
-            </div>
+            <IconButton 
+                className="close-btn" 
+                onClick={onCloseButtonClicked}
+            >
+                <CloseIcon/>
+            </IconButton>
+            {children}
         </div>
+        
     ) : "";
 }
 

@@ -16,6 +16,7 @@ import {TemporaryDrawer} from "../BackgroundCategories/index.js";
 import { useDispatch } from "react-redux";
 // import all the reducers you want to use here
 import { toggleDrawerOn } from "../Redux/Reducers/BackgroundImage/BackgroundImageSlice.js";
+import { toggleTimer } from "../Redux/Reducers/PomodoroTimer/PomodoroTimerSlice.js";
 
 // 1. Using Material-UI "themes" to alter their components/APIs
 const navBarTheme = createTheme({
@@ -59,7 +60,11 @@ const NavBar = ({props}) => {
                                 () => dispatch(toggleDrawerOn())
                             }
                         />
-                        <BottomNavigationAction label="Timer" icon={<TimerIcon />}/>
+                        <BottomNavigationAction label="Timer" icon={<TimerIcon />}
+                            onClick={
+                                () => dispatch(toggleTimer())
+                            }
+                        />
                         <BottomNavigationAction label="Music" icon={<AudiotrackIcon />} />
                         <BottomNavigationAction label="Ambience" icon={<GraphicEqIcon />} />
                         <BottomNavigationAction label="To-Do" icon={<NotesIcon />} />

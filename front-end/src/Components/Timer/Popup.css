@@ -1,14 +1,10 @@
-.popup-inner {
+.popup {
     display: grid;
+    border-radius: 15px;
 }
 
 .close-btn {
     justify-self: right;
-    background-color: transparent;
-    background-repeat: no-repeat;
-    border: none;
 }
 
-.popup {
-    background-color: azure;
-}
+

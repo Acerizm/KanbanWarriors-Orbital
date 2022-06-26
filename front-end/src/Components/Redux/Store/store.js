@@ -4,6 +4,7 @@ import { configureStore } from "@reduxjs/toolkit";
 // import reducers here
 import backgroundImageReducer from "../Reducers/BackgroundImage/BackgroundImageSlice.js";
 import AuthenticationReducer from "../Reducers/Authentication/AuthenticationSlice.js";
+import pomodoroTimerReducer from "../Reducers/PomodoroTimer/PomodoroTimerSlice"
 
 const store = configureStore({
     // root reducer is here
@@ -18,6 +19,7 @@ const store = configureStore({
         // the actual state for the code below is state.backgroundImage.something
         backgroundImage: backgroundImageReducer,
         Authentication: AuthenticationReducer,
+        pomodoroTimer: pomodoroTimerReducer,
     }
 })
 

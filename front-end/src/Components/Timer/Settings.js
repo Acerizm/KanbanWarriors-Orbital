@@ -1,16 +1,28 @@
 import React from 'react';
-import iconSettings from './assets/settings-icon.svg'
-import './Settings.css';
 
-const Settings = ({buttonClick}) => {
+// REDUX
+import { useDispatch } from 'react-redux';
+import { toggleModesOpen } from '../Redux/Reducers/PomodoroTimer/PomodoroTimerSlice';
+
+// styles
+import './Settings.css';
+import IconButton from '@mui/material/IconButton';
+import SettingsIcon from '@mui/icons-material/Settings';
+
+const Settings = () => {  
+  const onSettingsButtonClicked = ()=> {
+    dispatch(toggleModesOpen());
+  }
+  const dispatch = useDispatch();
+
   return (
     <div className="settings">
-      <button 
+      <IconButton 
         className='settings-button' 
-        onClick={buttonClick}
+        onClick={onSettingsButtonClicked}
         >
-        <img src={iconSettings} alt="icon-settings" height= '20' />
-      </button>
+          <SettingsIcon/>
+      </IconButton>
     </div>
   )
 }

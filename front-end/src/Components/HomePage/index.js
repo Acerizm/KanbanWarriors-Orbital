@@ -6,7 +6,7 @@ import Draggable from 'react-draggable';
 import React from "react";
 import { BackgroundImage } from "../BackgroundCategories/index.js";
 import DraggableClock from "../DraggableClock/DraggableClock"
-import DraggableTimer from "../Timer/DraggableTimer"
+import DraggableTimer from "../Timer/DraggableTimer.js";
 // import custom css file here
 import "./HomePage.css";
 
@@ -40,17 +40,7 @@ const HomePage = () =>  {
                             <DraggableClock></DraggableClock>
                         </div>
                     </Draggable>
-                    <Draggable
-                        axis="both"
-                        handle=".timerHandle"
-                        position={null}
-                        defaultClassName="draggableTimer"
-                        scale={1}
-                        >
-                        <div>
-                            <DraggableTimer></DraggableTimer>
-                        </div>
-                    </Draggable>
+                    <DraggableTimer></DraggableTimer>
                 </div>
             </Desktop>
             <Tablet></Tablet>

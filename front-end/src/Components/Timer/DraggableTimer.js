@@ -1,61 +1,65 @@
-import React, { useEffect, useState } from 'react';
+import React, { Fragment } from 'react';
+
+// Redux
+import { useSelector } from 'react-redux';
+import { getModesOpen,getTimerState } from '../Redux/Reducers/PomodoroTimer/PomodoroTimerSlice';
 
 // Components
 import Settings from './Settings';
 import Modes from './Modes';
 import CountDownClock from './CountDownClock';
-import Buttons from './Buttons';
+import Draggable from 'react-draggable';
 
 // styles
 import './DraggableTimer.css'
 
-function DraggableTimer() {
-    const [pomodoroTime, setPomodoroTime] = useState(25);
-    const [breakTime, setBreakTime] = useState(5);
-    const [ModesOpen, setModeOpen] = useState(false);
-
-    const onSettingsButtonClicked = ()=> {
-        setModeOpen(ModesOpen? false: true);
-        console.log("clicked setting");
-    }
-
-    const onCloseButtonClicked = () => {
-        setModeOpen(false);
-    }
-
-
-    const OnPomodoroChange = (event) => {
-        console.log("Pomodoro:", event.target.value)
-        setPomodoroTime(event.target.value);
-        console.log("pomodorotime:", pomodoroTime)
-    }
-    const OnBreakChange = (event) => {
-        console.log("break:", event.target.value)
-        setBreakTime(event.target.value);
-    }
-
-    const newPomodoroTime = pomodoroTime;
-    const newBreakTime = breakTime;
+const DraggableTimer = () => {
     
-    return (
-        <div className='timer timerHandle'>
-            <Settings 
-                buttonClick = {onSettingsButtonClicked}
-            />
-            <Modes 
-                pomodoroChange={OnPomodoroChange} 
-                breakChange={OnBreakChange}
-                isModesOpen = {ModesOpen}
-                buttonClick = {onCloseButtonClicked}
-            />
-            <CountDownClock
-                className = 'CountdownClockComponent' 
-                pomodoroTime={newPomodoroTime} 
-                breakTime={newBreakTime} 
-            />
-            <Buttons/>
-        </div>
-    )
+    const timerClicked = useSelector(getTimerState);
+    const mod = useSelector(getModesOpen);
+
+    const DisplayedTimer = () => {
+        return (
+            <Fragment>
+             {
+                mod ? <div className='timer timerHandle'>
+                <Modes/>
+            </div> :
+            <div className='timer timerHandle'>
+                <Settings/>
+                <CountDownClock/>
+            </div>
+            
+             }
+               </Fragment>
+        )
+    }
+
+    const DraggableDisplayedTimer = () => {
+        return (
+            <Draggable
+                axis="both"
+                handle=".timerHandle"
+                position={null}
+                defaultClassName="draggableTimer"
+                scale={1}
+                >
+                <div>
+                    <DisplayedTimer/>
+                </div>
+            </Draggable>
+        )
+    }
+
+    // you can only return a react component 
+    // any JS variable must be declared in JSX {} tag after return
+    return  (
+        <Fragment>
+            {
+                timerClicked ? <DraggableDisplayedTimer/> : null
+            }
+        </Fragment>
+    ) ;
 }
 
 export default DraggableTimer;

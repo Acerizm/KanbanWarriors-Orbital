@@ -1,0 +1,20 @@
+.CountDownClock {
+    display:grid;
+}
+
+.clockTime {
+    display: grid;
+	height: 100%;
+	width: 100%;
+	justify-items: center;
+	align-content: center;
+	font-family: Monaco; 
+}
+
+.div-clock-text {
+    font-size: 15px ;
+}
+
+.div-clock-time {
+    font-size: 30px ;
+}

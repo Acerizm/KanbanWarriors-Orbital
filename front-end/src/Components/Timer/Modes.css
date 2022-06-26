@@ -1,3 +1,10 @@
+.Modes-main {
+    display: grid;
+}
+
+.Modes-section {
+    display: grid;
+}
 
 .modes-time-container {
     display: flex;
@@ -5,31 +12,41 @@
     align-content: space-evenly;
 }
 
-.modes-time {
-    justify-self: center;
+
+#pomodoroTitle {
+    text-align: center;
+    padding: 0%;
+    margin: 0%;
+    font-family: Monaco; 
 }
 
-.Modes-main {
-    justify-content: center;
-    align-items: center;
+#breakTitle {
+    text-align: center;
+    padding: 0%;
+    margin: 0%; 
+    font-family: Monaco; 
 }
 
-.modes-header {
-    justify-self: center;
+#SettingsTitle{
+    text-align: center;
+    padding: 0%;
+    margin: 0%;
+    font-family: Monaco; 
 }
 
-.closing-icon {
-    align-self: center;
-    justify-self: right;
+#TimeTitle {
+    text-align: center;
+    font-family: Monaco; 
 }
 
 .modes-applyButton {
     justify-self: center;
-    border: none;
+    border-radius: 15px;
 }
 
-section {
+
+.modes-time {
     display: grid;
-    align-items: center;
+    justify-items: center;
 }
 
