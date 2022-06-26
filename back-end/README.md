@@ -1,4 +1,7 @@
 
+![Logo](https://drive.google.com/uc?id=1DLNaICEW3G2hWcvZ7L6fD707nVMqvGi7)
+
+
 # KanbanWarriors Back-End/APIs
 
 Welcome everyone to our back-end repository! Feel free to follow instructions below if you would like to try out our web app in your local machine
