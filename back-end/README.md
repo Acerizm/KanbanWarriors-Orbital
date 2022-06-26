@@ -27,7 +27,7 @@ Go to the project directory (assuming you are at the Github folder)
 - Example: C:\Users\acehq\Documents\GitHub\KanbanWarriors-Orbital\back-end\back-end>
 
 ```bash
-  cd ./KanbanWarriors-Orbital/back-end/back-end>
+  cd ./KanbanWarriors-Orbital/back-end/back-end
 ```
 
 
