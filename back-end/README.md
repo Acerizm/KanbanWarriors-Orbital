@@ -13,7 +13,7 @@ Welcome everyone to our back-end repository! Feel free to follow instructions be
 
 
 ## Warning
-- Please do not run any HTTPut, HTTPPost, HTTPDelete APIs either on your local machione or thru the server. Both ways are connected to our live database and it will impact our app. This demo is only for showcase during Orbital & is currently not secured.
+- Please do not run any HTTPut, HTTPPost, HTTPDelete APIs either on your local machine or thru the server. Both ways are connected to our live database and it will impact our app. This demo is only for showcase during Orbital & is currently not secured.
 - Feel free to run any HTTPGet APIs !
 ## Run Locally
 
