@@ -3,12 +3,11 @@ import { Button } from "@mui/material";
 import Draggable from "react-draggable";
 import Backdrop from "@mui/material/Backdrop";
 import TextField from "@mui/material/TextField";
-import Switch from "@mui/material/Switch";
-import FormControlLabel from "@mui/material/FormControlLabel";
+import IconButton from "@mui/material/IconButton";
+import CloseIcon from "@mui/icons-material/Close";
 import * as CSS from "./css.js";
 import { useDispatch, useSelector } from "react-redux";
 import * as REDUX from "../Redux/Reducers/LiveRoom/LiveRoomSlice.js";
-import { toggleJoinRoomNotification } from "../Redux/Reducers/Notifications/NotificationsSlice.js";
 import * as SOCKETREDUX from "../Redux/Reducers/Socket/SocketSlice.js";
 
 // socket.io
@@ -17,6 +16,7 @@ import { socket } from "../SocketClient/index.js";
 
 const LiveRoomButton = () => {
 	const dispatch = useDispatch();
+	//console.log(user.uid);
 	const showBackdrop = useSelector(REDUX.selectBackdropState);
 	// for draggable
 	// ----------------------------------------------Code for socket.io---------------------------------------------------------------------------
@@ -59,6 +59,11 @@ const LiveRoomButton = () => {
 				updatePosition(settingsLastPosition);
 			}
 		);
+		socket.on("receive_room_message", (data) => {
+			if (data.success !== null && data.success === true) {
+				dispatch(REDUX.toggleBackdrop());
+			}
+		});
 	}, [socket]);
 	// // ----------------------------------------------Code for socket.io---------------------------------------------------------------------------
 	return (
@@ -128,6 +133,12 @@ const LiveRoomButton = () => {
 					id="RoomPopUpContainer"
 					style={{ ...CSS.RoomPopUpContainerStyle }}
 				>
+					<IconButton
+						sx={{ ...CSS.MinimizeButtonStyle }}
+						onClick={() => dispatch(REDUX.toggleBackdrop())}
+					>
+						<CloseIcon fontSize="medium" />
+					</IconButton>
 					<JoinOthersContainer />
 					<InviteOthersContainer />
 					<SubmitButton />
@@ -141,6 +152,8 @@ const SubmitButton = () => {
 	const isInviteOthersSelected = useSelector(REDUX.selectInviteOthersInput);
 	const JoinOthersRoomId = useSelector(REDUX.selectJoinOthersInput);
 	const InviteOthersRoomId = useSelector(REDUX.selectInviteOthersInput);
+	const JoinOthersPassword = useSelector(REDUX.selectJoinOthersPassword);
+	const InviteOthersPassword = useSelector(REDUX.selectInviteOthersPassword);
 	const dispatch = useDispatch();
 	return (
 		<Button
@@ -149,17 +162,19 @@ const SubmitButton = () => {
 			onClick={() => {
 				if (isJoinOthersSelected) {
 					dispatch(
-						SOCKETREDUX.joinRoom({ roomId: JoinOthersRoomId })
+						SOCKETREDUX.joinRoom({
+							roomId: JoinOthersRoomId,
+							password: JoinOthersPassword,
+						})
 					);
-					dispatch(toggleJoinRoomNotification());
-					dispatch(REDUX.toggleBackdrop());
 				} else if (isInviteOthersSelected) {
 					// fix this in the future
 					dispatch(
-						SOCKETREDUX.createRoom({ roomId: JoinOthersRoomId })
+						SOCKETREDUX.createRoom({
+							roomId: InviteOthersRoomId,
+							password: InviteOthersPassword,
+						})
 					);
-					dispatch(toggleJoinRoomNotification());
-					dispatch(REDUX.toggleBackdrop());
 				} else {
 					// show error in the future
 				}
@@ -172,6 +187,7 @@ const SubmitButton = () => {
 const JoinOthersContainer = () => {
 	const dispatch = useDispatch();
 	const value = useSelector(REDUX.selectJoinOthersInput);
+	const passwordValue = useSelector(REDUX.selectJoinOthersPassword);
 	const isDisabled = useSelector(REDUX.selectShowJoinOthersInput);
 	return (
 		<div
@@ -199,6 +215,29 @@ const JoinOthersContainer = () => {
 				}}
 				disabled={!isDisabled}
 			/>
+			<p
+				className="liveRoomPassword"
+				style={{ ...CSS.RoomNameStyle, marginTop: "10px" }}
+			>
+				Password
+			</p>
+			<TextField
+				sx={{ ...CSS.RoomInputStyle }}
+				size="small"
+				value={passwordValue}
+				onChange={(event) => {
+					if (event.target.value !== "") {
+						dispatch(REDUX.blockInput("InviteOthers"));
+					}
+					if (event.target.value == "") {
+						dispatch(REDUX.unblockInput("InviteOthers"));
+					}
+					dispatch(
+						REDUX.updateJoinOthersPassword(event.target.value)
+					);
+				}}
+				disabled={!isDisabled}
+			/>
 		</div>
 	);
 };
@@ -214,6 +253,7 @@ const InviteOthersContainer = () => {
 	};
 	const dispatch = useDispatch();
 	const value = useSelector(REDUX.selectInviteOthersInput);
+	const passwordValue = useSelector(REDUX.selectInviteOthersPassword);
 	const isDisabled = useSelector(REDUX.selectShowInviteOthersInput);
 	return (
 		<div
@@ -244,11 +284,28 @@ const InviteOthersContainer = () => {
 				}}
 				disabled={!isDisabled}
 			/>
-			<FormControlLabel
-				control={<Switch defaultChecked />}
-				label={label}
-				sx={{ color: "black", width: "70%" }}
-				onClick={() => toggleLabel()}
+			<p
+				className="liveRoomPassword"
+				style={{ ...CSS.RoomNameStyle, marginTop: "10px" }}
+			>
+				Password
+			</p>
+			<TextField
+				sx={{ ...CSS.RoomInputStyle }}
+				size="small"
+				value={passwordValue}
+				onChange={(event) => {
+					if (event.target.value !== "") {
+						dispatch(REDUX.blockInput("JoinOthers"));
+					}
+					if (event.target.value == "") {
+						dispatch(REDUX.unblockInput("JoinOthers"));
+					}
+					dispatch(
+						REDUX.updateInviteOthersPassword(event.target.value)
+					);
+				}}
+				disabled={!isDisabled}
 			/>
 		</div>
 	);

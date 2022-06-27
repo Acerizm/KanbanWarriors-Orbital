@@ -3,9 +3,6 @@
 // middleware's codes/functions exits between when the user dispatches the action and when the reducer receives the action to process the state!
 // useful for storing sockets in middleware and logging stuffs!
 // example -> https://blog.campvanilla.com/redux-middleware-basics-getting-started-17dc31c6435c
-//import io from "socket.io-client";
-//import store from "../Store/store";
-import * as BackgroundImageRedux from "../Reducers/BackgroundImage/BackgroundImageSlice.js";
 
 export const SocketMiddleware =
 	(socket) =>
@@ -14,10 +11,16 @@ export const SocketMiddleware =
 	(action) => {
 		//console.log(getState());
 		if (action.type === "Socket/createRoom") {
-			socket.emit("createRoom", action.payload.roomId);
+			socket.emit("createRoom", {
+				roomId: action.payload.roomId,
+				password: action.payload.password,
+			});
 		}
 		if (action.type === "Socket/joinRoom") {
-			socket.emit("joinRoom", action.payload.roomId);
+			socket.emit("joinRoom", {
+				roomId: action.payload.roomId,
+				password: action.payload.password,
+			});
 		}
 
 		// ---------------------- for background category feature as a Sender -----------------------------------------

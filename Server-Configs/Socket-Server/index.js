@@ -1,4 +1,5 @@
 const express = require("express");
+const axios = require("axios");
 const app = express();
 const http = require("http");
 const { Server } = require("socket.io");
@@ -18,18 +19,236 @@ const io = new Server(server, {
 
 io.on("connection", (socket) => {
 	console.log(`user ${socket.id} is connected`);
-
 	// for joining room
-	socket.on("joinRoom", (roomId) => {
-		socket.join(roomId);
-		console.log(`user ${socket.id} joined ${roomId}`);
+	socket.on("joinRoom", (data) => {
+		// check if the room exists
+		axios
+			.get(
+				"http://159.223.91.154:500/api/LiveRoom/CheckLockedRoom?roomId=" +
+					data.roomId +
+					"&password=" +
+					data.password
+			)
+			.then((response) => {
+				if (response.data == true) {
+					// before the user joins the room, if he created a room
+					// leave the room
+					axios
+						.get(
+							"http://159.223.91.154:500/api/LiveRoom/CheckRoomBySocketId?socketId=" +
+								socket.id
+						)
+						.then((response) => {
+							if (response.data !== null) {
+								// this happens when there is a room
+								let tempRoomId = response.data;
+								socket.leave(tempRoomId);
+								axios
+									.delete(
+										"http://159.223.91.154:500/api/LiveRoom/DeleteSocketHost?socketId=" +
+											socket.id
+									)
+									.then(() => {
+										socket
+											.to(response.data)
+											.emit("receive_room_message", {
+												message: `Host of this room has left! Disconnected from room...`,
+											});
+										io.in(response.data).socketsLeave(
+											response.data
+										);
+									})
+									.catch((error) => {
+										console.log(error.message);
+									});
+							}
+
+							//then clear the user if the user has joined any other rooms before
+							socket.rooms.forEach((key, value) => {
+								if (value !== socket.id) {
+									socket
+										.to(value)
+										.emit("receive_room_message", {
+											message: "someone left the room",
+										});
+									socket.leave(value);
+								}
+							});
+
+							// then join normally
+							// if the room exists & the password is correct, the user can join
+							socket.join(data.roomId);
+							console.log(
+								`user ${socket.id} joined ${data.roomId}`
+							);
+							// informed the user that the user has joined
+							socket.emit("receive_room_message", {
+								message: `You have successfully joined room ${data.roomId} !`,
+								success: true,
+							});
+							socket
+								.to(data.roomId)
+								.emit("receive_room_message", {
+									message: `someone has joined the room`,
+								});
+						});
+				} else {
+					// inform the user that the user cannot join because the room does not exists or the password is wrong
+					socket.emit("receive_room_message", {
+						message: `Room ${data.roomId} does not exists or the password is wrong`,
+					});
+				}
+			})
+			.catch((error) => {
+				console.log(error.message);
+			});
 	});
 	// for creating room
-	socket.on("createRoom", (roomId) => {
-		socket.join(roomId);
-		console.log(`user ${socket.id} created room ${roomId}`);
+	socket.on("createRoom", (data) => {
+		// check if the roomdId is already taken
+		axios
+			.get(
+				"http://159.223.91.154:500/api/LiveRoom/CheckLockedRoom?roomId=" +
+					data.roomId +
+					"&password=" +
+					data.password
+			)
+			.then((response) => {
+				// if response = true
+				// return error to user
+				if (response.data) {
+					socket.emit("receive_room_message", {
+						message: `Room ${data.roomId} has already been created by another user !`,
+					});
+				} else if (response.data === false) {
+					// else connect user to room
+					// and let database know that the user has hosted a room
+					// 1. Must check that the user did not create any prior rooms before
+					// so that socket.io can free up the room
+					// code will be similar to disconnect feature
+					axios
+						.get(
+							"http://159.223.91.154:500/api/LiveRoom/CheckRoomBySocketId?socketId=" +
+								socket.id
+						)
+						.then((response) => {
+							if (response.data !== null) {
+								// this happens when there is a room
+								let tempRoomId = response.data;
+								socket.leave(tempRoomId);
+								axios
+									.delete(
+										"http://159.223.91.154:500/api/LiveRoom/DeleteSocketHost?socketId=" +
+											socket.id
+									)
+									.then(() => {
+										socket
+											.to(response.data)
+											.emit("receive_room_message", {
+												message: `Host of this room has left! Disconnected from room...`,
+											});
+										io.in(response.data).socketsLeave(
+											response.data
+										);
+									})
+									.catch((error) => {
+										console.log(error.message);
+									});
+							}
+							// then join normally
+							// but must clear the socket from existing rooms if he joined a room before
+							socket.rooms.forEach((key, value) => {
+								if (value !== socket.id) {
+									socket
+										.to(value)
+										.emit("receive_room_message", {
+											message: "someone left the room",
+										});
+									socket.leave(value);
+								}
+							});
+							socket.join(data.roomId);
+							axios
+								.post(
+									"http://159.223.91.154:500/api/LiveRoom/CreateNewLockedRoom?socketId=" +
+										socket.id +
+										"&roomId=" +
+										data.roomId +
+										"&password=" +
+										data.password
+								)
+								.then(() => {
+									console.log(
+										`user ${socket.id} created room ${data.roomId}`
+									);
+									socket.emit("receive_room_message", {
+										message: `You have created room ${data.roomId} !`,
+										success: true,
+									});
+								})
+								.catch((error) => {
+									console.log(error.message);
+								});
+						})
+						.catch((error) => {
+							console.log(error.message);
+						});
+				} else {
+					// do nothing
+				}
+			})
+			.catch((error) => {
+				console.log(error.message);
+			});
 	});
 
+	socket.on("disconnecting", (reason) => {
+		//if the socket is not the fake "host"
+		//let everyone know you disconnected from the room
+		socket.rooms.forEach((key, value) => {
+			if (value !== socket.id) {
+				socket.to(value).emit("receive_room_message", {
+					message: "someone left the room",
+				});
+			}
+		});
+	});
+	// to handle disconnect feature
+	socket.on("disconnect", (reason) => {
+		// 1. check if the socket is the fake "host" of the room
+		// 	by checking if the socket id exists in the database
+		axios
+			.get(
+				"http://159.223.91.154:500/api/LiveRoom/CheckRoomBySocketId?socketId=" +
+					socket.id
+			)
+			.then((response) => {
+				if (response.data !== null) {
+					// inform others that the "host" has disconnected
+					// then make all sockets leave the room but not disconnect them as the clients might want to use socket.io again
+					axios
+						.delete(
+							"http://159.223.91.154:500/api/LiveRoom/DeleteSocketHost?socketId=" +
+								socket.id
+						)
+						.then(() => {
+							socket
+								.to(response.data)
+								.emit("receive_room_message", {
+									message: `Host of this room has left! Disconnected from room...`,
+								});
+							io.in(response.data).socketsLeave(response.data);
+						})
+						.catch((error) => {
+							console.log(error.message);
+						});
+				} else {
+				}
+			})
+			.catch((error) => {
+				console.log(error.message);
+			});
+	});
 	// for sharing user's draggable position
 	// user in react app sends "send_user_positions"!
 	// while server sends "receive_other_users_positions" to react app users

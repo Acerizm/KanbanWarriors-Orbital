@@ -9,9 +9,13 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.Configure<BackgroundImagesDatabaseSettings>(
     builder.Configuration.GetSection("BackgroundImagesDatabase"));
 
+builder.Services.Configure<LiveRoomDatabaseSettings>(
+    builder.Configuration.GetSection("LiveRoomDatabase"));
+
 // Just keep adding services below
 builder.Services.AddSingleton<BackgroundImagesServices>();
 builder.Services.AddSingleton<VideosServices>();
+builder.Services.AddSingleton<LiveRoomServices>();
 
 builder.Services.AddControllers()
     .AddJsonOptions(

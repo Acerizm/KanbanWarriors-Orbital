@@ -5,8 +5,10 @@ const LiveRoomSlice = createSlice({
 	initialState: {
 		//currentInput: null,
 		JoinOthersInput: "",
+		JoinOthersPassword: "",
 		showJoinOthersInput: true,
 		InviteOthersInput: "",
+		InviteOthersPassword: "",
 		showInviteOthersInput: true,
 		showBackdrop: false,
 	},
@@ -31,6 +33,12 @@ const LiveRoomSlice = createSlice({
 		updateInviteOthersInput(state, action) {
 			state.InviteOthersInput = action.payload;
 		},
+		updateInviteOthersPassword(state, action) {
+			state.InviteOthersPassword = action.payload;
+		},
+		updateJoinOthersPassword(state, action) {
+			state.JoinOthersPassword = action.payload;
+		},
 		toggleBackdrop(state) {
 			state.showBackdrop = !state.showBackdrop;
 		},
@@ -43,6 +51,8 @@ export const {
 	unblockInput,
 	updateInviteOthersInput,
 	updateJoinOthersInput,
+	updateInviteOthersPassword,
+	updateJoinOthersPassword,
 	toggleBackdrop,
 } = LiveRoomSlice.actions;
 
@@ -57,4 +67,8 @@ export const selectShowInviteOthersInput = (state) =>
 	state.LiveRoom.showInviteOthersInput;
 export const selectInviteOthersInput = (state) =>
 	state.LiveRoom.InviteOthersInput;
+export const selectJoinOthersPassword = (state) =>
+	state.LiveRoom.JoinOthersPassword;
+export const selectInviteOthersPassword = (state) =>
+	state.LiveRoom.InviteOthersPassword;
 export const selectBackdropState = (state) => state.LiveRoom.showBackdrop;

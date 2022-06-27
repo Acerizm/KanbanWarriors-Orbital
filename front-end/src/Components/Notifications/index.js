@@ -1,33 +1,25 @@
-import React, { Fragment, useEffect } from "react";
+import React, { useEffect } from "react";
 import Snackbar from "@mui/material/Snackbar";
-import Slide from "@mui/material/Slide";
-import { useDispatch, useSelector } from "react-redux";
-import * as REDUX from "../Redux/Reducers/Notifications/NotificationsSlice.js";
-import { selectJoinOthersInput } from "../Redux/Reducers/LiveRoom/LiveRoomSlice.js";
+import { socket } from "../SocketClient/index.js";
 
 const Notifications = () => {
-	return (
-		<Fragment>
-			<JoinRoomNotification />
-		</Fragment>
-	);
-};
-
-const JoinRoomNotification = () => {
-	const dispatch = useDispatch();
-	const showNotification = useSelector(REDUX.selectJoinRoomNotificationState);
-	const roomId = useSelector(selectJoinOthersInput);
+	const [isOpen, toggleNotification] = React.useState(false);
+	const [message, setMessage] = React.useState("");
+	useEffect(() => {
+		socket.on("receive_room_message", (data) => {
+			setMessage(data.message);
+			toggleNotification(true);
+		});
+	}, [socket]);
 	return (
 		<Snackbar
 			anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
-			open={showNotification}
+			open={isOpen}
 			onClose={() => {
-				dispatch(REDUX.toggleJoinRoomNotification());
+				toggleNotification(false);
 			}}
-			//TransitionComponent={<Slide direction="right" />}
-			message={`Successfully joined room ${roomId} !`}
-			autoHideDuration={3000}
-			//key={transition ? transition.name : ""}
+			message={message}
+			autoHideDuration={2000}
 		/>
 	);
 };

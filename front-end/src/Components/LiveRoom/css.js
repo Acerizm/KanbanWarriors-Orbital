@@ -11,7 +11,7 @@ export const LiveRoomButtonContainerStyle = {
 export const RoomPopUpContainerStyle = {
 	//border: "2px solid black",
 	backgroundColor: "#fff",
-	height: "250px",
+	height: "300px",
 	width: "600px",
 	borderRadius: "10px",
 	justifySelf: "center",
@@ -77,6 +77,18 @@ export const StartButtonStyle = {
 	gridColumn: "1 / 3",
 	width: "30%",
 	justifySelf: "center",
-	//border: "black",
+	border: "1px solid black",
+	color: "black",
 	marginBottom: "10px",
+};
+
+export const MinimizeButtonStyle = {
+	gridRow: "1 / 2",
+	gridColumn: "2 / 3",
+	//border: "2px solid black",
+	height: "30px",
+	width: "30px",
+	justifySelf: "end",
+	marginRight: "10px",
+	marginTop: "10px",
 };

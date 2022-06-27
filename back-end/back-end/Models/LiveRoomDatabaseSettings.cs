@@ -1,6 +1,6 @@
 ﻿namespace back_end.Models
 {
-    public class BackgroundImagesDatabaseSettings
+    public class LiveRoomDatabaseSettings
     {
         public string ConnectionString { get; set; } = null!;
 

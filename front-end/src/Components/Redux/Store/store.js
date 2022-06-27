@@ -6,7 +6,6 @@ import AuthenticationReducer from "../Reducers/Authentication/AuthenticationSlic
 import AmbienceSoundsReducer from "../Reducers/AmbienceSounds/AmbienceSoundsSlice.js";
 import SettingsReducer from "../Reducers/Settings/SettingsSlice.js";
 import LiveRoomReducer from "../Reducers/LiveRoom/LiveRoomSlice.js";
-import NotificationsReducer from "../Reducers/Notifications/NotificationsSlice.js";
 import SocketReducer from "../Reducers/Socket/SocketSlice.js";
 
 //custom middlewares here
@@ -29,7 +28,6 @@ const store = configureStore({
 		AmbienceSounds: AmbienceSoundsReducer,
 		Settings: SettingsReducer,
 		LiveRoom: LiveRoomReducer,
-		Notifications: NotificationsReducer,
 		Socket: SocketReducer,
 	},
 	// --------------------------------------------------------- WARNING-------------------------------------------------
