@@ -18,12 +18,12 @@ Clone the project (Skip this step if you have already cloned our project before)
   git clone https://github.com/Acerizm/KanbanWarriors-Orbital.git
 ```
 
-Go to the project directory (assuming you are at the Github folder)
+Navigate to our socket.io server codebase (assuming you are at the Github folder)
 
--   Example: C:\Users\acehq\Documents\GitHub\KanbanWarriors-Orbital\front-end\src\Components\SocketClient>
+-   Example: C:\Users\acehq\Documents\GitHub\KanbanWarriors-Orbital\Server-Configs\Socket-Server>
 
 ```bash
-  cd ./KanbanWarriors-Orbital/front-end/src/Components/SocketClient
+  cd ./KanbanWarriors-Orbital/Server-Configs/Socket-Server
 ```
 
 Install Dependencies
