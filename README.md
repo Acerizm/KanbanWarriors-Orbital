@@ -22,7 +22,7 @@ their peers while providing essential features that boosts their productivity in
 
 **Client:** React.js, Redux Toolkit.js, Axios, React Router, Material UI, Ant Design
 
-**Back-End:** .NET Core, Swagger, MongoDB
+**Back-End:** .NET Core, Swagger, MongoDB, Socket.io
 
 **Server:** Node.js, Express.js, NGINX, Docker, Docker Compose, Digital Ocean Linux Server,
 
