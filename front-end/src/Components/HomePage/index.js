@@ -10,6 +10,7 @@ import "./HomePage.css";
 import SettingsButton from "../Settings/index.js";
 import Notifications from "../Notifications/index.js";
 import LiveRoomButton from "../LiveRoom/index.js";
+import WebCam from "../Webcam";
 
 const HomePage = () => {
 	return (
@@ -26,6 +27,7 @@ const HomePage = () => {
 				<AmbienceMusic />
 				<AudioPlayer />
 				<Notifications />
+				<WebCam />
 			</div>
 		</div>
 	);

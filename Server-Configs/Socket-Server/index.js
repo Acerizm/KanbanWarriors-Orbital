@@ -3,9 +3,12 @@ const axios = require("axios");
 const app = express();
 const http = require("http");
 const { Server } = require("socket.io");
+const { PeerServer } = require("peer");
 
 const cors = require("cors");
+const peerServer = PeerServer({ path: "/" });
 app.use(cors());
+app.use("/peerjs", peerServer);
 
 const server = http.createServer(app);
 
@@ -17,6 +20,7 @@ const io = new Server(server, {
 	},
 });
 
+// Socket.io logic
 io.on("connection", (socket) => {
 	console.log(`user ${socket.id} is connected`);
 	// for joining room
@@ -335,6 +339,11 @@ io.on("connection", (socket) => {
 			.emit("receive_other_users_toggle_ambience_player");
 	});
 });
+
+// PeerServer.js logic here
+peerServer.on("connection", (client) => {});
+
+peerServer.on("disconnect", (client) => {});
 
 server.listen(4000, () => {
 	console.log("server is running");
