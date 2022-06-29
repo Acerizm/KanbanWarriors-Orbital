@@ -1,0 +1,52 @@
+.Modes-main {
+    display: grid;
+}
+
+.Modes-section {
+    display: grid;
+}
+
+.modes-time-container {
+    display: flex;
+    justify-content: space-evenly;
+    align-content: space-evenly;
+}
+
+
+#pomodoroTitle {
+    text-align: center;
+    padding: 0%;
+    margin: 0%;
+    font-family: Monaco; 
+}
+
+#breakTitle {
+    text-align: center;
+    padding: 0%;
+    margin: 0%; 
+    font-family: Monaco; 
+}
+
+#SettingsTitle{
+    text-align: center;
+    padding: 0%;
+    margin: 0%;
+    font-family: Monaco; 
+}
+
+#TimeTitle {
+    text-align: center;
+    font-family: Monaco; 
+}
+
+.modes-applyButton {
+    justify-self: center;
+    border-radius: 15px;
+}
+
+
+.modes-time {
+    display: grid;
+    justify-items: center;
+}
+
