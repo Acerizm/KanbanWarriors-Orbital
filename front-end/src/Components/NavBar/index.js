@@ -22,6 +22,8 @@ import { selectRoomId } from "../Redux/Reducers/Socket/SocketSlice.js";
 
 import { socket } from "../SocketClient/index.js";
 
+import { toggleTimer } from "../Redux/Reducers/PomodoroTimer/PomodoroTimerSlice.js";
+
 // 1. Using Material-UI "themes" to alter their components/APIs
 const navBarTheme = createTheme({
 	components: {
@@ -128,6 +130,12 @@ const NavBar = ({ props }) => {
 							label="Timer"
 							icon={<TimerIcon />}
 							disabled={isDragging}
+							onClick={() => dispatch(toggleTimer())}
+							onTouchEnd={() => {
+								if (!isDragging) {
+									dispatch(toggleTimer());
+								}
+							}}
 						/>
 						<BottomNavigationAction
 							label="Music"

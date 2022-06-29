@@ -1,0 +1,16 @@
+.timer {
+    background: linear-gradient(to right, rgb(112, 255, 102), rgb(111, 147, 253));
+	cursor: pointer;
+    display: grid;
+    border-radius: 15px;
+    height: auto;
+    width: 300px;
+    grid-template-rows: 25% 75%;
+    box-shadow: 10px 10px 10px rgb(2, 2, 2);
+}
+
+.timer:active {
+	cursor: grab;
+}
+
+

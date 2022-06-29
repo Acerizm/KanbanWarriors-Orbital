@@ -1,0 +1,10 @@
+.popup {
+    display: grid;
+    border-radius: 15px;
+}
+
+.close-btn {
+    justify-self: right;
+}
+
+
