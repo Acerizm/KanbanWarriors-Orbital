@@ -6,7 +6,7 @@ import DraggableClock from "../DraggableClock/DraggableClock";
 import { AmbienceMusic } from "../DraggableAmbienceMusic/index.js";
 import { AudioPlayer } from "../DraggableAmbienceMusic/index.js";
 import DraggableTimer from "../Timer/DraggableTimer.js";
-import SpotifyPlayer from "../SpotifyPlayer/SpotifyFlyer"
+import SpotifyPlayer from "../SpotifyPlayer/SpotifyPlayer"
 
 // import custom css file here
 import "./HomePage.css";
