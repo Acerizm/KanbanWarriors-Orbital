@@ -337,7 +337,7 @@ io.on("connection", (socket) => {
 	socket.on("send_user_pomodoro_positions", (data) => {
 		socket
 			.to(data.roomId)
-			.emit("receive_other_users_pomodoro_positions");
+			.emit("receive_other_users_pomodoro_positions", data.position);
 	});
 });
 
