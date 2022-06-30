@@ -334,6 +334,11 @@ io.on("connection", (socket) => {
 			.to(data.roomId)
 			.emit("receive_other_users_toggle_ambience_player");
 	});
+	socket.on("send_user_pomodoro_positions", (data) => {
+		socket
+			.to(data.roomId)
+			.emit("receive_other_users_pomodoro_positions", data.position);
+	});
 });
 
 server.listen(4000, () => {
