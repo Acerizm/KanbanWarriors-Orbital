@@ -34,6 +34,7 @@
     "react-spinners": "^0.12.0",
     "react-spotify-web-playback": "^0.10.0",
     "react-youtube": "^9.0.2",
+    "scrollable-component": "^1.2.1",
     "socket.io-client": "^4.5.1",
     "spotify-web-api-node": "^5.0.2",
     "web-vitals": "^2.1.4"

@@ -1,6 +1,6 @@
 import React from "react";
 
-const TrackSearchResult = ({track, key, chooseTrack}) => {
+const TrackSearchResult = ({track, chooseTrack}) => {
 
     const handlePlay = () => {
         chooseTrack(track);

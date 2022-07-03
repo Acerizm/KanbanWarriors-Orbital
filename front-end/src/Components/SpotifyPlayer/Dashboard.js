@@ -3,16 +3,19 @@ import useAuth from './useAuth';
 import SpotifyWebApi from 'spotify-web-api-node'
 import TrackSearchResult from './TrackSearchResult';
 import Player from './Player';
+import 'scrollable-component';
 
 const spotifyApi = new SpotifyWebApi({
-    clientId:"df99a5fdb03042449bdb285e0f4193d6"
+    // clientId:"df99a5fdb03042449bdb285e0f4193d6"
+    // trying Haiqel's spotify accounts'
+    clientId: 'deb3dc9dc4d3435384bb6237be1cd68c'
 })
 
 const Dashboard = ( {code} ) => {
-    const accessToken = useAuth(code)
-    const [search, setSearch] = useState('')
-    const [searchResults, setSearchResults] = useState([])
-    const [playingTrack, setPlayingTrack] = useState()
+    const accessToken = useAuth(code);
+    const [search, setSearch] = useState('');
+    const [searchResults, setSearchResults] = useState([]);
+    const [playingTrack, setPlayingTrack] = useState();
 
     const chooseTrack = (track) => {
         setPlayingTrack(track);
@@ -30,8 +33,10 @@ const Dashboard = ( {code} ) => {
                 res.body.tracks.items.map(track=> {
                     const smallestAlbumImage = track.album.images.reduce(
                         (smallest, image) => {
-                            if (image.height < smallest.height) return image
-                            return smallest
+                            if (image.height < smallest.height) {
+                                return image;
+                            }
+                            return smallest;
                         }, track.album.images[0])
 
                     return {
@@ -45,7 +50,7 @@ const Dashboard = ( {code} ) => {
         })
 
         // to let only the last input be searched
-        return () => cancel = true
+        return () => (cancel = true)
     }, [accessToken, search])
 
     useEffect(() => {
@@ -62,15 +67,20 @@ const Dashboard = ( {code} ) => {
                 onChange = {(event) => setSearch(event.target.value)}
             />
             <div style={{border:"solid blue 1px", padding:"10px", color: 'red'}}>
-                {searchResults.map(track => {
-                    <TrackSearchResult 
-                        track= {track} 
-                        key={track.uri}
-                        chooseTrack={chooseTrack} 
-                    />
-                })}
+                {/* <scrollable-component
+                    scrollbar-visibility
+                > */}
+                    {searchResults.map(track => (
+                        <TrackSearchResult 
+                            track= {track} 
+                            key={track.uri}
+                            chooseTrack={chooseTrack} 
+                        />
+                    ))}
+                {/* </scrollable-component> */}
             </div>
-            <div><Player 
+            <div>
+                <Player 
                     accessToken={accessToken}
                     trackUri = {playingTrack?.uri}
                 />
