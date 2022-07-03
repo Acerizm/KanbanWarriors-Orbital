@@ -3,8 +3,9 @@ const axios = require("axios");
 const app = express();
 const http = require("http");
 const { Server } = require("socket.io");
-
+const SpotifyWebApi = require("spotify-web-api-node")
 const cors = require("cors");
+
 app.use(cors());
 
 const server = http.createServer(app);
@@ -340,6 +341,56 @@ io.on("connection", (socket) => {
 			.emit("receive_other_users_pomodoro_positions", data.position);
 	});
 });
+
+
+
+//----------------------------------Spotify-------------------------------------------//
+
+
+app.use(express.json())
+
+app.post('/login',(req,res)=> {
+    const code = req.body.code;
+    const spotifyApi = new SpotifyWebApi({
+        redirectUri:"http://localhost:3000/",
+        clientId:"df99a5fdb03042449bdb285e0f4193d6",
+        clientSecret:"563d044820ed459db684ddfeb7180a6f",
+    })
+
+    spotifyApi.authorizationCodeGrant(code).then(data=> {
+        res.json({
+            accessToken: data.body.access_token,
+            refreshToken: data.body.refresh_token,
+            expiresIn: data.body.expires_in
+        })
+    }).catch((err)=> {
+        console.log(err);
+        res.sendStatus(400);
+    })
+})
+
+app.post('/refresh', (req,res) => {
+    const refreshToken = req.body.refreshToken;
+    const spotifyApi = new SpotifyWebApi({
+        redirectUri:"http://localhost:3000/",
+        clientId:"df99a5fdb03042449bdb285e0f4193d6",
+        clientSecret:"563d044820ed459db684ddfeb7180a6f",
+        refreshToken
+    })
+    // clientId, clientSecret and refreshToken has been set on the api object previous to this call.
+    spotifyApi.refreshAccessToken()
+        .then((data) =>  {
+            res.json({
+                accessToken: data.body.accessToken,
+                expiresIn: data.body.expiresIn,
+            });
+        })
+        .catch(() => {
+            res.sendStatus(400);
+        })
+})
+
+//------------------------------------------------------------------------------------//
 
 server.listen(4000, () => {
 	console.log("server is running");
