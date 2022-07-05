@@ -3,7 +3,10 @@ import useAuth from './useAuth';
 import SpotifyWebApi from 'spotify-web-api-node'
 import TrackSearchResult from './TrackSearchResult';
 import Player from './Player';
-import 'scrollable-component';
+import Scroll from 'react-scroll-component';
+
+// styles
+import './Dashboard.css'
 
 const spotifyApi = new SpotifyWebApi({
     // clientId:"df99a5fdb03042449bdb285e0f4193d6"
@@ -67,9 +70,11 @@ const Dashboard = ( {code} ) => {
                 onChange = {(event) => setSearch(event.target.value)}
             />
             <div style={{border:"solid blue 1px", padding:"10px", color: 'red'}}>
-                {/* <scrollable-component
-                    scrollbar-visibility
-                > */}
+                <Scroll
+                    direction='vertical'
+                    height='100px'
+                    
+                >
                     {searchResults.map(track => (
                         <TrackSearchResult 
                             track= {track} 
@@ -77,7 +82,7 @@ const Dashboard = ( {code} ) => {
                             chooseTrack={chooseTrack} 
                         />
                     ))}
-                {/* </scrollable-component> */}
+                </Scroll>
             </div>
             <div>
                 <Player 
