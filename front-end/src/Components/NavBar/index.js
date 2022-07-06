@@ -24,6 +24,8 @@ import { socket } from "../SocketClient/index.js";
 
 import { toggleTimer } from "../Redux/Reducers/PomodoroTimer/PomodoroTimerSlice.js";
 
+import { toggleMusicPlayer } from "../Redux/Reducers/SpotifyPlayer/SpotifyPlayerSlice.js";
+
 // 1. Using Material-UI "themes" to alter their components/APIs
 const navBarTheme = createTheme({
 	components: {
@@ -141,6 +143,12 @@ const NavBar = ({ props }) => {
 							label="Music"
 							icon={<AudiotrackIcon />}
 							disabled={isDragging}
+							onClick={() => dispatch(toggleMusicPlayer())}
+							onTouchEnd={() => {
+								if (!isDragging) {
+									dispatch(toggleMusicPlayer());
+								}
+							}}
 						/>
 						<BottomNavigationAction
 							label="Ambience"

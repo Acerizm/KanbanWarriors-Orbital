@@ -335,10 +335,17 @@ io.on("connection", (socket) => {
 			.to(data.roomId)
 			.emit("receive_other_users_toggle_ambience_player");
 	});
+	// --------------------------------------Pomodoro------------------------------------------------------------
 	socket.on("send_user_pomodoro_positions", (data) => {
 		socket
 			.to(data.roomId)
 			.emit("receive_other_users_pomodoro_positions", data.position);
+	});
+	// -------------------------------------SpotifyPlayer--------------------------------------------------------
+	socket.on("send_user_spotify_positions", (data) => {
+		socket
+			.to(data.roomId)
+			.emit("receive_other_users_spotify_positions", data.position);
 	});
 });
 

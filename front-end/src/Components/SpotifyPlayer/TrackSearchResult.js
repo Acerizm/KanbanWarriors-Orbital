@@ -1,5 +1,11 @@
 import React from "react";
 
+// styled components
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
+import Button from '@mui/material/Button';
+
+
 const TrackSearchResult = ({track, chooseTrack}) => {
 
     const handlePlay = () => {
@@ -7,16 +13,20 @@ const TrackSearchResult = ({track, chooseTrack}) => {
     }
 
     return (
-        <div 
-            style ={{cursor: 'pointer'}}
+        <Button
             onClick={handlePlay}
+            sx = {{width: 360, backgroundColor:'white', border:'5px', margin:'5px' }}
+            variant= 'outlined'
         >
-            <img src={track.albumUrl} style ={{height:'64px', width:'64px'}} />
-            <div>
-                <div>{track.title}</div>
-                <div>{track.artist}</div>
-            </div>
-        </div>
+            <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+                    <Typography component="div" variant="subtitle1">
+                    {track.title}
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary" component="div">
+                    {track.artist}
+                    </Typography>
+            </Box>
+        </Button>
     )
 }
 

@@ -8,6 +8,7 @@ import SettingsReducer from "../Reducers/Settings/SettingsSlice.js";
 import LiveRoomReducer from "../Reducers/LiveRoom/LiveRoomSlice.js";
 import SocketReducer from "../Reducers/Socket/SocketSlice.js";
 import pomodoroTimerReducer from "../Reducers/PomodoroTimer/PomodoroTimerSlice"
+import spotifyPlayerReducer from "../Reducers/SpotifyPlayer/SpotifyPlayerSlice"
 
 //custom middlewares here
 import { SocketMiddleware } from "../Middlewares/index.js";
@@ -31,6 +32,7 @@ const store = configureStore({
 		LiveRoom: LiveRoomReducer,
 		Socket: SocketReducer,
 		pomodoroTimer: pomodoroTimerReducer,
+		spotifyPlayer: spotifyPlayerReducer,
 	},
 	// --------------------------------------------------------- WARNING-------------------------------------------------
 	// Removed redux default error notifications on console.log for non serializable data

@@ -5,8 +5,9 @@ import TrackSearchResult from './TrackSearchResult';
 import Player from './Player';
 import Scroll from 'react-scroll-component';
 
-// styles
-import './Dashboard.css'
+// styled Components
+import TextField from '@mui/material/TextField';
+import { Card, CardContent } from '@mui/material';
 
 const spotifyApi = new SpotifyWebApi({
     // clientId:"df99a5fdb03042449bdb285e0f4193d6"
@@ -60,20 +61,14 @@ const Dashboard = ( {code} ) => {
         if (!accessToken) return
         spotifyApi.setAccessToken(accessToken);
     }, [accessToken])
-
-    return(
-        <div style={{border:"solid red 1px", padding:"10px"}}>
-            <input 
-                type='search'
-                placeholder= 'Songs/artist name'
-                value = {search}
-                onChange = {(event) => setSearch(event.target.value)}
-            />
-            <div style={{border:"solid blue 1px", padding:"10px", color: 'red'}}>
+    
+    const TrackFinds = () => {
+        console.log('searchResults', searchResults)
+        if (searchResults.length > 0) {
+            return (
                 <Scroll
                     direction='vertical'
-                    height='100px'
-                    
+                    height='150px'
                 >
                     {searchResults.map(track => (
                         <TrackSearchResult 
@@ -83,14 +78,44 @@ const Dashboard = ( {code} ) => {
                         />
                     ))}
                 </Scroll>
-            </div>
-            <div>
-                <Player 
-                    accessToken={accessToken}
-                    trackUri = {playingTrack?.uri}
+            ) 
+        } else {
+            return (
+                <Scroll
+                    direction='vertical'
+                    height='50px'
+                >
+                </Scroll>
+            )
+        }
+    }
+
+    return(
+        <Card variant="outlined" 
+            sx= {{ 
+                width: 400, 
+                backgroundColor:'#333', 
+                }}
+            >
+            <CardContent>
+                <TextField
+                    id="outlined-search"
+                    label="Song/Artist Name"
+                    type="search"
+                    value = {search}
+                    onChange = {(event) => setSearch(event.target.value)}
+                    fullWidth = 'true'
+                    sx={{marginBottom:'10px'}}
                 />
-            </div>
-        </div>
+                <TrackFinds/>
+                <div style ={{marginTop:'10px'}}>
+                    <Player 
+                        accessToken={accessToken}
+                        trackUri = {playingTrack?.uri}
+                    />
+                </div>
+            </CardContent>
+        </Card>
     )
 }
 
