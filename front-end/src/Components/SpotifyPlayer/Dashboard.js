@@ -75,7 +75,6 @@ const Dashboard = ( {code} ) => {
     }, [accessToken])
     
     const TrackFinds = () => {
-        console.log('searchResults', searchResults)
         if (searchResults.length > 0) {
             return (
                 <Scroll
