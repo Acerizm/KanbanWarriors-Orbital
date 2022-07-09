@@ -7,7 +7,13 @@ import Scroll from 'react-scroll-component';
 
 // styled Components
 import TextField from '@mui/material/TextField';
-import { Card, CardContent } from '@mui/material';
+import { Card, CardContent, Typography } from '@mui/material';
+import IconButton from '@mui/material/IconButton';
+import MinimizeIcon from '@mui/icons-material/Minimize';
+
+// Redux
+import { useDispatch } from "react-redux";
+import { displayMusicPlayerOff } from '../Redux/Reducers/SpotifyPlayer/SpotifyPlayerSlice';
 
 const spotifyApi = new SpotifyWebApi({
     // clientId:"df99a5fdb03042449bdb285e0f4193d6"
@@ -21,9 +27,15 @@ const Dashboard = ( {code} ) => {
     const [searchResults, setSearchResults] = useState([]);
     const [playingTrack, setPlayingTrack] = useState();
 
+    const dispatch = useDispatch();
+
     const chooseTrack = (track) => {
         setPlayingTrack(track);
         setSearch('');
+    }
+
+    const minimizeClicked = () => {
+        dispatch(displayMusicPlayerOff());
     }
 
     useEffect(() => {
@@ -98,6 +110,21 @@ const Dashboard = ( {code} ) => {
                 }}
             >
             <CardContent>
+                <div style={{display:'flex', justifyContent:'space-between', alignItems:'center'}}>
+                    <Typography variant='h6' sx={{color:'white'}}>
+                        Music Player
+                    </Typography>
+                    <IconButton
+                        sx={{cursor:'pointer'}}
+                        onClick={minimizeClicked}
+                    >
+                        <MinimizeIcon
+                            fontSize='large'
+                            sx={{color:'white'}}
+                        />
+                    </IconButton>
+                    
+                </div>
                 <TextField
                     id="outlined-search"
                     label="Song/Artist Name"
@@ -105,7 +132,7 @@ const Dashboard = ( {code} ) => {
                     value = {search}
                     onChange = {(event) => setSearch(event.target.value)}
                     fullWidth = 'true'
-                    sx={{marginBottom:'10px'}}
+                    sx={{marginBottom:'10px', marginTop:'10px'}}
                 />
                 <TrackFinds/>
                 <div style ={{marginTop:'10px'}}>

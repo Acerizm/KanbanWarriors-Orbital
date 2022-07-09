@@ -9,13 +9,20 @@ const spotifyPlayerSlice = createSlice({
     reducers : {
         toggleMusicPlayer(state) {
 			state.isPlayerDisplayed = !state.isPlayerDisplayed;
-		}
+		},
+        displayMusicPlayerOn(state) {
+            state.isPlayerDisplayed = true;
+        },
+        displayMusicPlayerOff(state) {
+            state.isPlayerDisplayed = false;
+        }
+
     }
 
 })
 
 // Exporting Reducers/Actions
-export const {toggleMusicPlayer} = spotifyPlayerSlice.actions;
+export const {toggleMusicPlayer, displayMusicPlayerOn, displayMusicPlayerOff} = spotifyPlayerSlice.actions;
 
 export default spotifyPlayerSlice.reducer;
 

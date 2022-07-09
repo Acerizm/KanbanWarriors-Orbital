@@ -6,8 +6,9 @@ import Dashboard from './Dashboard';
 import Login from './Login';
 
 // Redux
-import { useSelector } from "react-redux";
-import { getPlayerState } from '../Redux/Reducers/SpotifyPlayer/SpotifyPlayerSlice';
+import { useDispatch, useSelector } from "react-redux";
+import { getPlayerState, displayMusicPlayerOn } from '../Redux/Reducers/SpotifyPlayer/SpotifyPlayerSlice';
+
 
 // socket.io
 import { selectRoomId } from "../Redux/Reducers/Socket/SocketSlice.js";
@@ -17,6 +18,10 @@ import { socket } from "../SocketClient/index.js";
 const code = new URLSearchParams(window.location.search).get('code')
 
 const DisplayedComponent = () => {
+	const dispatch = useDispatch();
+	if (code) {
+		dispatch(displayMusicPlayerOn())
+	}
     return code ? 
         <Dashboard code = {code}/> : <Login/>
 }

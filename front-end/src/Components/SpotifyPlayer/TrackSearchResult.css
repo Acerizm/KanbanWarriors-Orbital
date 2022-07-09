@@ -1,0 +1,9 @@
+.TrackSearchResultButtons {
+    background-color: Transparent;
+    background-repeat:no-repeat;
+    border: none;
+    padding: 0;
+    margin: none;
+    cursor:pointer;
+    overflow: hidden; 
+}
