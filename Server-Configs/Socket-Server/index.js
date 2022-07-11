@@ -6,7 +6,7 @@ const { Server } = require("socket.io");
 const { PeerServer } = require("peer");
 
 const cors = require("cors");
-const peerServer = PeerServer({ path: "/" });
+const peerServer = PeerServer({ path: "/peerServer" });
 app.use(cors());
 app.use("/peerjs", peerServer);
 
@@ -296,11 +296,7 @@ io.on("connection", (socket) => {
 			.emit("receive_other_users_background_settings", data);
 	});
 	// -----------------------------------for background feature-----------------------------------------------
-	socket.on("send_user_video_id", (data) => {
-		socket
-			.to(data.roomId)
-			.emit("receive_other_users_video_id", data.videoId);
-	});
+
 	socket.on("send_user_category_selected", (data) => {
 		socket
 			.to(data.roomId)
@@ -337,6 +333,12 @@ io.on("connection", (socket) => {
 		socket
 			.to(data.roomId)
 			.emit("receive_other_users_toggle_ambience_player");
+	});
+
+	socket.on("send_user_webcam_positions", (data) => {
+		socket
+			.to(data.roomId)
+			.emit("receive_other_users_webcam_positions", data.webcamUsers);
 	});
 });
 

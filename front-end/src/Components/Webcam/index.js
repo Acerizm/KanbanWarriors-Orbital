@@ -55,12 +55,24 @@ const WebcamComponent = () => {
 const WebCam = () => {
 	// ----------------------------------------------Code for socket.io---------------------------------------------------------------------------
 	const [isDragging, updateDraggingStatus] = React.useState(false);
-	const [currentPosition, updatePosition] = React.useState({
-		x: 0,
-		y: 0,
-	});
+	const [webcamUsers, updateWebcamUsers] = React.useState([
+		{
+			socketId: socket.id,
+			x: 0,
+			y: 0,
+		},
+	]);
+	const updateCurrentUserPosition = (userId, x, y) => {
+		const newState = webcamUsers.map((user) => {
+			if (user.socketId === userId) {
+				return { ...user, x: x, y: y };
+			}
+			return user;
+		});
+		updateWebcamUsers(newState);
+	};
 	const roomId = useSelector(selectRoomId);
-	const eventControl = (event, data) => {
+	const eventControl = (event, data, userId) => {
 		if (event.type === "mousedown" || event.type === "touchstart") {
 			// do nothing
 		}
@@ -72,62 +84,84 @@ const WebCam = () => {
 		}
 		if (event.type === "mousemove" || event.type === "touchmove") {
 			updateDraggingStatus(true);
-			updatePosition({
-				x: data.x,
-				y: data.y,
-			});
+			updateCurrentUserPosition(userId, data.x, data.y);
 			//also update positions for other users!
 			if (selectRoomId !== null) {
 				socket.emit("send_user_webcam_positions", {
-					position: currentPosition,
+					//position: currentPosition,
+					webcamUsers: webcamUsers,
 					roomId: roomId,
 				});
 			}
 		}
 	};
+	let draggableWebcam = webcamUsers.map((user) => {
+		let userId = "DraggableWebCamera-" + user.socketId;
+		let handleId = "#" + userId;
+		return (
+			<Draggable
+				key={user.socketId}
+				axis="both"
+				handle={handleId}
+				position={{
+					x: user.x,
+					y: user.y,
+				}}
+				//defaultClassName="draggableWebCamera"
+				scale={1}
+				onStart={(event, data) => {
+					eventControl(event, data, user.socketId);
+				}}
+				onStop={(event, data) => {
+					eventControl(event, data, user.socketId);
+				}}
+				onDrag={(event, data) => {
+					eventControl(event, data, user.socketId);
+				}}
+			>
+				<div
+					id={userId}
+					style={{
+						gridRow: "1 / 2",
+						gridColumn: "1 / 1",
+						height: "200px",
+						width: "200px",
+						//border: "2px solid red",
+					}}
+				>
+					<WebcamComponent />
+				</div>
+			</Draggable>
+		);
+	});
 	useEffect(() => {
 		// change code here for other components!
-		// socket.on(
-		// 	"receive_other_users_clock_positions",
-		// 	(settingsLastPosition) => {
-		// 		updatePosition(settingsLastPosition);
-		// 	}
-		// );
+		socket.on(
+			"receive_other_users_webcam_positions",
+			(updatedWebcamUsers) => {
+				// check if you are inside the array
+				webcamUsers.map((user) => {
+
+				})
+				let checkCurrentUserInside = updatedWebcamUsers.map((user) => {
+					if(user.socketId === socket.id){
+						return true
+					}
+				})
+				if(checkCurrentUserInside) {
+					updateWebcamUsers(updatedWebcamUsers);
+				} else {
+					// when the user is not inside
+					// need to add the current user into the array
+					let newWebCamUsers = updatedWebcamUsers;
+					newWebCamUsers
+				}
+			}
+		);
 		//socket.on("receive_other_users_clock_color", (textColor) => {});
 	}, [socket]);
 	// ------------------------------------------------------------------------------------------------------------------------------
-	return (
-		<Draggable
-			axis="both"
-			handle="#DraggableWebCamera"
-			position={currentPosition}
-			defaultClassName="draggableWebCamera"
-			scale={1}
-			onStart={(event, data) => {
-				eventControl(event, data);
-			}}
-			onStop={(event, data) => {
-				eventControl(event, data);
-			}}
-			onDrag={(event, data) => {
-				eventControl(event, data);
-			}}
-		>
-			{/* <WebcamComponent /> */}
-			<div
-				id="DraggableWebCamera"
-				style={{
-					gridRow: "1 / 2",
-					gridColumn: "1 / 1",
-					height: "200px",
-					width: "200px",
-					//border: "2px solid red",
-				}}
-			>
-				<WebcamComponent />
-			</div>
-		</Draggable>
-	);
+	return <Fragment>{draggableWebcam}</Fragment>;
 };
 
 export default WebCam;
