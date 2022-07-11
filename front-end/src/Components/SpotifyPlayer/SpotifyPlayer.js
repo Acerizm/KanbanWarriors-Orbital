@@ -74,6 +74,7 @@ const InitialPlayer = () => {
             position={currentPosition}
 			defaultClassName="draggablePlayer"
 			scale={1}
+			cancel="span"
             onStart={(event, data) => {
 				eventControl(event, data);
 			}}

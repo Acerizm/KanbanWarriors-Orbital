@@ -44,6 +44,7 @@ const Dashboard = ( {code} ) => {
 
         let cancel = false
         spotifyApi.searchTracks(search).then((res)=> {
+            console.log(res.body.tracks.items, "from dashboard")
             if (cancel) return
             setSearchResults(
                 res.body.tracks.items.map(track=> {
@@ -104,13 +105,13 @@ const Dashboard = ( {code} ) => {
     return(
         <Card variant="outlined" 
             sx= {{ 
-                width: 400, 
+                width: 420, 
                 backgroundColor:'#333', 
                 }}
             >
             <CardContent>
                 <div style={{display:'flex', justifyContent:'space-between', alignItems:'center'}}>
-                    <Typography variant='h6' sx={{color:'white'}}>
+                    <Typography variant='h6' sx={{color:'#1DB954'}}>
                         Music Player
                     </Typography>
                     <IconButton
@@ -119,7 +120,7 @@ const Dashboard = ( {code} ) => {
                     >
                         <MinimizeIcon
                             fontSize='large'
-                            sx={{color:'white'}}
+                            sx={{color:'#1DB954'}}
                         />
                     </IconButton>
                     
@@ -130,16 +131,20 @@ const Dashboard = ( {code} ) => {
                     type="search"
                     value = {search}
                     onChange = {(event) => setSearch(event.target.value)}
-                    fullWidth = 'true'
+                    fullWidth={true}
                     sx={{marginBottom:'10px', marginTop:'10px'}}
                 />
                 <TrackFinds/>
-                <div style ={{marginTop:'10px'}}>
-                    <Player 
+                <span 
+                    style ={{marginTop:'10px'}}
+                    // className given to have no draggable feature on Player
+                    className="no-cursor"
+                >
+                    <Player
                         accessToken={accessToken}
-                        trackUri = {playingTrack?.uri}
+                        playingTrack = {playingTrack}
                     />
-                </div>
+                </span>
             </CardContent>
         </Card>
     )
