@@ -60,6 +60,7 @@ const Dashboard = ( {code} ) => {
                         artist: track.artists[0].name,
                         title: track.name,
                         uri: track.uri,
+                        duration_ms: track.duration_ms,
                         albumUrl: smallestAlbumImage.url
                     }
                 })

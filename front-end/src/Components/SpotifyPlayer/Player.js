@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import SpotifyWebApi from "spotify-web-api-node";
 // import SpotifyPlayer from 'react-spotify-web-playback'
 // import SpotifyPlayer from 'react-spotify-player';
 
@@ -15,6 +16,7 @@ import FastForwardRounded from '@mui/icons-material/FastForwardRounded';
 import FastRewindRounded from '@mui/icons-material/FastRewindRounded';
 import VolumeUpRounded from '@mui/icons-material/VolumeUpRounded';
 import VolumeDownRounded from '@mui/icons-material/VolumeDownRounded';
+
 
 
 const Widget = styled('div')(({ theme }) => ({
@@ -51,10 +53,49 @@ const TinyText = styled(Typography)({
 });
 
 
+const spotifyApi = new SpotifyWebApi({
+    // clientId:"df99a5fdb03042449bdb285e0f4193d6"
+    // trying Haiqel's spotify accounts'
+    clientId: 'deb3dc9dc4d3435384bb6237be1cd68c'
+})
+
 const Player = ({accessToken,playingTrack}) => {
+    console.log(accessToken, "from Player 2")
     const [play,setPlay] = useState(false)
+    const [user,setUser] = useState({})
 
     useEffect(()=> setPlay(true), [playingTrack])
+
+    useEffect(() => {
+        if (!accessToken) return
+        spotifyApi.setAccessToken(accessToken);
+    }, [accessToken])
+
+    const onPlayButtonClicked = () => {
+        if (paused) {
+            return 
+        } else {
+            spotifyApi.play()
+                .then(function() {
+                console.log('Playback started');
+                }, function(err) {
+                //if the user making the request is non-premium, a 403 FORBIDDEN response code will be returned
+                console.log('Something went wrong!', err);
+        })
+        }
+    }
+   
+
+    // scrapping this idea, getting user's info
+    // useEffect(()=> {
+    //     if (!accessToken) return
+    //     spotifyApi.getMe()
+    //         .then((res) => {
+    //             console.log('Some information about the authenticated user', res.body);
+    //             setUser(res.body)
+    //             return res.body;
+    //         })
+    // },[accessToken])
 
     const theme = useTheme();
     const duration = 200; // seconds
@@ -69,7 +110,8 @@ const Player = ({accessToken,playingTrack}) => {
     const lightIconColor =
     theme.palette.mode === 'dark' ? 'rgba(255,255,255,0.4)' : 'rgba(0,0,0,0.4)';
     
-    console.log(playingTrack, "from player") 
+    // console.log(user, "user");
+    // console.log(playingTrack, "from player") 
     if (!accessToken) return null
     return (
         <Box sx={{ width: '100%', overflow: 'hidden' }}>
@@ -77,16 +119,16 @@ const Player = ({accessToken,playingTrack}) => {
                 <Box sx={{ display: 'flex', alignItems: 'center' }}>
                     <CoverImage>
                         <img
-                            alt= {playingTrack}
+                            alt= 'hi'
                             src={playingTrack ? playingTrack.albumUrl : null}
                         />
                     </CoverImage>
                     <Box sx={{ ml: 1.5, minWidth: 0 }}>
                         <Typography variant="caption" color="text.secondary" fontWeight={500}>
-                            {playingTrack ? playingTrack.artist : 'hi'}
+                            {playingTrack ? playingTrack.artist : 'Artist'}
                         </Typography>
                         <Typography noWrap>
-                            <b>{playingTrack ? playingTrack.title : 'hola'}</b>
+                            <b>{playingTrack ? playingTrack.title :  'Song title'}</b>
                         </Typography>
                     </Box>
                 </Box>
@@ -149,7 +191,10 @@ const Player = ({accessToken,playingTrack}) => {
                     </IconButton>
                     <IconButton
                         aria-label={paused ? 'play' : 'pause'}
-                        onClick={() => setPaused(!paused)}
+                        onClick={() => {
+                            setPaused(!paused)
+                            onPlayButtonClicked()
+                        }}
                     >
                         {paused ? (
                             <PlayArrowRounded
