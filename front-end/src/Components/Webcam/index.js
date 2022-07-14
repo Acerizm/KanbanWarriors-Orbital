@@ -140,21 +140,19 @@ const WebCam = () => {
 			"receive_other_users_webcam_positions",
 			(updatedWebcamUsers) => {
 				// check if you are inside the array
-				webcamUsers.map((user) => {
-
-				})
+				webcamUsers.map((user) => {});
 				let checkCurrentUserInside = updatedWebcamUsers.map((user) => {
-					if(user.socketId === socket.id){
-						return true
+					if (user.socketId === socket.id) {
+						return true;
 					}
-				})
-				if(checkCurrentUserInside) {
+				});
+				if (checkCurrentUserInside) {
 					updateWebcamUsers(updatedWebcamUsers);
 				} else {
 					// when the user is not inside
 					// need to add the current user into the array
 					let newWebCamUsers = updatedWebcamUsers;
-					newWebCamUsers
+					//newWebCamUsers
 				}
 			}
 		);

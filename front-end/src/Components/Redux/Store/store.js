@@ -7,6 +7,7 @@ import AmbienceSoundsReducer from "../Reducers/AmbienceSounds/AmbienceSoundsSlic
 import SettingsReducer from "../Reducers/Settings/SettingsSlice.js";
 import LiveRoomReducer from "../Reducers/LiveRoom/LiveRoomSlice.js";
 import SocketReducer from "../Reducers/Socket/SocketSlice.js";
+import LiveChatReducer from "../Reducers/LiveChat/LiveChatSlice.js";
 
 //custom middlewares here
 import { SocketMiddleware } from "../Middlewares/index.js";
@@ -29,6 +30,7 @@ const store = configureStore({
 		Settings: SettingsReducer,
 		LiveRoom: LiveRoomReducer,
 		Socket: SocketReducer,
+		LiveChat: LiveChatReducer,
 	},
 	// --------------------------------------------------------- WARNING-------------------------------------------------
 	// Removed redux default error notifications on console.log for non serializable data
