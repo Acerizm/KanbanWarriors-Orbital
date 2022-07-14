@@ -60,47 +60,84 @@ const spotifyApi = new SpotifyWebApi({
 })
 
 const Player = ({accessToken,playingTrack}) => {
-    console.log(accessToken, "from Player 2")
-    const [play,setPlay] = useState(false)
-    const [user,setUser] = useState({})
+    const [play,setPlay] = useState(false);
+    const [currentPlayingTrack, setCurrentPlayingTrack] = useState({});
+    const [position, setPosition] = useState(1);
+    const [paused, setPaused] = useState(false);
 
     useEffect(()=> setPlay(true), [playingTrack])
 
+    //for getting recently played song and authorising spotify api node
     useEffect(() => {
         if (!accessToken) return
         spotifyApi.setAccessToken(accessToken);
-    }, [accessToken])
 
-    const onPlayButtonClicked = () => {
-        if (paused) {
-            return 
-        } else {
-            spotifyApi.play()
-                .then(function() {
-                console.log('Playback started');
-                }, function(err) {
-                //if the user making the request is non-premium, a 403 FORBIDDEN response code will be returned
-                console.log('Something went wrong!', err);
+
+        spotifyApi.getMyRecentlyPlayedTracks({
+            limit : 1
         })
-        }
-    }
-   
+            .then((res) => {
+                const recentTrack = res.body.items[0].track
+                const smallestAlbumImage = recentTrack.album.images.reduce(
+                    (smallest, image) => {
+                        if (image.height < smallest.height) {
+                            return image;
+                        }
+                        return smallest;
+                    }, recentTrack.album.images[0])
+                setCurrentPlayingTrack(
+                    {
+                        artist: recentTrack.album.artists[0].name,
+                        title: recentTrack.album.name,
+                        uri: recentTrack.album.uri,
+                        duration_ms: recentTrack.duration_ms,
+                        albumUrl: smallestAlbumImage.url
+                    }
+                )
+            }, (err) => {
+                console.log('Something went wrong!', err);
+            });
+        
+        
+        spotifyApi.getMyDevices()
+            .then((data) => {
+                let availableDevices = data.body.devices;
+                console.log(availableDevices, "available");
+            }, function(err) {
+                console.log('Something went wrong!', err);
+            });
 
-    // scrapping this idea, getting user's info
+    }, [accessToken])    
+
     // useEffect(()=> {
-    //     if (!accessToken) return
-    //     spotifyApi.getMe()
-    //         .then((res) => {
-    //             console.log('Some information about the authenticated user', res.body);
-    //             setUser(res.body)
-    //             return res.body;
-    //         })
-    // },[accessToken])
+    //     if (paused) {
+    //         spotifyApi.play()
+    //             .then(function() {
+    //                 console.log('Playback started');
+    //             }, function(err) {
+    //                 //if the user making the request is non-premium, a 403 FORBIDDEN response code will be returned
+    //                 console.log('Something went wrong!', err);
+    //             });
+    //     }
+    // }, [paused])
+
+    useEffect(()=> {
+        let interval = setInterval(()=> {
+            clearInterval(interval);
+            if (paused) {
+                
+            } else {
+                setPosition(position + 1)
+            }
+        },1000)
+    }, [paused,position])
 
     const theme = useTheme();
-    const duration = 200; // seconds
-    const [position, setPosition] = useState(32);
-    const [paused, setPaused] = useState(false);
+    const duration = playingTrack ? 
+        Math.floor(playingTrack.duration_ms / 1000) :  
+        Math.floor(currentPlayingTrack.duration_ms / 1000); // seconds
+
+    
     function formatDuration(value) {
         const minute = Math.floor(value / 60);
         const secondLeft = value - minute * 60;
@@ -109,9 +146,8 @@ const Player = ({accessToken,playingTrack}) => {
     const mainIconColor = theme.palette.mode === 'dark' ? '#fff' : '#000';
     const lightIconColor =
     theme.palette.mode === 'dark' ? 'rgba(255,255,255,0.4)' : 'rgba(0,0,0,0.4)';
-    
-    // console.log(user, "user");
-    // console.log(playingTrack, "from player") 
+
+
     if (!accessToken) return null
     return (
         <Box sx={{ width: '100%', overflow: 'hidden' }}>
@@ -120,15 +156,15 @@ const Player = ({accessToken,playingTrack}) => {
                     <CoverImage>
                         <img
                             alt= 'hi'
-                            src={playingTrack ? playingTrack.albumUrl : null}
+                            src={playingTrack ? playingTrack.albumUrl : currentPlayingTrack.albumUrl}
                         />
                     </CoverImage>
                     <Box sx={{ ml: 1.5, minWidth: 0 }}>
                         <Typography variant="caption" color="text.secondary" fontWeight={500}>
-                            {playingTrack ? playingTrack.artist : 'Artist'}
+                            {playingTrack ? playingTrack.artist : currentPlayingTrack.artist}
                         </Typography>
                         <Typography noWrap>
-                            <b>{playingTrack ? playingTrack.title :  'Song title'}</b>
+                            <b>{playingTrack ? playingTrack.title :  currentPlayingTrack.title}</b>
                         </Typography>
                     </Box>
                 </Box>
@@ -139,7 +175,11 @@ const Player = ({accessToken,playingTrack}) => {
                     min={0}
                     step={1}
                     max={duration}
-                    onChange={(_, value) => setPosition(value)}
+                    // when dragging slider, player gets paused
+                    onChange={(_, value) => {
+                        setPaused(true)
+                        setPosition(value)   
+                    }}
                     sx={{
                         color: theme.palette.mode === 'dark' ? '#fff' : 'rgba(0,0,0,0.87)',
                         height: 4,
@@ -193,7 +233,6 @@ const Player = ({accessToken,playingTrack}) => {
                         aria-label={paused ? 'play' : 'pause'}
                         onClick={() => {
                             setPaused(!paused)
-                            onPlayButtonClicked()
                         }}
                     >
                         {paused ? (

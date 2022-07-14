@@ -354,6 +354,7 @@ io.on("connection", (socket) => {
 //----------------------------------Spotify-------------------------------------------//
 
 
+// body parser!
 app.use(express.json())
 
 app.post('/login',(req,res)=> {

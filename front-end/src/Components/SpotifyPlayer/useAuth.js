@@ -20,6 +20,7 @@ const useAuth = (code) => {
                 window.history.pushState({}, null, '/')
             })
             .catch(()=> {
+                // to prevent any errors from popping by redirecting to main page
                 window.location = '/'
             })
     }, [code])
@@ -29,6 +30,8 @@ const useAuth = (code) => {
     // we will do auto refresh for our users using the refreshToken
     // and expiresIn hook
     useEffect(()=> {
+        // to prevent a case where the following code gets run before we 
+        // have a refreshToken or an expiresIn
         if (!refreshToken || !expiresIn ) return
         const interval = setInterval(() => {
             axios
