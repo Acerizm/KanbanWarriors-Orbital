@@ -17,6 +17,7 @@ import ScreenShareIcon from "@mui/icons-material/ScreenShare";
 import Divider from "@mui/material/Divider";
 import MicOffIcon from "@mui/icons-material/MicOff";
 import HeadsetIcon from "@mui/icons-material/Headset";
+import Backdrop from '@mui/material/Backdrop';
 
 // for signal
 import SignalCellularAltIcon from "@mui/icons-material/SignalCellularAlt";
@@ -86,13 +87,19 @@ const LiveChatDrawer = () => {
 				anchor="left"
 				open={isDrawerOpen}
 				onClose={(event) => toggleDrawer(event)}
+				
+				
 			>
+				<div style={{height: "100%", width: "100vw	", display: "grid", gridTemplateColumns: "250px calc(100% - 350px) 100px ", gridTemplateRows: "100%", }}>
 				<Box
 					sx={{
 						width: 250,
 						height: "calc(100% - 150px)",
 						//border: "2px solid black",
 						backgroundColor: "#F2F3F5",
+						gridColumn: "1 / 2",
+						gridRow: "1 / 1",
+						alignSelf: "start"
 					}}
 					role="presentation"
 					onClick={(event) => toggleDrawer(event)}
@@ -128,6 +135,9 @@ const LiveChatDrawer = () => {
 						height: "150px",
 						width: "100%",
 						backgroundColor: "#EBEDEF",
+						gridColumn: "1 / 2",
+						gridRow: "1 / 1",
+						alignSelf: "end"
 					}}
 				>
 					<div
@@ -275,6 +285,12 @@ const LiveChatDrawer = () => {
 						</Tooltip>
 					</div>
 				</div>
+				<div style={{backgroundColor: "white", 
+					width: "100%", height: "100%",
+					gridColumn: "2 / 3", gridRow: "1 / 1"}}>
+					hello world
+				</div>
+			</div>
 			</Drawer>
 		</Fragment>
 	);
