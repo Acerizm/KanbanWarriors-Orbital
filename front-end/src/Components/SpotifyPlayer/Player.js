@@ -18,7 +18,6 @@ import VolumeUpRounded from '@mui/icons-material/VolumeUpRounded';
 import VolumeDownRounded from '@mui/icons-material/VolumeDownRounded';
 
 
-
 const Widget = styled('div')(({ theme }) => ({
     padding: 16,
     borderRadius: 16,
@@ -60,12 +59,14 @@ const spotifyApi = new SpotifyWebApi({
 })
 
 const Player = ({accessToken,playingTrack}) => {
-    const [play,setPlay] = useState(false);
     const [currentPlayingTrack, setCurrentPlayingTrack] = useState({});
     const [position, setPosition] = useState(1);
     const [paused, setPaused] = useState(false);
+    const [player, setPlayer] = useState(undefined);
+    const [is_active, setActive] = useState(false);
+    const [current_track, setTrack] = useState(playingTrack);
+    const [deviceId, setDeviceId] = useState([])
 
-    useEffect(()=> setPlay(true), [playingTrack])
 
     //for getting recently played song and authorising spotify api node
     useEffect(() => {
@@ -97,44 +98,99 @@ const Player = ({accessToken,playingTrack}) => {
             }, (err) => {
                 console.log('Something went wrong!', err);
             });
-        
-        
-        spotifyApi.getMyDevices()
-            .then((data) => {
-                let availableDevices = data.body.devices;
-                console.log(availableDevices, "available");
-            }, function(err) {
-                console.log('Something went wrong!', err);
+
+        const script = document.createElement("script");
+        script.src = "https://sdk.scdn.co/spotify-player.js";
+        script.async = true;
+
+        document.body.appendChild(script);
+
+        window.onSpotifyWebPlaybackSDKReady = () => {
+
+            const player = new window.Spotify.Player({
+                name: 'Web Playback SDK',
+                getOAuthToken: cb => { cb(accessToken); },
+                volume: 0.5
             });
 
-    }, [accessToken])    
+            console.log(player)
+            setPlayer(player);
 
-    // useEffect(()=> {
-    //     if (paused) {
-    //         spotifyApi.play()
-    //             .then(function() {
-    //                 console.log('Playback started');
-    //             }, function(err) {
-    //                 //if the user making the request is non-premium, a 403 FORBIDDEN response code will be returned
-    //                 console.log('Something went wrong!', err);
-    //             });
-    //     }
-    // }, [paused])
+            player.addListener('ready', ({ device_id }) => {
+                console.log('Ready with Device ID', [device_id]);
+                setDeviceId([device_id]);
+            })
+
+            player.addListener('not_ready', ({ device_id }) => {
+                console.log('Device ID has gone offline', device_id);
+            });
+
+            player.addListener('player_state_changed', ( state => {
+                if (!state) {
+                    return;
+                }
+
+                setTrack(state.track_window.current_track);
+                setPaused(state.paused);
+
+                player.getCurrentState().then( state => { 
+                    (!state)? setActive(false) : setActive(true) 
+                });
+
+            }));
+            
+            player.connect();
+
+        };
+
+    }, [accessToken])
+    
+
+    useEffect(()=> {
+        spotifyApi.transferMyPlayback(deviceId)
+            .then(function() {
+                console.log('Transfering playback to ' + deviceId);
+            }, function(err) {
+                //if the user making the request is non-premium, a 403 FORBIDDEN response code will be returned
+                console.log('Something went wrong!', err);
+            });
+    },[deviceId])
+    // for play and pause
 
     useEffect(()=> {
         let interval = setInterval(()=> {
             clearInterval(interval);
             if (paused) {
                 
+            } else if (position === duration){
+                setPaused(true);
             } else {
-                setPosition(position + 1)
+                setPosition(() => position + 1)
             }
         },1000)
+
+        if (paused) {
+            spotifyApi.pause()
+                .then(function() {
+                    console.log('Playback paused');
+                }, function(err) {
+                    //if the user making the request is non-premium, a 403 FORBIDDEN response code will be returned
+                    console.log('Something went wrong!', err);
+                });
+        } else {
+            spotifyApi.play()
+            .then(function() {
+                console.log('Playback started');
+            }, function(err) {
+                //if the user making the request is non-premium, a 403 FORBIDDEN response code will be returned
+                console.log('Something went wrong!', err);
+            });
+        } 
     }, [paused,position])
 
     const theme = useTheme();
-    const duration = playingTrack ? 
-        Math.floor(playingTrack.duration_ms / 1000) :  
+    const duration = current_track ? 
+        Math.floor(current_track.duration_ms / 1000) :  
         Math.floor(currentPlayingTrack.duration_ms / 1000); // seconds
 
     
@@ -226,7 +282,12 @@ const Player = ({accessToken,playingTrack}) => {
                         mt: -1,
                     }}
                 >
-                    <IconButton aria-label="previous song">
+                    <IconButton 
+                        aria-label="previous song"
+                        onClick={()=>{
+                            player.previousTrack()
+                        }}
+                    >
                         <FastRewindRounded fontSize="large" htmlColor={mainIconColor} />
                     </IconButton>
                     <IconButton
@@ -244,7 +305,12 @@ const Player = ({accessToken,playingTrack}) => {
                             <PauseRounded sx={{ fontSize: '3rem' }} htmlColor={mainIconColor} />
                         )}
                     </IconButton>
-                    <IconButton aria-label="next song">
+                    <IconButton 
+                        aria-label="next song"
+                        onClick={()=>{
+                            player.nextTrack()
+                        }}
+                    >
                         <FastForwardRounded fontSize="large" htmlColor={mainIconColor} />
                     </IconButton>
                 </Box>
