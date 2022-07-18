@@ -340,6 +340,17 @@ io.on("connection", (socket) => {
 			.to(data.roomId)
 			.emit("receive_other_users_webcam_positions", data.webcamUsers);
 	});
+
+	// ---------------------------------------- live chat feature ------------------------------------------------
+	socket.on("send_new_message", (data) => {
+		console.log(data.message);
+		socket.to(data.roomId).emit("receive_new_message", {
+			message: data.message,
+			userName: data.userName,
+			userId: data.userId,
+			userAvatar: data.userAvatar,
+		});
+	});
 });
 
 // PeerServer.js logic here

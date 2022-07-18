@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@danktuary/react-discord-message": "^1.0.2",
     "@emotion/react": "^11.9.0",
     "@emotion/styled": "^11.8.1",
     "@fortawesome/fontawesome-svg-core": "^6.1.1",
@@ -32,6 +33,7 @@
     "react-router-dom": "^6.3.0",
     "react-scripts": "^5.0.1",
     "react-spinners": "^0.12.0",
+    "react-virtuoso": "^2.16.4",
     "react-webcam": "^7.0.1",
     "react-youtube": "^9.0.2",
     "socket.io-client": "^4.5.1",
