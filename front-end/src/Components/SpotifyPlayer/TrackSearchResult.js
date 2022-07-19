@@ -22,7 +22,7 @@ const TrackSearchResult = ({track, chooseTrack}) => {
             onClick={handlePlay}
             className='TrackSearchResultButtons'
         >
-            <Card sx={{ display: 'flex', width:'360px', border:'5px',  margin:'5px'}}>
+            <Card sx={{ display: 'flex', width:'390px', border:'5px',  margin:'5px'}}>
                 <CardMedia
                     component="img"
                     sx={{ width: 64, height: 64, alignSelf: 'center',  paddingLeft: '5px'}}
