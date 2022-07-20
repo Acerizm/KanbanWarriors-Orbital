@@ -62,6 +62,32 @@ namespace back_end.Services
             return lockedRoom;
         }
 
+        public async Task UpdateChannelUsers(string roomId,string channelId, Users user)
+        {
+            // in the future redo this code with atomic operations to optimize code
+            LockedRooms tempRoom = lockedRoomsCollection.Find(room => room.roomId == roomId).First();
+            var tempChannel = tempRoom.channelList.Find(channel => channel.channelId == channelId);
+            // then check if the user already exists in the list
+            if(tempChannel != null)
+            {
+                bool isUserExist = tempChannel.users.Any(user => user.userId == user.userId);
+                if (isUserExist)
+                {
+                    // remove the user from the channel
+                    tempChannel.users.RemoveAll(user => user.userId == user.userId);
+                } else
+                {
+                    tempChannel.users.Add(user);
+                }
+                // then update the whole document inside mongodb
+                lockedRoomsCollection.ReplaceOne(room => room.roomId == roomId, tempRoom);
+            }
+            
+
+
+
+        }
+
         public async Task RemoveAsync(string socketId)
         {
             await lockedRoomsCollection.DeleteOneAsync(lockedRoom => lockedRoom.socketId == socketId);

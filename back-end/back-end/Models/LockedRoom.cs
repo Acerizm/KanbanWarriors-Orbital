@@ -30,6 +30,38 @@ namespace back_end.Models
         [JsonPropertyName("password")]
         [BsonRepresentation(BsonType.String)]
         public string password { get; set; }
+
+        public List<Channel> channelList { get; set; }
     }
+
+    public class Channel {
+        [BsonElement("channelId")]
+        [JsonPropertyName("channelId")]
+        public string channelId { get; set; }
+
+        [BsonElement("channelName")]
+        [JsonPropertyName("channelName")]
+        public string channelName { get; set; }
+
+        [BsonElement("users")]
+        [JsonPropertyName("users")]
+        public List<Users> users { get; set; }
+    }
+
+    public class Users
+    {
+        [BsonElement("userId")]
+        [JsonPropertyName("userId")]
+        public string userId { get; set; }
+
+        [BsonElement("userAvatar")]
+        [JsonPropertyName("userAvatar")]
+        public string userAvatar { get;set; }
+
+        [BsonElement("userName")]
+        [JsonPropertyName("userName")]
+        public string userName { get; set; }    
+    }
+
 }
 

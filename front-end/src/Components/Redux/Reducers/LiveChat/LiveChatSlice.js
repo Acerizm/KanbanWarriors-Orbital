@@ -6,6 +6,7 @@ const LiveChatSlice = createSlice({
 		isDrawerOpen: false,
 		// migrated messages from front-end component to redux toolkit
 		messages: [],
+		currentChannelUsers: [],
 	},
 	reducers: {
 		toggleDrawer(state) {
@@ -52,11 +53,41 @@ const LiveChatSlice = createSlice({
 				state.messages = [tempMessage3];
 			}
 		},
+		toggleChannel(state, action) {
+			// this happenes when the user does not exists in the current user list
+			// action.payload refers to the object being passed from the front end with this signature
+			/* {
+				userName: auth.currentUser.displayName,
+				userAvatar: auth.currentUser.photoURL,
+				userId: auth.currentUser.uid,
+			 }
+			 */
+			let tempUser = action.payload;
+			if (
+				state.currentChannelUsers.find(
+					(user) => user.userId === tempUser.userId
+				) === undefined
+			) {
+				state.currentChannelUsers = [
+					...state.currentChannelUsers,
+					action.payload,
+				];
+			} else {
+				// this happens when the user is already part of the current user list of the channel
+				// remove the user from the channel
+				// this mimics leaving the channel
+				let newChannelUsers = state.currentChannelUsers.filter(
+					(user) => user.userId !== tempUser.userId
+				);
+				state.currentChannelUsers = newChannelUsers;
+			}
+		},
 	},
 });
 
 //export actions
-export const { toggleDrawer, addMessage } = LiveChatSlice.actions;
+export const { toggleDrawer, addMessage, toggleChannel } =
+	LiveChatSlice.actions;
 
 //export reducers
 export default LiveChatSlice.reducer;
@@ -64,3 +95,5 @@ export default LiveChatSlice.reducer;
 //export selectors
 export const selectDrawerState = (state) => state.LiveChat.isDrawerOpen;
 export const selectMessages = (state) => state.LiveChat.messages;
+export const selectCurrentChannelUsers = (state) =>
+	state.LiveChat.currentChannelUsers;

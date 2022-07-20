@@ -343,7 +343,7 @@ io.on("connection", (socket) => {
 
 	// ---------------------------------------- live chat feature ------------------------------------------------
 	socket.on("send_new_message", (data) => {
-		console.log(data.message);
+		//console.log(data.message);
 		socket.to(data.roomId).emit("receive_new_message", {
 			message: data.message,
 			userName: data.userName,
@@ -351,11 +351,22 @@ io.on("connection", (socket) => {
 			userAvatar: data.userAvatar,
 		});
 	});
+
+	socket.on("send_user_toggle_channel", (data) => {
+		socket.to(data.roomId).emit("receive_other_user_toggle_channel", {
+			userName: data.userName,
+			userAvatar: data.userAvatar,
+			userId: data.userId,
+		});
+	});
 });
 
 // PeerServer.js logic here
 peerServer.on("connection", (client) => {});
 
+// This code will run when
+// 1. when the peer disconnects from the server gracefully
+// 2. when the peer disconnects from the server when computer crashes, closes tab .etc
 peerServer.on("disconnect", (client) => {});
 
 server.listen(4000, () => {

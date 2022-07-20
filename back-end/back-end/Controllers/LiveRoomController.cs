@@ -152,6 +152,8 @@ namespace back_end.Controllers
                     newLockedRoom.socketId = socketId;
                     newLockedRoom.roomId = roomId;
                     newLockedRoom.password = password;
+                    // added new properties below as of 20/07/2022 for live chat/video feature
+                    newLockedRoom.channelList = new List<Channel>();
                     await Task.Run(() => liveRoomServices.Create(newLockedRoom));
                     return newLockedRoom;
                 }
@@ -160,6 +162,32 @@ namespace back_end.Controllers
 
             }
         }
+
+        /// <summary>
+        /// Add new Users to the specified channel
+        /// </summary>
+        /// <remarks>
+        /// Sample request:
+        ///
+        ///      /AddUserToChannel
+        ///     {
+        ///        "id": "62979eb0c19fd38c79cdb3b8",
+        ///        "userId": "62979eb0c19fd38c79cdb3b8",
+        ///        "roomId": "123"
+        ///        "password": "pwd"
+        ///     }
+        ///
+        /// </remarks>
+        /// <response code="201">Returns the newly created item</response>
+        /// <response code="400">If the item is null</response>       
+        // GET: api/LiveRoom/AdduserToChannel
+        [Route("AddUserToChannel")]
+        [HttpPut]
+        public async Task<bool> AddUserToChannel(string roomId,string channelId, Users user)
+        {
+
+        }
+
 
         /// <summary>
         /// delete socket host from the server
