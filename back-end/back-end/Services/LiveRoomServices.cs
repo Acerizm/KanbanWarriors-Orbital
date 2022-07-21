@@ -67,9 +67,9 @@ namespace back_end.Services
             // in the future redo this code with atomic operations to optimize code
             LockedRooms tempRoom = lockedRoomsCollection.Find(room => room.roomId == roomId).First();
             var tempChannel = tempRoom.channelList.Find(channel => channel.channelId == channelId);
-            // then check if the user already exists in the list
             if(tempChannel != null)
             {
+                // then check if the user already exists in the list
                 bool isUserExist = tempChannel.users.Any(user => user.userId == user.userId);
                 if (isUserExist)
                 {
@@ -80,12 +80,8 @@ namespace back_end.Services
                     tempChannel.users.Add(user);
                 }
                 // then update the whole document inside mongodb
-                lockedRoomsCollection.ReplaceOne(room => room.roomId == roomId, tempRoom);
+                await lockedRoomsCollection.ReplaceOneAsync(room => room.roomId == roomId, tempRoom);
             }
-            
-
-
-
         }
 
         public async Task RemoveAsync(string socketId)

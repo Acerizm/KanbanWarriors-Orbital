@@ -46,6 +46,14 @@ namespace back_end.Models
         [BsonElement("users")]
         [JsonPropertyName("users")]
         public List<Users> users { get; set; }
+
+        // One of the constructors for creating a new channel when the host creates a new room
+        public Channel(string channelId, string channelName)
+        {
+            this.channelId = channelId;
+            this.channelName = channelName;
+            this.users = new List<Users>();
+        }
     }
 
     public class Users

@@ -117,6 +117,28 @@ namespace back_end.Controllers
         }
 
         /// <summary>
+        /// Check updated data of the channels by roomId
+        /// </summary>
+        /// <remarks>
+        /// Sample request:
+        ///
+        ///      /GetUpdatedChannelsData
+        ///     {
+        ///        "roomId" : "",
+        ///     }
+        ///
+        /// </remarks>
+        /// <response code="201">Returns the newly created item</response>
+        /// <response code="400">If the item is null</response>       
+        // GET: api/LiveRoom/CheckRoomBySocketId
+        [Route("GetUpdatedChannelsData")]
+        [HttpGet]
+        public async Task<ActionResult<List<Channel>>> GetUpdatedChannelsData(string roomId)
+        {
+            LockedRooms tempRoom = liveRoomServices.GetByRoomId(roomId);
+            return tempRoom.channelList;
+        }
+        /// <summary>
         /// Create a new locked room
         /// </summary>
         /// <remarks>
@@ -154,6 +176,7 @@ namespace back_end.Controllers
                     newLockedRoom.password = password;
                     // added new properties below as of 20/07/2022 for live chat/video feature
                     newLockedRoom.channelList = new List<Channel>();
+                    newLockedRoom.channelList.Add(new Channel("1","General"));
                     await Task.Run(() => liveRoomServices.Create(newLockedRoom));
                     return newLockedRoom;
                 }
@@ -169,22 +192,27 @@ namespace back_end.Controllers
         /// <remarks>
         /// Sample request:
         ///
-        ///      /AddUserToChannel
+        ///      /UpdateChannelUser
         ///     {
-        ///        "id": "62979eb0c19fd38c79cdb3b8",
-        ///        "userId": "62979eb0c19fd38c79cdb3b8",
-        ///        "roomId": "123"
-        ///        "password": "pwd"
+        ///        "roomId": "62979eb0c19fd38c79cdb3b8",
+        ///        "channelId": "62979eb0c19fd38c79cdb3b8",
+        ///        "user": {
+        ///            "userId" : "",
+        ///            "userAvatar" : "",
+        ///            "userName" : "",
+        ///        }
         ///     }
         ///
         /// </remarks>
-        /// <response code="201">Returns the newly created item</response>
+        /// <response code="200">Operation is successful</response>
         /// <response code="400">If the item is null</response>       
-        // GET: api/LiveRoom/AdduserToChannel
-        [Route("AddUserToChannel")]
-        [HttpPut]
-        public async Task<bool> AddUserToChannel(string roomId,string channelId, Users user)
+        // GET: api/LiveRoom/UpdateChannelUser
+        [Route("UpdateChannelUser")]
+        [HttpPost]
+        public async Task<IActionResult> UpdateChannelUser(string roomId,string channelId, [FromQuery]Users user)
         {
+            await liveRoomServices.UpdateChannelUsers(roomId, channelId, user);
+            return new OkResult();
 
         }
 

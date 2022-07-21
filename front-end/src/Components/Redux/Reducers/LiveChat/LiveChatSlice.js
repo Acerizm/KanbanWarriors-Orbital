@@ -7,6 +7,7 @@ const LiveChatSlice = createSlice({
 		// migrated messages from front-end component to redux toolkit
 		messages: [],
 		currentChannelUsers: [],
+		channels: [],
 	},
 	reducers: {
 		toggleDrawer(state) {
@@ -82,11 +83,16 @@ const LiveChatSlice = createSlice({
 				state.currentChannelUsers = newChannelUsers;
 			}
 		},
+		updateChannels(state, action) {
+			// action.payload is list of channels received from the database
+			// all of the logic will be done by the database
+			state.channels = action.payload;
+		},
 	},
 });
 
 //export actions
-export const { toggleDrawer, addMessage, toggleChannel } =
+export const { toggleDrawer, addMessage, toggleChannel, updateChannels } =
 	LiveChatSlice.actions;
 
 //export reducers
@@ -95,5 +101,14 @@ export default LiveChatSlice.reducer;
 //export selectors
 export const selectDrawerState = (state) => state.LiveChat.isDrawerOpen;
 export const selectMessages = (state) => state.LiveChat.messages;
-export const selectCurrentChannelUsers = (state) =>
-	state.LiveChat.currentChannelUsers;
+// export const selectCurrentChannelUsers = (state) =>
+// 	state.LiveChat.currentChannelUsers;
+
+// complicated selectors
+export const selectCurrentChannelUsers = (state, channelId) => {
+	return state.LiveChat.channels.filter(
+		(channel) => channel.channelId == channelId
+	).users;
+};
+
+export const selectUpdatedChannels = (state) => state.LiveChat.channels;

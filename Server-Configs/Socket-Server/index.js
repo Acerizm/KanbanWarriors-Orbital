@@ -28,7 +28,7 @@ io.on("connection", (socket) => {
 		// check if the room exists
 		axios
 			.get(
-				"http://159.223.91.154:500/api/LiveRoom/CheckLockedRoom?roomId=" +
+				"http://localhost:5143/api/LiveRoom/CheckLockedRoom?roomId=" +
 					data.roomId +
 					"&password=" +
 					data.password
@@ -39,7 +39,7 @@ io.on("connection", (socket) => {
 					// leave the room
 					axios
 						.get(
-							"http://159.223.91.154:500/api/LiveRoom/CheckRoomBySocketId?socketId=" +
+							"http://localhost:5143/api/LiveRoom/CheckRoomBySocketId?socketId=" +
 								socket.id
 						)
 						.then((response) => {
@@ -49,7 +49,7 @@ io.on("connection", (socket) => {
 								socket.leave(tempRoomId);
 								axios
 									.delete(
-										"http://159.223.91.154:500/api/LiveRoom/DeleteSocketHost?socketId=" +
+										"http://localhost:5143/api/LiveRoom/DeleteSocketHost?socketId=" +
 											socket.id
 									)
 									.then(() => {
@@ -112,7 +112,7 @@ io.on("connection", (socket) => {
 		// check if the roomdId is already taken
 		axios
 			.get(
-				"http://159.223.91.154:500/api/LiveRoom/CheckLockedRoom?roomId=" +
+				"http://localhost:5143/api/LiveRoom/CheckLockedRoom?roomId=" +
 					data.roomId +
 					"&password=" +
 					data.password
@@ -132,7 +132,7 @@ io.on("connection", (socket) => {
 					// code will be similar to disconnect feature
 					axios
 						.get(
-							"http://159.223.91.154:500/api/LiveRoom/CheckRoomBySocketId?socketId=" +
+							"http://localhost:5143/api/LiveRoom/CheckRoomBySocketId?socketId=" +
 								socket.id
 						)
 						.then((response) => {
@@ -142,7 +142,7 @@ io.on("connection", (socket) => {
 								socket.leave(tempRoomId);
 								axios
 									.delete(
-										"http://159.223.91.154:500/api/LiveRoom/DeleteSocketHost?socketId=" +
+										"http://localhost:5143/api/LiveRoom/DeleteSocketHost?socketId=" +
 											socket.id
 									)
 									.then(() => {
@@ -174,7 +174,7 @@ io.on("connection", (socket) => {
 							socket.join(data.roomId);
 							axios
 								.post(
-									"http://159.223.91.154:500/api/LiveRoom/CreateNewLockedRoom?socketId=" +
+									"http://localhost:5143/api/LiveRoom/CreateNewLockedRoom?socketId=" +
 										socket.id +
 										"&roomId=" +
 										data.roomId +
@@ -223,7 +223,7 @@ io.on("connection", (socket) => {
 		// 	by checking if the socket id exists in the database
 		axios
 			.get(
-				"http://159.223.91.154:500/api/LiveRoom/CheckRoomBySocketId?socketId=" +
+				"http://localhost:5143/api/LiveRoom/CheckRoomBySocketId?socketId=" +
 					socket.id
 			)
 			.then((response) => {
@@ -232,7 +232,7 @@ io.on("connection", (socket) => {
 					// then make all sockets leave the room but not disconnect them as the clients might want to use socket.io again
 					axios
 						.delete(
-							"http://159.223.91.154:500/api/LiveRoom/DeleteSocketHost?socketId=" +
+							"http://localhost:5143/api/LiveRoom/DeleteSocketHost?socketId=" +
 								socket.id
 						)
 						.then(() => {
@@ -353,11 +353,7 @@ io.on("connection", (socket) => {
 	});
 
 	socket.on("send_user_toggle_channel", (data) => {
-		socket.to(data.roomId).emit("receive_other_user_toggle_channel", {
-			userName: data.userName,
-			userAvatar: data.userAvatar,
-			userId: data.userId,
-		});
+		socket.to(data.roomId).emit("receive_other_user_toggle_channel", {});
 	});
 });
 

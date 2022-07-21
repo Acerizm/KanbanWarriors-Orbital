@@ -118,6 +118,22 @@
              <response code="201">Returns the newly created item</response>
              <response code="400">If the item is null</response>       
         </member>
+        <member name="M:back_end.Controllers.LiveRoomController.GetUpdatedChannelsData(System.String)">
+             <summary>
+             Check updated data of the channels by roomId
+             </summary>
+             <remarks>
+             Sample request:
+            
+                  /GetUpdatedChannelsData
+                 {
+                    "roomId" : "",
+                 }
+            
+             </remarks>
+             <response code="201">Returns the newly created item</response>
+             <response code="400">If the item is null</response>       
+        </member>
         <member name="M:back_end.Controllers.LiveRoomController.CreateNewLockedRoom(System.String,System.String,System.String)">
              <summary>
              Create a new locked room
@@ -135,6 +151,28 @@
             
              </remarks>
              <response code="201">Returns the newly created item</response>
+             <response code="400">If the item is null</response>       
+        </member>
+        <member name="M:back_end.Controllers.LiveRoomController.UpdateChannelUser(System.String,System.String,back_end.Models.Users)">
+             <summary>
+             Add new Users to the specified channel
+             </summary>
+             <remarks>
+             Sample request:
+            
+                  /UpdateChannelUser
+                 {
+                    "roomId": "62979eb0c19fd38c79cdb3b8",
+                    "channelId": "62979eb0c19fd38c79cdb3b8",
+                    "user": {
+                        "userId" : "",
+                        "userAvatar" : "",
+                        "userName" : "",
+                    }
+                 }
+            
+             </remarks>
+             <response code="200">Operation is successful</response>
              <response code="400">If the item is null</response>       
         </member>
         <member name="M:back_end.Controllers.LiveRoomController.DeleteSocketHost(System.String)">

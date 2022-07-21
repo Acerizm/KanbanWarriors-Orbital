@@ -52,6 +52,9 @@ import "./index.css";
 // for video section
 import VideoSection from "../LiveVideo/index.js";
 
+// for interacting with our APIs
+import axios from "axios";
+
 import * as REDUX from "../../Redux/Reducers/LiveChat/LiveChatSlice.js";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -147,32 +150,67 @@ const Channels = () => {
 		}
 		dispatch(REDUX.toggleDrawer());
 	};
-	const currentUsers = useSelector(REDUX.selectCurrentChannelUsers);
+	//const currentUsers = useSelector(REDUX.selectCurrentChannelUsers);
 	const roomId = useSelector(selectRoomId);
-	const toggleChannel = () => {
-		// 1. let redux know about the user
-		// 2. let other users know about the current user that join/left
-		// 3. Redux on their client side will do the same magic
-		dispatch(
-			REDUX.toggleChannel({
-				userName: auth.currentUser.displayName,
-				userAvatar: auth.currentUser.photoURL,
-				userId: auth.currentUser.uid,
+	const updatedChannels = useSelector(REDUX.selectUpdatedChannels);
+	const updateChannel = (channelId, user) => {
+		// user is referring top the user object with 3 properties
+		// change this with Typescript in the future
+		console.log(user);
+		axios
+			.post(
+				"http://localhost:5143/api/LiveRoom/UpdateChannelUser?roomId=" +
+					roomId +
+					"&channelId=" +
+					channelId +
+					"&user=" +
+					user
+			)
+			.then((response) => {
+				// after posting
+				// get the updated data and pass it to our redux store
+				axios
+					.get(
+						"http://localhost:5143/api/LiveRoom/GetUpdatedChannelsData?roomId=" +
+							roomId
+					)
+					.then((response) => {
+						// response.data is the list of channels that is updated that we will get based on the roomId
+						// dispatch the new data to redux
+						dispatch(REDUX.updateChannels(response.data));
+					});
+				// then let other users in the channel know that the user has already left/entered the room
+				socket.emit("send_user_toggle_channel", {});
 			})
-		);
-		socket.emit("send_user_toggle_channel", {
-			roomId: roomId,
-			userName: auth.currentUser.displayName,
-			userAvatar: auth.currentUser.photoURL,
-			userId: auth.currentUser.uid,
-		});
+			.catch((error) => console.log(error));
 	};
 	useEffect(() => {
-		socket.on("receive_other_user_toggle_channel", (user) => {
-			console.log(user);
-			dispatch(REDUX.toggleChannel(user));
+		socket.on("receive_other_user_toggle_channel", () => {
+			axios
+				.get(
+					"http://localhost:5143/api/LiveRoom/GetUpdatedChannelsData?roomId=" +
+						roomId
+				)
+				.then((response) => {
+					// response.data is the list of channels that is updated that we will get based on the roomId
+					// dispatch the new data to redux
+					dispatch(REDUX.updateChannels(response.data));
+				});
 		});
 	}, [socket]);
+	useEffect(() => {
+		// runs this once to populate the channels array when user loads the live chat area
+		axios
+			.get(
+				"http://localhost:5143/api/LiveRoom/GetUpdatedChannelsData?roomId=" +
+					roomId
+			)
+			.then((response) => {
+				// response.data is the list of channels that is updated that we will get based on the roomId
+				// dispatch the new data to redux
+				dispatch(REDUX.updateChannels(response.data));
+			});
+	}, []);
 	return (
 		<Box
 			sx={{
@@ -190,30 +228,53 @@ const Channels = () => {
 		>
 			<List sx={{ paddingBottom: 0 }}>
 				{/* list item represents each item in the list vertically */}
-				<ListItem sx={{ paddingBottom: 0 }}>
-					<ListItemButton onClick={() => toggleChannel()}>
-						<ListItemIcon>
-							{/* Icon to be placed inside the item */}
-							<VolumeUpIcon />
-						</ListItemIcon>
-						<ListItemText primary="General" />
-						{/* Then if the user clicks, append the user to the list */}
-					</ListItemButton>
-				</ListItem>
-				<List sx={{ pl: 4, paddingTop: 0 }}>
-					{currentUsers.map((user, index) => {
-						return (
-							<ListItem sx={{ paddingTop: 0 }}>
-								<ListItemButton>
+				{updatedChannels.map((channel, index) => {
+					return (
+						<Fragment>
+							<ListItem sx={{ paddingBottom: 0 }}>
+								<ListItemButton
+									onClick={() =>
+										// when the user clicks this button, the user will either leave or join the chat channel
+										updateChannel(channel.channelId, {
+											userId: auth.currentUser.uid,
+											userAvatar:
+												auth.currentUser.photoURL,
+											userName:
+												auth.currentUser.displayName,
+										})
+									}
+								>
 									<ListItemIcon>
-										<Avatar src={user.userAvatar}></Avatar>
+										{/* Icon to be placed inside the item */}
+										<VolumeUpIcon />
 									</ListItemIcon>
-									<ListItemText primary={user.userName} />
+									<ListItemText
+										primary={channel.channelName}
+									/>
+									{/* Then if the user clicks, append the user to the list */}
 								</ListItemButton>
 							</ListItem>
-						);
-					})}
-				</List>
+							<List sx={{ pl: 4, paddingTop: 0 }}>
+								{channel.users.map((user, index) => {
+									return (
+										<ListItem sx={{ paddingTop: 0 }}>
+											<ListItemButton>
+												<ListItemIcon>
+													<Avatar
+														src={user.userAvatar}
+													></Avatar>
+												</ListItemIcon>
+												<ListItemText
+													primary={user.userName}
+												/>
+											</ListItemButton>
+										</ListItem>
+									);
+								})}
+							</List>
+						</Fragment>
+					);
+				})}
 			</List>
 		</Box>
 	);
