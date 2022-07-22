@@ -156,15 +156,27 @@ const Channels = () => {
 	const updateChannel = (channelId, user) => {
 		// user is referring top the user object with 3 properties
 		// change this with Typescript in the future
-		console.log(user);
+		let payload = {
+			roomId: roomId,
+			channelId: channelId,
+			user: user
+		}
 		axios
 			.post(
-				"http://localhost:5143/api/LiveRoom/UpdateChannelUser?roomId=" +
-					roomId +
-					"&channelId=" +
-					channelId +
-					"&user=" +
-					user
+				// "http://localhost:5143/api/LiveRoom/UpdateChannelUser?roomId=" +
+				// 	roomId +
+				// 	"&channelId=" +
+				// 	channelId +
+				// 	"&user=" +
+				// 	user
+				"http://localhost:5143/api/LiveRoom/UpdateChannelUser",
+				payload
+				// {
+				// url: "http://localhost:5143/api/LiveRoom/UpdateChannelUser",
+				// method: "post",
+				// data: payload,
+				// }
+
 			)
 			.then((response) => {
 				// after posting
@@ -180,7 +192,9 @@ const Channels = () => {
 						dispatch(REDUX.updateChannels(response.data));
 					});
 				// then let other users in the channel know that the user has already left/entered the room
-				socket.emit("send_user_toggle_channel", {});
+				socket.emit("send_user_toggle_channel", {
+					roomId: roomId
+				});
 			})
 			.catch((error) => console.log(error));
 	};
@@ -194,6 +208,7 @@ const Channels = () => {
 				.then((response) => {
 					// response.data is the list of channels that is updated that we will get based on the roomId
 					// dispatch the new data to redux
+					console.log(response.data);
 					dispatch(REDUX.updateChannels(response.data));
 				});
 		});
@@ -312,7 +327,6 @@ const LiveChatTextBox = () => {
 	const dispatch = useDispatch();
 	const keyPress = (event) => {
 		if (event.keyCode == 13 && message !== "") {
-			console.log(auth.currentUser.photoURL);
 			// 1. send the data to socket server if the user enters the message
 			socket.emit("send_new_message", {
 				roomId: roomId,

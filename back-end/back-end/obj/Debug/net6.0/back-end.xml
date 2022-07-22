@@ -153,7 +153,7 @@
              <response code="201">Returns the newly created item</response>
              <response code="400">If the item is null</response>       
         </member>
-        <member name="M:back_end.Controllers.LiveRoomController.UpdateChannelUser(System.String,System.String,back_end.Models.Users)">
+        <member name="M:back_end.Controllers.LiveRoomController.UpdateChannelUser(back_end.Controllers.LiveRoomController.Payload)">
              <summary>
              Add new Users to the specified channel
              </summary>

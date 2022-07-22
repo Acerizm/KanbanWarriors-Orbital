@@ -186,6 +186,13 @@ namespace back_end.Controllers
             }
         }
 
+        public class Payload
+        {
+            public string roomId { get;     set; }
+            public string channelId { get; set; }
+            public Users user { get; set; }
+        }
+
         /// <summary>
         /// Add new Users to the specified channel
         /// </summary>
@@ -209,9 +216,9 @@ namespace back_end.Controllers
         // GET: api/LiveRoom/UpdateChannelUser
         [Route("UpdateChannelUser")]
         [HttpPost]
-        public async Task<IActionResult> UpdateChannelUser(string roomId,string channelId, [FromQuery]Users user)
+        public async Task<IActionResult> UpdateChannelUser([FromBody]Payload payload)
         {
-            await liveRoomServices.UpdateChannelUsers(roomId, channelId, user);
+            await liveRoomServices.UpdateChannelUsers(payload.roomId, payload.channelId, payload.user);
             return new OkResult();
 
         }
