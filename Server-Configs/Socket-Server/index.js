@@ -3,8 +3,9 @@ const axios = require("axios");
 const app = express();
 const http = require("http");
 const { Server } = require("socket.io");
-
+const SpotifyWebApi = require("spotify-web-api-node")
 const cors = require("cors");
+
 app.use(cors());
 
 const server = http.createServer(app);
@@ -334,12 +335,76 @@ io.on("connection", (socket) => {
 			.to(data.roomId)
 			.emit("receive_other_users_toggle_ambience_player");
 	});
+	// --------------------------------------Pomodoro------------------------------------------------------------
 	socket.on("send_user_pomodoro_positions", (data) => {
 		socket
 			.to(data.roomId)
 			.emit("receive_other_users_pomodoro_positions", data.position);
 	});
+	// -------------------------------------SpotifyPlayer--------------------------------------------------------
+	socket.on("send_user_spotify_positions", (data) => {
+		socket
+			.to(data.roomId)
+			.emit("receive_other_users_spotify_positions", data.position);
+	});
 });
+
+
+
+//----------------------------------Spotify-------------------------------------------//
+
+
+// body parser!
+app.use(express.json())
+
+app.post('/login',(req,res)=> {
+    const code = req.body.code;
+    const spotifyApi = new SpotifyWebApi({
+        redirectUri:"http://localhost:3000/",
+        // clientId:"df99a5fdb03042449bdb285e0f4193d6",
+        // clientSecret:"563d044820ed459db684ddfeb7180a6f",
+		// using Haiqel's one
+		clientId:"deb3dc9dc4d3435384bb6237be1cd68c",
+		clientSecret: "0054ef4673a74ab5b1fdcc3d27722872",
+    })
+
+    spotifyApi.authorizationCodeGrant(code).then(data=> {
+        res.json({
+            accessToken: data.body.access_token,
+            refreshToken: data.body.refresh_token,
+            expiresIn: data.body.expires_in
+        })
+    }).catch((err)=> {
+        console.log(err);
+        res.sendStatus(400);
+    })
+})
+
+app.post('/refresh', (req,res) => {
+    const refreshToken = req.body.refreshToken;
+    const spotifyApi = new SpotifyWebApi({
+        redirectUri:"http://localhost:3000/",
+        // clientId:"df99a5fdb03042449bdb285e0f4193d6",
+        // clientSecret:"563d044820ed459db684ddfeb7180a6f",
+		// using Haiqel's one
+		clientId:"deb3dc9dc4d3435384bb6237be1cd68c",
+		clientSecret: "0054ef4673a74ab5b1fdcc3d27722872",
+        refreshToken
+    })
+    // clientId, clientSecret and refreshToken has been set on the api object previous to this call.
+    spotifyApi.refreshAccessToken()
+        .then((data) =>  {
+            res.json({
+                accessToken: data.body.accessToken,
+                expiresIn: data.body.expiresIn,
+            });
+        })
+        .catch(() => {
+            res.sendStatus(400);
+        })
+})
+
+//------------------------------------------------------------------------------------//
 
 server.listen(4000, () => {
 	console.log("server is running");
