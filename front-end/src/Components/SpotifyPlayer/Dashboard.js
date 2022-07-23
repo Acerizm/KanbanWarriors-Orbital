@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react'
 import useAuth from './useAuth';
 import SpotifyWebApi from 'spotify-web-api-node'
 import TrackSearchResult from './TrackSearchResult';
-import Player from './Player';
+import AudioPlayer from './AudioPlayer';
 import Scroll from 'react-scroll-component';
 
 // styled Components
@@ -12,6 +12,7 @@ import IconButton from '@mui/material/IconButton';
 import MinimizeIcon from '@mui/icons-material/Minimize';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 
+import { Player } from '@lottiefiles/react-lottie-player';
 
 // Redux
 import { useDispatch,useSelector } from "react-redux";
@@ -28,6 +29,7 @@ const Dashboard = ( {code} ) => {
     const [search, setSearch] = useState('');
     const [searchResults, setSearchResults] = useState([]);
     const [playingTrack, setPlayingTrack] = useState();
+    const [userName, setUserName] = useState('');
 
     // Redux stuff
     const dispatch = useDispatch();
@@ -35,7 +37,6 @@ const Dashboard = ( {code} ) => {
 
     const chooseTrack = (track) => {
         setPlayingTrack(track);
-        setSearch('');
         dispatch(audioPlayerModeOn())
     }
 
@@ -49,7 +50,6 @@ const Dashboard = ( {code} ) => {
 
         let cancel = false
         spotifyApi.searchPlaylists(search).then((res)=> {
-            console.log(res.body.playlists, "from dashboard")
             if (cancel) return
             setSearchResults(
                 res.body.playlists.items.map(playlist=> {
@@ -70,64 +70,17 @@ const Dashboard = ( {code} ) => {
             )
         })
 
-        // spotifyApi.searchTracks(search).then((res)=> {
-        //     console.log(res.body.tracks.items, "from dashboard")
-        //     if (cancel) return
-        //     setSearchResults(
-        //         res.body.tracks.items.map(track=> {
-        //             const smallestAlbumImage = track.album.images.reduce(
-        //                 (smallest, image) => {
-        //                     if (image.height < smallest.height) {
-        //                         return image;
-        //                     }
-        //                     return smallest;
-        //                 }, track.album.images[0])
-
-        //             return {
-        //                 artist: track.artists[0].name,
-        //                 title: track.name,
-        //                 uri: track.uri,
-        //                 duration_ms: track.duration_ms,
-        //                 albumUrl: smallestAlbumImage.url
-        //             }
-        //         })
-        //     )
-        // })
-
         // to let only the last input be searched
         return () => (cancel = true)
     }, [accessToken, search])
-    console.log(accessToken)
 
     useEffect(() => {
         if (!accessToken) return
         spotifyApi.setAccessToken(accessToken);
         spotifyApi.getMe()
             .then((data) => {
-                console.log('Some information about the authenticated user', data.body);
-                spotifyApi.getCategories({
-                    limit : 5,
-                    offset: 0,
-                    country: 'SG',
-                    locale: 'sv_SG'
-                })
-                .then(function(data) {
-                  console.log(data.body);
-                }, function(err) {
-                  console.log("Something went wrong!", err);
-                });
-                    
-            }, function(err) {
-                console.log('Something went wrong!', err);
-            });
-        
-        spotifyApi.getFeaturedPlaylists({ limit : 6, offset: 1, country: 'SG'})
-            .then(function(data) {
-              console.log(data.body);
-            }, function(err) {
-              console.log("Something went wrong!", err);
-            });
-        
+                setUserName(data.body.display_name);
+            })
     }, [accessToken])
     
     const TrackFinds = () => {
@@ -161,7 +114,7 @@ const Dashboard = ( {code} ) => {
         <Card variant="outlined" 
             sx= {{ 
                 width: 400, 
-                backgroundColor:'rgba(51,51,51, 0.8)',
+                backgroundColor:'rgba(255,255,255, 0.8)',
                 padding:0
             }}
             >
@@ -177,6 +130,7 @@ const Dashboard = ( {code} ) => {
                 }}
             >
                 <div style={{display:'flex', justifyContent:'space-between', alignItems:'center'}}>
+                    {audioPlayerclicked ? 
                     <IconButton
                         sx={{cursor:'pointer'}}
                         onClick={() => dispatch(audioPlayerModeOff())}
@@ -185,9 +139,18 @@ const Dashboard = ( {code} ) => {
                             fontSize='large' 
                             sx={{color:'#1DB954'}}
                         />
-                    </IconButton>
+                    </IconButton> : 
+                    <Player
+                    autoplay
+                    
+                    keepLastFrame
+                    src="https://assets9.lottiefiles.com/packages/lf20_v2gjaej7.json"
+                    style={{ height: '70px', width: '70px' }}
+                    >
+                    </Player>
+                    }
                     <Typography variant='h6' sx={{color:'#1DB954'}}>
-                    Music Player
+                    {userName}'s Spotify
                     </Typography>
                     <IconButton
                         sx={{cursor:'pointer'}}
@@ -204,8 +167,7 @@ const Dashboard = ( {code} ) => {
                     // className given to have no draggable feature on Player
                     className="no-cursor"
                     >
-                        <Player
-                            accessToken={accessToken}
+                        <AudioPlayer
                             playingTrack = {playingTrack}
                         /> 
                     </span>
@@ -219,7 +181,29 @@ const Dashboard = ( {code} ) => {
                             value = {search}
                             onChange = {(event) => setSearch(event.target.value)}
                             fullWidth={true}
-                            sx={{marginTop:'10px'}}
+                            sx={{
+                                '& label.Mui-focused': {
+                                    color: '#1DB954',
+                                },
+                                '&.Mui-focused fieldset': {
+                                    borderColor: '#1DB954',
+                                },
+                                '& .MuiInput-underline:after': {
+                                    borderBottomColor: '#1DB954',
+                                },
+                                '& .MuiOutlinedInput-root': {
+                                    '& fieldset': {
+                                      borderColor: '#1DB954',
+                                    },
+                                    '&:hover fieldset': {
+                                        borderColor: 'green',
+                                      },
+                                      '&.Mui-focused fieldset': {
+                                        borderColor: '#1DB954',
+                                      }
+                                },
+                                marginTop:'10px'
+                            }}
                         />
                     </React.Fragment>
                 }
