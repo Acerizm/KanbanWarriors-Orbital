@@ -134,7 +134,23 @@
              <response code="201">Returns the newly created item</response>
              <response code="400">If the item is null</response>       
         </member>
-        <member name="M:back_end.Controllers.LiveRoomController.CreateNewLockedRoom(System.String,System.String,System.String)">
+        <member name="M:back_end.Controllers.LiveRoomController.GetOnlineUsers(System.String)">
+             <summary>
+             Get users who are online
+             </summary>
+             <remarks>
+             Sample request:
+            
+                  /GetUpdatedChannelsData
+                 {
+                    "roomId" : "",
+                 }
+            
+             </remarks>
+             <response code="201">Returns the newly created item</response>
+             <response code="400">If the item is null</response>       
+        </member>
+        <member name="M:back_end.Controllers.LiveRoomController.CreateNewLockedRoom(back_end.Controllers.LiveRoomController.NewLockedRoomPayload)">
              <summary>
              Create a new locked room
              </summary>
@@ -155,7 +171,7 @@
         </member>
         <member name="M:back_end.Controllers.LiveRoomController.UpdateChannelUser(back_end.Controllers.LiveRoomController.Payload)">
              <summary>
-             Add new Users to the specified channel
+             Add/remove user to/from the specified channel
              </summary>
              <remarks>
              Sample request:
@@ -164,6 +180,44 @@
                  {
                     "roomId": "62979eb0c19fd38c79cdb3b8",
                     "channelId": "62979eb0c19fd38c79cdb3b8",
+                    "user": {
+                        "userId" : "",
+                        "userAvatar" : "",
+                        "userName" : "",
+                    }
+                 }
+            
+             </remarks>
+             <response code="200">Operation is successful</response>
+             <response code="400">If the item is null</response>       
+        </member>
+        <member name="M:back_end.Controllers.LiveRoomController.DisconnectingUser(back_end.Controllers.LiveRoomController.DisconnectingUserPayload)">
+             <summary>
+             Remove user from all connected channels and the online list inside the room when disconnecting from the app
+             </summary>
+             <remarks>
+             Sample request:
+            
+                  /DisconnectingUser
+                 {
+                    "roomId": "62979eb0c19fd38c79cdb3b8",
+                    "socketId: "",
+                 }
+            
+             </remarks>
+             <response code="200">Operation is successful</response>
+             <response code="400">If the item is null</response>       
+        </member>
+        <member name="M:back_end.Controllers.LiveRoomController.UpdateUserOnlineList(back_end.Controllers.LiveRoomController.UserOnlinePayload)">
+             <summary>
+             Add new Users to the current online user list
+             </summary>
+             <remarks>
+             Sample request:
+            
+                  /UpdateUserOnlineList
+                 {
+                    "roomId": "62979eb0c19fd38c79cdb3b8",
                     "user": {
                         "userId" : "",
                         "userAvatar" : "",

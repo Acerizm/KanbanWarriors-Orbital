@@ -12,6 +12,7 @@ const LiveRoomSlice = createSlice({
 		showInviteOthersInput: true,
 		showBackdrop: false,
 		showVideoSection: false,
+		OnlineUsers: [],
 	},
 	reducers: {
 		blockInput(state, action) {
@@ -46,6 +47,9 @@ const LiveRoomSlice = createSlice({
 		toggleVideoSection(state) {
 			state.showVideoSection = !state.showVideoSection;
 		},
+		updateOnlineUsers(state, action) {
+			state.OnlineUsers = action.payload;
+		},
 	},
 });
 
@@ -59,6 +63,7 @@ export const {
 	updateJoinOthersPassword,
 	toggleBackdrop,
 	toggleVideoSection,
+	updateOnlineUsers,
 } = LiveRoomSlice.actions;
 
 //export reducers
@@ -79,3 +84,4 @@ export const selectInviteOthersPassword = (state) =>
 export const selectBackdropState = (state) => state.LiveRoom.showBackdrop;
 export const selectShowVideoSectionState = (state) =>
 	state.LiveRoom.showVideoSection;
+export const selectOnlineUsers = (state) => state.LiveRoom.OnlineUsers;

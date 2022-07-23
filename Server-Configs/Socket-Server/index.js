@@ -82,9 +82,6 @@ io.on("connection", (socket) => {
 							// then join normally
 							// if the room exists & the password is correct, the user can join
 							socket.join(data.roomId);
-							console.log(
-								`user ${socket.id} joined ${data.roomId}`
-							);
 							// informed the user that the user has joined
 							socket.emit("receive_room_message", {
 								message: `You have successfully joined room ${data.roomId} !`,
@@ -94,6 +91,26 @@ io.on("connection", (socket) => {
 								.to(data.roomId)
 								.emit("receive_room_message", {
 									message: `someone has joined the room`,
+								});
+							// then let update the database so that the user will appear under the online section
+							let payload = {
+								roomId: data.roomId,
+								user: {
+									userId: data.user.userId,
+									userAvatar: data.user.userAvatar,
+									userName: data.user.userName,
+									socketId: socket.id,
+								},
+							};
+							axios
+								.post(
+									"http://localhost:5143/api/LiveRoom/UpdateUserOnlineList",
+									payload
+								)
+								.then(() => {
+									socket
+										.to(data.roomId)
+										.emit("updateOnlineUsers", {});
 								});
 						});
 				} else {
@@ -137,7 +154,8 @@ io.on("connection", (socket) => {
 						)
 						.then((response) => {
 							if (response.data !== null) {
-								// this happens when there is a room
+								// this happens when there is a room that has already been created by the host
+								// so delete the room so that the previous room that the host created is freed up for other hosts to use
 								let tempRoomId = response.data;
 								socket.leave(tempRoomId);
 								axios
@@ -156,11 +174,12 @@ io.on("connection", (socket) => {
 										);
 									})
 									.catch((error) => {
+										// pass to rollbar this error
 										console.log(error.message);
 									});
 							}
 							// then join normally
-							// but must clear the socket from existing rooms if he joined a room before
+							// but must clear the sockets from existing rooms if he joined a room before
 							socket.rooms.forEach((key, value) => {
 								if (value !== socket.id) {
 									socket
@@ -172,19 +191,30 @@ io.on("connection", (socket) => {
 								}
 							});
 							socket.join(data.roomId);
+							let payload = {
+								socketId: socket.id,
+								roomId: data.roomId,
+								password: data.password,
+								user: {
+									userId: data.user.userId,
+									userAvatar: data.user.userAvatar,
+									userName: data.user.userName,
+									socketId: socket.id,
+								},
+							};
 							axios
 								.post(
-									"http://localhost:5143/api/LiveRoom/CreateNewLockedRoom?socketId=" +
-										socket.id +
-										"&roomId=" +
-										data.roomId +
-										"&password=" +
-										data.password
+									// "http://localhost:5143/api/LiveRoom/CreateNewLockedRoom?socketId=" +
+									// 	socket.id +
+									// 	"&roomId=" +
+									// 	data.roomId +
+									// 	"&password=" +
+									// 	data.password
+									// modify this to fit new requirements of passing the current user to the API as of 23/07/2022
+									"http://localhost:5143/api/LiveRoom/CreateNewLockedRoom",
+									payload
 								)
 								.then(() => {
-									console.log(
-										`user ${socket.id} created room ${data.roomId}`
-									);
 									socket.emit("receive_room_message", {
 										message: `You have created room ${data.roomId} !`,
 										success: true,
@@ -216,43 +246,69 @@ io.on("connection", (socket) => {
 				});
 			}
 		});
-	});
-	// to handle disconnect feature
-	socket.on("disconnect", (reason) => {
-		// 1. check if the socket is the fake "host" of the room
-		// 	by checking if the socket id exists in the database
-		axios
-			.get(
-				"http://localhost:5143/api/LiveRoom/CheckRoomBySocketId?socketId=" +
-					socket.id
-			)
-			.then((response) => {
-				if (response.data !== null) {
-					// inform others that the "host" has disconnected
-					// then make all sockets leave the room but not disconnect them as the clients might want to use socket.io again
+		// then delete the user from the UserOnline list and channels that the user is in
+		// our architecture only allows the user to be in a single room at one point of time
+		let roomsIter = socket.rooms.values();
+		roomsIter.next();
+		let tempRoomId = roomsIter.next().value;
+		if (tempRoomId != undefined) {
+			let payload = {
+				roomId: tempRoomId,
+				socketId: socket.id,
+			};
+			axios
+				.post(
+					"http://localhost:5143/api/LiveRoom/DisconnectingUser",
+					payload
+				)
+				.then(() => {
+					// Tell others to pull the data again
+					socket
+						.to(tempRoomId)
+						.emit("receive_other_user_toggle_channel", {});
+					socket.to(tempRoomId).emit("updateOnlineUsers", {});
+
+					// 2. check if the socket is the fake "host" of the room
+					// 	by checking if the socket id exists in the database
 					axios
-						.delete(
-							"http://localhost:5143/api/LiveRoom/DeleteSocketHost?socketId=" +
+						.get(
+							"http://localhost:5143/api/LiveRoom/CheckRoomBySocketId?socketId=" +
 								socket.id
 						)
-						.then(() => {
-							socket
-								.to(response.data)
-								.emit("receive_room_message", {
-									message: `Host of this room has left! Disconnected from room...`,
-								});
-							io.in(response.data).socketsLeave(response.data);
+						.then((response) => {
+							if (response.data !== null) {
+								// inform others that the "host" has disconnected
+								// then make all sockets leave the room but not disconnect them as the clients might want to use socket.io again
+								axios
+									.delete(
+										"http://localhost:5143/api/LiveRoom/DeleteSocketHost?socketId=" +
+											socket.id
+									)
+									.then(() => {
+										socket
+											.to(response.data)
+											.emit("receive_room_message", {
+												message: `Host of this room has left! Disconnected from room...`,
+											});
+										io.in(response.data).socketsLeave(
+											response.data
+										);
+									})
+									.catch((error) => {
+										console.log(error.message);
+									});
+							} else {
+							}
 						})
 						.catch((error) => {
 							console.log(error.message);
 						});
-				} else {
-				}
-			})
-			.catch((error) => {
-				console.log(error.message);
-			});
+				})
+				.catch((error) => console.log(error));
+		}
 	});
+	// to handle disconnect feature
+	socket.on("disconnect", (reason) => {});
 	// for sharing user's draggable position
 	// user in react app sends "send_user_positions"!
 	// while server sends "receive_other_users_positions" to react app users

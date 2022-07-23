@@ -16,6 +16,7 @@ namespace back_end.Models
         [BsonRepresentation(BsonType.ObjectId)]
         public string id { get; set; }
 
+        // this is the socketId of the host
         [BsonElement("socketId")]
         [JsonPropertyName("socketId")]
         [Required]
@@ -32,6 +33,12 @@ namespace back_end.Models
         public string password { get; set; }
 
         public List<Channel> channelList { get; set; }
+
+        // there is a need to store a list of users who are currently
+        // or print all the users based on the channelList? 
+        // Ans: Keep another list of users to list who is currently online and joined the room
+
+        public List<Users> onlineUsersList { get; set; }
     }
 
     public class Channel {
@@ -61,6 +68,13 @@ namespace back_end.Models
         [BsonElement("userId")]
         [JsonPropertyName("userId")]
         public string userId { get; set; }
+
+        // need to store the socketId of the user
+        // so that when disconnect/disconnecting event happens,
+        // remove the user from the userList based on the socketId
+        [BsonElement("socketId")]
+        [JsonPropertyName("socketId")]
+        public string socketId { get; set; }
 
         [BsonElement("userAvatar")]
         [JsonPropertyName("userAvatar")]

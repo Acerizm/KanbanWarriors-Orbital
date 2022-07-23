@@ -138,6 +138,38 @@ namespace back_end.Controllers
             LockedRooms tempRoom = liveRoomServices.GetByRoomId(roomId);
             return tempRoom.channelList;
         }
+
+        /// <summary>
+        /// Get users who are online
+        /// </summary>
+        /// <remarks>
+        /// Sample request:
+        ///
+        ///      /GetUpdatedChannelsData
+        ///     {
+        ///        "roomId" : "",
+        ///     }
+        ///
+        /// </remarks>
+        /// <response code="201">Returns the newly created item</response>
+        /// <response code="400">If the item is null</response>       
+        // GET: api/LiveRoom/GetOnlineUsers
+        [Route("GetOnlineUsers")]
+        [HttpGet]
+        public async Task<ActionResult<List<Users>>> GetOnlineUsers(string roomId)
+        {
+            return liveRoomServices.GetOnlineUsers(roomId);
+        }
+
+
+        // Payload for CreateNewLockedRoom
+        public class NewLockedRoomPayload
+        {
+            public string roomId { get; set; }
+            public string socketId { get; set; }
+            public string password { get; set; }
+            public Users user { get; set; }
+        }
         /// <summary>
         /// Create a new locked room
         /// </summary>
@@ -159,7 +191,7 @@ namespace back_end.Controllers
 
         [Route("CreateNewLockedRoom")]
         [HttpPost]
-        public async Task<ActionResult<LockedRooms>> CreateNewLockedRoom(string socketId, string roomId, string password)
+        public async Task<ActionResult<LockedRooms>> CreateNewLockedRoom([FromBody]NewLockedRoomPayload payload)
         {
             LockedRooms newLockedRoom = new LockedRooms();
             while(true)
@@ -171,12 +203,14 @@ namespace back_end.Controllers
                 if (checkId == null)
                 {
                     newLockedRoom.id = objectId;
-                    newLockedRoom.socketId = socketId;
-                    newLockedRoom.roomId = roomId;
-                    newLockedRoom.password = password;
+                    newLockedRoom.socketId = payload.socketId;
+                    newLockedRoom.roomId = payload.roomId;
+                    newLockedRoom.password = payload.password;
                     // added new properties below as of 20/07/2022 for live chat/video feature
                     newLockedRoom.channelList = new List<Channel>();
                     newLockedRoom.channelList.Add(new Channel("1","General"));
+                    newLockedRoom.onlineUsersList = new List<Users>();
+                    newLockedRoom.onlineUsersList.Add(payload.user);
                     await Task.Run(() => liveRoomServices.Create(newLockedRoom));
                     return newLockedRoom;
                 }
@@ -188,13 +222,13 @@ namespace back_end.Controllers
 
         public class Payload
         {
-            public string roomId { get;     set; }
+            public string roomId { get; set; }
             public string channelId { get; set; }
             public Users user { get; set; }
         }
 
         /// <summary>
-        /// Add new Users to the specified channel
+        /// Add/remove user to/from the specified channel
         /// </summary>
         /// <remarks>
         /// Sample request:
@@ -223,6 +257,99 @@ namespace back_end.Controllers
 
         }
 
+        public class DisconnectingUserPayload
+        {
+            public string roomId { get; set; }
+            public string socketId { get; set; }
+        }
+
+        /// <summary>
+        /// Remove user from all connected channels and the online list inside the room when disconnecting from the app
+        /// </summary>
+        /// <remarks>
+        /// Sample request:
+        ///
+        ///      /DisconnectingUser
+        ///     {
+        ///        "roomId": "62979eb0c19fd38c79cdb3b8",
+        ///        "socketId: "",
+        ///     }
+        ///
+        /// </remarks>
+        /// <response code="200">Operation is successful</response>
+        /// <response code="400">If the item is null</response>       
+        // GET: api/LiveRoom/DisconnectingUser
+        [Route("DisconnectingUser")]
+        [HttpPost]
+        public async Task<IActionResult> DisconnectingUser([FromBody] DisconnectingUserPayload payload)
+        {
+            // 1. remove the user from the online list
+            await liveRoomServices.DeleteUserFromOnlineList(payload.roomId, payload.socketId);
+
+            // 2. remove the user from the channel list
+            // due to the limitations of our architecture, we will max it to only 5 different channels
+            // as the time complexity of searching for the user will be 0(5n) which is extremely slow
+            await Task.Run(async () =>
+            {
+                LockedRooms room = liveRoomServices.GetByRoomId(payload.roomId);
+                await Task.Run(() => room.channelList.ForEach(channel =>
+                {
+
+                    channel.users.RemoveAll(user => user.socketId == payload.socketId);
+                }));
+                // then update the whole room object again
+                await liveRoomServices.UpdateRoom(room);
+
+            });
+            return new OkResult();
+
+        }
+
+        public class UserOnlinePayload
+        {
+            public string roomId { get; set; }
+            public Users user { get; set; }
+        }
+
+        /// <summary>
+        /// Add new Users to the current online user list
+        /// </summary>
+        /// <remarks>
+        /// Sample request:
+        ///
+        ///      /UpdateUserOnlineList
+        ///     {
+        ///        "roomId": "62979eb0c19fd38c79cdb3b8",
+        ///        "user": {
+        ///            "userId" : "",
+        ///            "userAvatar" : "",
+        ///            "userName" : "",
+        ///        }
+        ///     }
+        ///
+        /// </remarks>
+        /// <response code="200">Operation is successful</response>
+        /// <response code="400">If the item is null</response>       
+        // GET: api/LiveRoom/UpdateUserOnlineList
+        [Route("UpdateUserOnlineList")]
+        [HttpPost]
+        public async Task<IActionResult> UpdateUserOnlineList([FromBody]UserOnlinePayload payload)
+        {
+            // check if the user exist in the room
+            bool isUserExist = liveRoomServices.CheckOnlineUserExist(payload.user.userId, payload.roomId).Result;
+            if (isUserExist)
+            {
+                // remove the user from the list if the user existed
+                await liveRoomServices.DeleteUserFromOnlineList(payload.roomId, payload.user);
+                return new OkResult();
+            }
+            else
+            {
+                // add the user to the list of online users if the user does not exist in the list
+                await liveRoomServices.AddUserToOnlineList(payload.roomId,payload.user);
+                return new OkResult();
+            }
+        }
 
         /// <summary>
         /// delete socket host from the server

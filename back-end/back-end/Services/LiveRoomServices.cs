@@ -56,6 +56,18 @@ namespace back_end.Services
             return list;
         }
 
+        public List<Users> GetOnlineUsers(string roomId)
+        {
+            return lockedRoomsCollection.Find(room => room.roomId == roomId).First().onlineUsersList;
+        }
+
+        public async Task<bool> CheckOnlineUserExist(string userId, string roomId)
+        {
+            LockedRooms tempRoom = await lockedRoomsCollection.Find(room => room.roomId == roomId).FirstOrDefaultAsync();
+            return tempRoom.onlineUsersList.Exists(user => user.userId == userId);
+        
+        }
+
         public LockedRooms Create(LockedRooms lockedRoom)
         {
             lockedRoomsCollection.InsertOne(lockedRoom);
@@ -70,18 +82,44 @@ namespace back_end.Services
             if(tempChannel != null)
             {
                 // then check if the user already exists in the list
-                bool isUserExist = tempChannel.users.Any(user => user.userId == user.userId);
+                bool isUserExist = tempChannel.users.Any(ChannelUser => ChannelUser.userId == user.userId);
                 if (isUserExist)
                 {
                     // remove the user from the channel
-                    tempChannel.users.RemoveAll(user => user.userId == user.userId);
+                    tempRoom.channelList.Find(channel => channel.channelId == channelId).users.RemoveAll(ChannelUser => ChannelUser.userId == user.userId);
                 } else
                 {
-                    tempChannel.users.Add(user);
+                    tempRoom.channelList.Find(channel => channel.channelId == channelId).users.Add(user);
                 }
                 // then update the whole document inside mongodb
                 await lockedRoomsCollection.ReplaceOneAsync(room => room.roomId == roomId, tempRoom);
             }
+        }
+
+        public async Task AddUserToOnlineList(string roomId, Users user)
+        {
+            LockedRooms tempRoom = lockedRoomsCollection.Find(room => room.roomId == roomId).First();
+            tempRoom.onlineUsersList.Add(user);
+            await lockedRoomsCollection.ReplaceOneAsync(room => room.roomId == roomId, tempRoom);
+        }
+
+        // method overloading here
+        public async Task DeleteUserFromOnlineList(string roomId, string socketId)
+        {
+            LockedRooms tempRoom = lockedRoomsCollection.Find(room => room.roomId == roomId).First();
+            await Task.Run(() => tempRoom.onlineUsersList.RemoveAll(user => user.socketId == socketId));
+            await lockedRoomsCollection.ReplaceOneAsync(room => room.roomId == roomId, tempRoom);
+        }
+        public async Task DeleteUserFromOnlineList(string roomId, Users user)
+        {
+            LockedRooms tempRoom = lockedRoomsCollection.Find(room => room.roomId == roomId).First();
+            await Task.Run(() => tempRoom.onlineUsersList.RemoveAll(TempUser => TempUser.userId == user.userId));
+            await lockedRoomsCollection.ReplaceOneAsync(room => room.roomId == roomId, tempRoom);
+        }
+
+        public async Task UpdateRoom(LockedRooms newRoom)
+        {
+            await lockedRoomsCollection.ReplaceOneAsync(room => room.roomId == newRoom.roomId, newRoom);
         }
 
         public async Task RemoveAsync(string socketId)

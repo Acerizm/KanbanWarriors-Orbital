@@ -14,6 +14,9 @@ import * as SOCKETREDUX from "../Redux/Reducers/Socket/SocketSlice.js";
 import { selectRoomId } from "../Redux/Reducers/Socket/SocketSlice.js";
 import { socket } from "../SocketClient/index.js";
 
+// for firebase details of the user
+import { auth } from "../Auth/Firebase/index.js";
+
 const LiveRoomButton = () => {
 	const dispatch = useDispatch();
 	//console.log(user.uid);
@@ -165,6 +168,12 @@ const SubmitButton = () => {
 						SOCKETREDUX.joinRoom({
 							roomId: JoinOthersRoomId,
 							password: JoinOthersPassword,
+							// pass user data too
+							user: {
+								userId: auth.currentUser.uid,
+								userAvatar: auth.currentUser.photoURL,
+								userName: auth.currentUser.displayName,
+							},
 						})
 					);
 				} else if (isInviteOthersSelected) {
@@ -173,6 +182,12 @@ const SubmitButton = () => {
 						SOCKETREDUX.createRoom({
 							roomId: InviteOthersRoomId,
 							password: InviteOthersPassword,
+							// need to pass the user's data here too
+							user: {
+								userId: auth.currentUser.uid,
+								userAvatar: auth.currentUser.photoURL,
+								userName: auth.currentUser.displayName,
+							},
 						})
 					);
 				} else {

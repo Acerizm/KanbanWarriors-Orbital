@@ -17,18 +17,14 @@ import ScreenShareIcon from "@mui/icons-material/ScreenShare";
 import Divider from "@mui/material/Divider";
 import MicOffIcon from "@mui/icons-material/MicOff";
 import HeadsetIcon from "@mui/icons-material/Headset";
-
 // for signal
 import SignalCellularAltIcon from "@mui/icons-material/SignalCellularAlt";
-
 // for avatar
 import { styled } from "@mui/material/styles";
 import Badge from "@mui/material/Badge";
 import Avatar from "@mui/material/Avatar";
-
 // for list
 import { Virtuoso } from "react-virtuoso";
-
 //for messages
 import { socket } from "../../SocketClient/index.js";
 import { selectRoomId } from "../../Redux/Reducers/Socket/SocketSlice.js";
@@ -37,10 +33,8 @@ import {
 	selectShowVideoSectionState,
 	toggleVideoSection,
 } from "../../Redux/Reducers/LiveRoom/LiveRoomSlice.js";
-
 // for auth details
 import { auth } from "../../Auth/Firebase/index.js";
-
 // for chat box
 import {
 	DiscordMention,
@@ -48,13 +42,11 @@ import {
 	DiscordMessages,
 } from "@danktuary/react-discord-message";
 import "./index.css";
-
 // for video section
 import VideoSection from "../LiveVideo/index.js";
-
 // for interacting with our APIs
 import axios from "axios";
-
+import OnlineSection from "../OnlineSection/index.js";
 import * as REDUX from "../../Redux/Reducers/LiveChat/LiveChatSlice.js";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -159,8 +151,8 @@ const Channels = () => {
 		let payload = {
 			roomId: roomId,
 			channelId: channelId,
-			user: user
-		}
+			user: user,
+		};
 		axios
 			.post(
 				// "http://localhost:5143/api/LiveRoom/UpdateChannelUser?roomId=" +
@@ -176,7 +168,6 @@ const Channels = () => {
 				// method: "post",
 				// data: payload,
 				// }
-
 			)
 			.then((response) => {
 				// after posting
@@ -193,7 +184,7 @@ const Channels = () => {
 					});
 				// then let other users in the channel know that the user has already left/entered the room
 				socket.emit("send_user_toggle_channel", {
-					roomId: roomId
+					roomId: roomId,
 				});
 			})
 			.catch((error) => console.log(error));
@@ -208,7 +199,6 @@ const Channels = () => {
 				.then((response) => {
 					// response.data is the list of channels that is updated that we will get based on the roomId
 					// dispatch the new data to redux
-					console.log(response.data);
 					dispatch(REDUX.updateChannels(response.data));
 				});
 		});
@@ -256,6 +246,7 @@ const Channels = () => {
 												auth.currentUser.photoURL,
 											userName:
 												auth.currentUser.displayName,
+											socketId: socket.id,
 										})
 									}
 								>
@@ -272,7 +263,11 @@ const Channels = () => {
 							<List sx={{ pl: 4, paddingTop: 0 }}>
 								{channel.users.map((user, index) => {
 									return (
-										<ListItem sx={{ paddingTop: 0 }}>
+										<ListItem
+											sx={{
+												paddingTop: 0,
+											}}
+										>
 											<ListItemButton>
 												<ListItemIcon>
 													<Avatar
@@ -421,7 +416,6 @@ const ChatMessages = () => {
 							</DiscordMessages>
 						);
 					} else {
-						console.log(messageItem.userAvatar);
 						return (
 							<DiscordMessages lightTheme={true}>
 								<DiscordMessage
@@ -451,22 +445,6 @@ const Footer = () => {
 		>
 			Loading...
 		</div>
-	);
-};
-
-const OnlineSection = () => {
-	return (
-		<Fragment>
-			<div
-				style={{
-					backgroundColor: "#F2F3F5",
-					gridColumn: "3 / 3",
-					gridRow: "1 / 1",
-					width: "100%",
-					height: "100%",
-				}}
-			></div>
-		</Fragment>
 	);
 };
 

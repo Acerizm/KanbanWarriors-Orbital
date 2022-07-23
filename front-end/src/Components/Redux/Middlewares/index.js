@@ -14,12 +14,16 @@ export const SocketMiddleware =
 			socket.emit("createRoom", {
 				roomId: action.payload.roomId,
 				password: action.payload.password,
+				// need to emit the user details here too
+				user: action.payload.user,
 			});
 		}
 		if (action.type === "Socket/joinRoom") {
 			socket.emit("joinRoom", {
 				roomId: action.payload.roomId,
 				password: action.payload.password,
+				// emit user details here too
+				user: action.payload.user,
 			});
 		}
 
